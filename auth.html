@@ -59,6 +59,15 @@
     .form-check-label {
         user-select: none;
     }
+
+    .auth-form {
+        opacity: 1;
+        transition: opacity 0.3s ease;
+    }
+
+    .auth-form.fade-out {
+        opacity: 0;
+    }
 </style>
 </head>
 
@@ -77,9 +86,12 @@
                     <button id="signUpBtn" class="toggle-btn">Sign Up</button>
                 </div>
             </div>
-
+            <!-- alert -->
+            <div id="authAlert" class="alert alert-danger d-none text-dark" role="alert">
+                Please fill in all required fields correctly.
+            </div>
             <!-- sign in -->
-            <form id="signInForm">
+            <form id="signInForm" class="auth-form">
                 <div class="mb-4">
                     <label class="form-label">Email</label>
                     <input type="email" class="form-control border border-dark rounded-3" placeholder="Enter email">
@@ -103,13 +115,13 @@
                     <hr class="flex-grow-1">
                 </div>
                 <div class="text-center">
-                    <i class="bi bi-google fs-4 mx-2"></i>
-                    <i class="bi bi-facebook fs-4 mx-2"></i>
-                    <i class="bi bi-apple fs-4 mx-2"></i>
+                    <i class="bi bi-google fs-4 mx-3"></i>
+                    <i class="bi bi-facebook fs-4 mx-3"></i>
+                    <i class="bi bi-apple fs-4 mx-3"></i>
                 </div>
             </form>
             <!-- sign up -->
-            <form id="signUpForm" class="d-none">
+            <form id="signUpForm" class="auth-form d-none">
                 <div class="mb-4">
                     <label class="form-label">Name</label>
                     <input type="text" class="form-control border border-dark rounded-3" placeholder="Enter name">
@@ -134,30 +146,86 @@
 
         </div>
     </div>
-    <!-- toggle js -->
+
+    <!--js -->
     <script>
         const signInBtn = document.getElementById("signInBtn");
         const signUpBtn = document.getElementById("signUpBtn");
         const toggleBg = document.querySelector(".toggle-bg");
         const signInForm = document.getElementById("signInForm");
         const signUpForm = document.getElementById("signUpForm");
+        const authAlert = document.getElementById("authAlert");
+
+        // alert function
+        function showError(message) {
+            authAlert.textContent = message;
+            authAlert.classList.remove("d-none");
+
+            setTimeout(() => {
+                authAlert.classList.add("d-none");
+            }, 3000);
+        }
+
+        // toggle forms
         signInBtn.onclick = () => {
             toggleBg.style.transform = "translateX(0)";
             signInBtn.classList.add("active");
             signUpBtn.classList.remove("active");
-            signInForm.classList.remove("d-none");
-            signUpForm.classList.add("d-none");
+            signUpForm.classList.add("fade-out");
+            setTimeout(() => {
+                signUpForm.classList.add("d-none");
+                signUpForm.classList.remove("fade-out");
+                signInForm.classList.remove("d-none");
+            }, 300);
         };
+
         signUpBtn.onclick = () => {
             toggleBg.style.transform = "translateX(100%)";
             signUpBtn.classList.add("active");
             signInBtn.classList.remove("active");
-            signUpForm.classList.remove("d-none");
-            signInForm.classList.add("d-none");
+            signInForm.classList.add("fade-out");
+            setTimeout(() => {
+                signInForm.classList.add("d-none");
+                signInForm.classList.remove("fade-out");
+
+                signUpForm.classList.remove("d-none");
+            }, 300);
         };
+
+        // sign in validation
+        signInForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const email = signInForm.querySelector('input[type="email"]').value.trim();
+            const password = signInForm.querySelector('input[type="password"]').value.trim();
+            if (!email || !password) {
+                showError("Email and password are required.");
+                return;
+            }
+            alert("Sign In successful!");
+        });
+
+        // sign up validation
+        signUpForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const name = signUpForm.querySelector('input[type="text"]').value.trim();
+            const email = signUpForm.querySelector('input[type="email"]').value.trim();
+            const password = signUpForm.querySelector('input[type="password"]').value.trim();
+            const terms = document.getElementById("termsCheck").checked;
+            if (!name || !email || !password) {
+                showError("All fields are required.");
+                return;
+            }
+            if (!terms) {
+                showError("You must accept the Terms & Conditions.");
+                return;
+            }
+            alert("Sign Up successful!");
+        });
     </script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
 </body>
+
 </html>
