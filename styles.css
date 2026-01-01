@@ -16,23 +16,32 @@
     z-index: -1; 
 } */
 
+.comment-img {
+    width: 150px;
+    height: 100px;
+    object-fit: cover;
+    object-position: top;
+}
+
 .text-home {
-    position: relative; 
+    position: relative;
     margin-top: -6em;
     text-align: justify;
 }
 
-.food-menu, .choose-us {
+.food-menu,
+.choose-us {
     position: relative;
     padding: 5rem 0;
     background: url("images/hero.jpg") center/cover no-repeat;
 }
 
-.food-menu::after, .choose-us::after {
+.food-menu::after,
+.choose-us::after {
     content: "";
     position: absolute;
     inset: 0;
-    background: rgba(0,0,0,0.35);
+    background: rgba(0, 0, 0, 0.35);
     backdrop-filter: blur(4px);
 }
 
@@ -44,7 +53,7 @@
 }
 
 .hiw-card {
-    height: 290px;
+    height: 320px;
     width: 280px;
 }
 
@@ -53,4 +62,3 @@
         margin-top: -13.5em;
     }
 }
-
