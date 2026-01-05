@@ -15,7 +15,33 @@
     background: rgba(0, 0, 0, 0.3);
     z-index: -1; 
 } */
+.card-pkg {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
+.card-pkg:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    z-index: 2;
+}
+
+/* Hidden state */
+.card-pkg .explore-text {
+    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+    transform: translateY(20%);
+    opacity: 0;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+    padding: 1rem;
+     /* height: 50%; */
+}
+
+/* Show on hover */
+.card-pkg:hover .explore-text {
+    transform: translateY(0);
+    opacity: 1;
+}
 .comment-img {
     width: 150px;
     height: 100px;
