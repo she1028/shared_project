@@ -9,6 +9,8 @@
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
@@ -66,57 +68,100 @@
     </section>
 
     <!-- Packages -->
-    <section id="packages">
-        <div class="container-fluid my-5 pb-5" style="background-color: #3E2723;">
-            <div class="row">
-                <div class="col-12 text-center text-light p-5">
-                    <h2 class="fw-bold mb-2 mt-3">Packages</h2>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elito cum esse magnam quibusdam fugit
-                        corporis dist</p>
-                </div>
-            </div>
-            <div class="container-fluid">
-                <div class="row g-5 justify-content-center pb-5">
-                    <div class="col-md-4 col-lg-3 col-10">
-                        <div class="card border text-center">
-                            <img src="images/change.jpg" class="card-img-top" alt="Package 1">
-                            <div class="card-img-overlay d-flex justify-content-center align-items-center">
-                                <p class=" fw-bold fs-4 text-light">WEDDING</p>
-                            </div>
+    <section id="packages" class="mt-5" style="background-color: #ffffff;">
+        <div class="text-center text-dark p-5">
+            <h2 class="fw-bold display-6 mb-2 mt-3"
+                style="font-family: 'Poppins', sans-serif; color: rgb(251, 157, 173);">
+                Packages
+            </h2>
+            <small class="text-muted">
+                Our catering packages are made to fit any celebration big or small, bringing great food and seamless
+                service to your special moments.
+            </small>
+        </div>
+
+        <div class="container">
+            <div class="row g-3 justify-content-center" id="packageRow">
+
+                <!-- <div class="col-md-4 col-lg-3 col-10">
+                    <div class="card-pkg card border h-100" style="height: 300px; overflow: hidden;">
+                        <img src="images/packages/wedding-img-pkg.jpg" class="card-img-top h-100"
+                            style="object-fit: cover;" alt="Wedding">
+                        <div class="card-img-overlay d-flex justify-content-start align-items-start p-2">
+                            <p class="fw-bold text-muted bg-light rounded-5 px-3 mb-0">WEDDING</p>
                         </div>
-                    </div>
-                    <div class="col-md-4 col-lg-3 col-10">
-                        <div class="card border text-center">
-                            <img src="images/change.jpg" class="card-img-top" alt="Package 1">
-                            <div class="card-img-overlay d-flex justify-content-center align-items-center">
-                                <p class=" fw-bold fs-4 text-light">CHILDREN'S PARTY</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-lg-3 col-10">
-                        <div class="card border">
-                            <img src="images/change.jpg" class="card-img-top" alt="Package 1">
-                            <div class="card-img-overlay d-flex justify-content-center align-items-center">
-                                <p class=" fw-bold fs-4 text-light">DEBUT</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-lg-3 col-10">
-                        <div class="card border text-center">
-                            <img src="images/change.jpg" class="card-img-top" alt="Package 1">
-                            <div class="card-img-overlay d-flex justify-content-center align-items-center">
-                                <p class=" fw-bold fs-4 text-light">CORPORATE EVENT</p>
-                            </div>
+                        <div
+                            class="card-img-overlay d-flex flex-column justify-content-end text-white text-start explore-text">
+                            <p class="small mb-2">
+                                Celebrate your dream day with elegance and style. Our wedding package handles every
+                                detail so you can enjoy every moment.
+                            </p>
+                            <a href="#" target="_blank" class="btn btn-light btn-sm"
+                                style="z-index: 6; color: rgb(231, 87, 231);">View Package</a>
                         </div>
                     </div>
                 </div>
 
-            </div>
-            <div class="text-end mt-4 me-3">
-                <a href="#" class="btn btn-light rounded-pill px-4">View More</a>
+                <div class="col-md-4 col-lg-3 col-10">
+                    <div class="card-pkg card border h-100" style="height: 300px; overflow: hidden;">
+                        <img src="images/packages/debut-pkg.jpg" class="card-img-top h-100" style="object-fit: cover;"
+                            alt="Debut">
+                        <div class="card-img-overlay d-flex justify-content-start align-items-start p-2">
+                            <p class="fw-bold text-muted bg-light rounded-5 px-3 mb-0">DEBUT</p>
+                        </div>
+                        <div
+                            class="card-img-overlay d-flex flex-column justify-content-end text-white text-start explore-text">
+                            <p class="small mb-2">
+                                Make your milestone 18th birthday unforgettable. Our debut package provides delicious
+                                food and stylish setups to celebrate in style.
+                            </p>
+                            <a href="#" target="_blank" class="btn btn-light btn-sm"
+                                style="z-index: 6; color: rgb(231, 87, 231);">View Package</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-lg-3 col-10">
+                    <div class="card-pkg card border h-100" style="height: 300px; overflow: hidden;">
+                        <img src="images/packages/kids party-pkg.jpg" class="card-img-top h-100"
+                            style="object-fit: cover;" alt="Kids Party">
+                        <div class="card-img-overlay d-flex justify-content-start align-items-start p-2">
+                            <p class="fw-bold text-muted bg-light rounded-5 px-3 mb-0">KID'S PARTY</p>
+                        </div>
+                        <div
+                            class="card-img-overlay d-flex flex-column justify-content-end text-white text-start explore-text">
+                            <p class="small mb-2">
+                                Turn your child’s special day into a fun-filled celebration. Our kids party package
+                                offers tasty treats and playful catering that everyone will enjoy.
+                            </p>
+                            <a href="#" target="_blank" class="btn btn-light btn-sm"
+                                style="z-index: 6; color: rgb(231, 87, 231);">View Package</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-lg-3 col-10">
+                    <div class="card-pkg card border h-100" style="height: 300px; overflow: hidden;">
+                        <img src="images/packages/corporate-party-pkg.jpg" class="card-img-top h-100"
+                            style="object-fit: cover;" alt="Corporate Events">
+                        <div class="card-img-overlay d-flex justify-content-start align-items-start p-2">
+                            <p class="fw-bold text-muted bg-light rounded-5 px-3 mb-0">CORPORATE EVENTS</p>
+                        </div>
+                        <div
+                            class="card-img-overlay d-flex flex-column justify-content-end text-white text-start explore-text">
+                            <p class="small mb-2">
+                                Impress your guests with a professional and delicious spread. Our corporate events
+                                package ensures seamless catering for meetings, conferences, and office celebrations.
+                            </p>
+                            <a href="#" target="_blank" class="btn btn-light btn-sm"
+                                style="z-index: 6; color: rgb(231, 87, 231);">View Package</a>
+                        </div>
+                    </div>
+                </div> -->
             </div>
         </div>
     </section>
+
 
     <!-- Food Menu -->
     <section id="menu" class="food-menu my-5 py-4" style="position: relative; z-index: 1;">
@@ -126,28 +171,35 @@
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit,
                 sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
             </p>
-            <div class="row g-4 justify-content-center">
-                <div class="col-12 col-md-4 col-lg-4 d-flex justify-content-center">
-                    <div class="menu-card p-2">
-                        <img src="images/change.jpg" class="img-fluid rounded-3" alt="menu 1">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-4 col-lg-4 d-flex justify-content-center mb-3">
+                    <div class="menu-card card p-0" style="overflow: hidden; height: 250px; width: 100%;">
+                        <img src="images/Food Menu/classic.jpg" class="img-fluid rounded-3" alt="menu 1"
+                            style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
                 </div>
-                <div class="col-12 col-md-4 col-lg-4 d-flex justify-content-center">
-                    <div class="menu-card p-2">
-                        <img src="images/change.jpg" class="img-fluid rounded-3" alt="menu 2">
+
+                <div class="col-12 col-md-4 col-lg-4 d-flex justify-content-center mb-3">
+                    <div class="menu-card card p-0" style="overflow: hidden; height: 250px; width: 100%;">
+                        <img src="images/Food Menu/intimate.jpg" class="img-fluid rounded-3" alt="menu 2"
+                            style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
                 </div>
-                <div class="col-12 col-md-4 col-lg-4 d-flex justify-content-center">
-                    <div class="menu-card p-2">
-                        <img src="images/change.jpg" class="img-fluid rounded-3" alt="menu 3">
+
+                <div class="col-12 col-md-4 col-lg-4 d-flex justify-content-center mb-3">
+                    <div class="menu-card card p-0" style="overflow: hidden; height: 250px; width: 100%;">
+                        <img src="images/Food Menu/vogue.jpg" class="img-fluid rounded-3" alt="menu 3"
+                            style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
                 </div>
             </div>
+
             <div class="text-end mt-4">
                 <a href="#" class="btn btn-light rounded-pill px-4">View More</a>
             </div>
         </div>
     </section>
+
 
     <!-- Rentals -->
     <section id="rentals">
@@ -160,71 +212,7 @@
                 </div>
             </div>
             <div class="container-fluid">
-                <div class="row g-3 justify-content-center pb-5">
-                    <div class="col-md-4 col-lg-3 col-10">
-                        <div class="card border text-center">
-                            <img src="images/change.jpg" class="card-img-top" alt="Rental 1">
-                            <div class="card-img-overlay d-flex justify-content-center align-items-center">
-                                <p class="fw-bold fs-4 text-light">TENTING</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-lg-3 col-10">
-                        <div class="card border text-center">
-                            <img src="images/change.jpg" class="card-img-top" alt="Rental 2">
-                            <div class="card-img-overlay d-flex justify-content-center align-items-center">
-                                <p class="fw-bold fs-4 text-light">TABLEWARE & UTENSILS</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-lg-3 col-10">
-                        <div class="card border text-center">
-                            <img src="images/change.jpg" class="card-img-top" alt="Rental 3">
-                            <div class="card-img-overlay d-flex justify-content-center align-items-center">
-                                <p class="fw-bold fs-4 text-light">TABLES</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-lg-3 col-10">
-                        <div class="card border text-center">
-                            <img src="images/change.jpg" class="card-img-top" alt="Rental 4">
-                            <div class="card-img-overlay d-flex justify-content-center align-items-center">
-                                <p class="fw-bold fs-4 text-light">CHAIRS</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-lg-3 col-10">
-                        <div class="card border text-center">
-                            <img src="images/change.jpg" class="card-img-top" alt="Rental 5">
-                            <div class="card-img-overlay d-flex justify-content-center align-items-center">
-                                <p class="fw-bold fs-4 text-light">FABRICS</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-lg-3 col-10">
-                        <div class="card border text-center">
-                            <img src="images/change.jpg" class="card-img-top" alt="Rental 6">
-                            <div class="card-img-overlay d-flex justify-content-center align-items-center">
-                                <p class="fw-bold fs-4 text-light">DECORATIONS</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-lg-3 col-10">
-                        <div class="card border text-center">
-                            <img src="images/change.jpg" class="card-img-top" alt="Rental 7">
-                            <div class="card-img-overlay d-flex justify-content-center align-items-center">
-                                <p class="fw-bold fs-4 text-light">TABLE & CHAIRS SETUP</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-lg-3 col-10">
-                        <div class="card border text-center">
-                            <img src="images/change.jpg" class="card-img-top" alt="Rental 8">
-                            <div class="card-img-overlay d-flex justify-content-center align-items-center">
-                                <p class="fw-bold fs-4 text-light">CONTAINERS</p>
-                            </div>
-                        </div>
-                    </div>
+                <div class="row g-3 justify-content-center pb-5" id="rentalsRow">
                 </div>
             </div>
         </div>
@@ -396,19 +384,23 @@
         </div>
     </section>
 
-<!-- why choose us  -->
-<section id="why-choose-us" class="choose-us my-5 py-4" style="position: relative; z-index: 1;">
-    <div class="container content text-center text-light" style="position: relative; z-index: 1;">
-        <h2 class="fw-bold mb-4 mt-3 text-start px-3">Why Choose Us</h2>
-        <ul class="list-unstyled fs-5 text-start px-5">
-            <li class="mb-3"><i class="bi bi-check-circle-fill me-2"></i>Experienced and professional catering team</li>
-            <li class="mb-3"><i class="bi bi-check-circle-fill me-2"></i>Customizable packages to fit your needs</li>
-            <li class="mb-3"><i class="bi bi-check-circle-fill me-2"></i>High-quality ingredients and presentation</li>
-            <li class="mb-3"><i class="bi bi-check-circle-fill me-2"></i>Reliable and timely service</li>
-            <li class="mb-3"><i class="bi bi-check-circle-fill me-2"></i>Comprehensive rental options for all event needs</li>
-        </ul>
-    </div>
-</section>
+    <!-- why choose us  -->
+    <section id="why-choose-us" class="choose-us my-5 py-4" style="position: relative; z-index: 1;">
+        <div class="container content text-center text-light" style="position: relative; z-index: 1;">
+            <h2 class="fw-bold mb-4 mt-3 text-start px-3">Why Choose Us</h2>
+            <ul class="list-unstyled fs-5 text-start px-5">
+                <li class="mb-3"><i class="bi bi-check-circle-fill me-2"></i>Experienced and professional catering team
+                </li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill me-2"></i>Customizable packages to fit your needs
+                </li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill me-2"></i>High-quality ingredients and presentation
+                </li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill me-2"></i>Reliable and timely service</li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill me-2"></i>Comprehensive rental options for all event
+                    needs</li>
+            </ul>
+        </div>
+    </section>
     <!-- Contact Section -->
     <section id="contact">
         <div class="container-fluid py-5 mt-5" style="background-color: #3E2723;">
@@ -460,6 +452,56 @@
             </div>
         </div>
     </section>
+
+    <script src="data.js"></script>
+
+    <script>
+
+        // Rentals Section
+        var rentalsRow = document.getElementById("rentalsRow");
+
+        rentals.rntCategories.forEach(rntCategory => {
+            rentalsRow.innerHTML += `
+        <div class="col-md-4 col-lg-3 col-10 mb-3">
+            <div class="card border" style="height: 260px; overflow: hidden;">
+                <img src="`+ rntCategory.img + `" class="card-img-top" alt="` + rntCategory.title + `" style="height: 100%; object-fit: cover; filter: brightness(70%);">
+                <div class="card-img-overlay d-flex justify-content-end align-items-start p-2">
+                    <p class="fw-bold fs-6 text-muted bg-light rounded-5 px-2 m-0">`+ rntCategory.title + `</p>
+                </div>
+            </div>
+        </div>
+    `;
+        });
+
+        // Package Section
+
+        var packageRow = document.getElementById("packageRow");
+
+        packages.pkgCategories.forEach(pkgCategory => {
+            packageRow.innerHTML += `
+        <div class="col-md-4 col-lg-3 col-10">
+                    <div class="card-pkg card border h-100" style="height: 300px; overflow: hidden;">
+                        <img src="`+ pkgCategory.img + `" class="card-img-top h-100"
+                            style="object-fit: cover;" alt="Wedding">
+                        <div class="card-img-overlay d-flex justify-content-start align-items-start p-2">
+                            <p class="fw-bold text-muted bg-light rounded-5 px-3 mb-0">`+ pkgCategory.title + `</p>
+                        </div>
+                        <div
+                            class="card-img-overlay d-flex flex-column justify-content-end text-white text-start explore-text">
+                            <p class="small mb-2">`+ pkgCategory.desc + `
+                                
+                            </p>
+                            <a href="#" target="_blank" class="btn btn-light btn-sm"
+                                style="z-index: 6; color: rgb(231, 87, 231);">View Package</a>
+                        </div>
+                    </div>
+                </div>
+    `;
+        });
+    </script>
+
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
