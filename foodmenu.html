@@ -49,7 +49,7 @@
                     <div class="fs-5 py-1">
                         <a href="index.html#home" class="text-white" style="text-decoration: none;">Home</a>
                         <span style="color:#ffffff;"> &lt; </span>
-                        <a href="rentals.html" class="text-white" style="text-decoration: none; color:#ca9292;">Rentals</a>          
+                        <a href="foodmenu.html" class="text-white" style="text-decoration: none; color:#ca9292;">Food Menu</a>          
                     </div>
                 </div>
             </div>
@@ -69,53 +69,12 @@
     <div class="container text-center my-5">
         <h2 class="fw-bold my-3">Browse Our Wide Selection of Delicious Menu Options!</h2>
         <div class="mt-1">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime accusantium esse culpa, dolorum, mollitia corrupti repellat accusamus magnam unde est, sit et! Nobis accusantium, veniam iure ad incidunt soluta necessitatibus!
+            Discover a variety of flavorful dishes made with fresh ingredients and lots of love. From comforting classics to exciting specialty meals, our menu is crafted to satisfy every craving and make every occasion more memorable. Enjoy great food that’s perfect for sharing with family and friends.
         </div>
     </div>
 
     <div class="container text-center my-5" id="content">
-        <h2 class="fw-bold mt-5 mb-3 pt-5">TITLE</h2>
-        <div class="mt-1">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime accusantium esse culpa, dolorum, mollitia corrupti repellat accusamus magnam unde est, sit et! Nobis accusantium, veniam iure ad incidunt soluta necessitatibus!
-        </div>
-        <div class="row row-cols-1 row-cols-md-4 g-4 mt-2">
-            <div class="col">
-                <div class="card h-100 border-dark shadow">
-                <img src="..." class="card-img-top">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card h-100 border-dark shadow">
-                <img src="..." class="card-img-top">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">This is a short card.</p>
-                </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card h-100 border-dark shadow">
-                <img src="..." class="card-img-top">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content.</p>
-                </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card h-100 border-dark shadow">
-                <img src="..." class="card-img-top">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                </div>
-                </div>
-            </div>
-        </div>
+        
     </div>
 
     <!-- footer -->
@@ -152,6 +111,45 @@
             </div>
         </div>
     </section>
+
+    <script src="food.js"></script>
+    <script>
+        var content = document.getElementById("content");
+
+        var menuSections = [
+            {title:"Appetizers", description: menu.appetizersDescription, items: menu.appetizers},
+            {title:"Main Courses", description: menu.mainCoursesDescription, items: menu.mainCourses},
+            {title:"Desserts", description: menu.dessertsDescription, items: menu.desserts}
+        ];
+
+        for (var i=0; i < menuSections.length; i++){
+            var section = menuSections[i];
+            var sectionId = section.title.replace(/\s+/g, "");
+            
+            content.innerHTML += `
+            <hr class="m-5"></hr>
+            <h2 class="fw-bold mt-5 mb-3 pt-5">`+ section.title +`</h2>
+            <div class="mt-1">`+ section.description +`</div>
+            <div class="row row-cols-1 row-cols-md-4 g-4 mt-2" id="`+ sectionId +`"></div>`;
+
+            var row = document.getElementById(sectionId);
+
+            for(var j=0; j < section.items.length; j++){
+                var item = section.items[j];
+
+                row.innerHTML += `
+                <div class="col">
+                    <div class="card border-dark shadow" >
+                        <img src="`+ item.image +`" class="card-img-top" style="height:200px; width:100%; object-fit: cover; object-position:center; background-color: #f8f9fa;">
+                        <div class="card-body text-start">
+                            <h5 class="card-title">`+ item.name +`</h5>
+                            <p class="card-text">$ `+ item.price.toFixed(2) +`</p>
+                        </div>
+                    </div>
+                </div>`;
+            }  
+        }
+    </script>
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"

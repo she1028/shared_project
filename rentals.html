@@ -43,13 +43,13 @@
         <div class="container-fluid align-items-center hero-rentals">
             <div class="row text-center header-rentals">
                 <div class="col-12 z-5">
-                    <div class=" display-1 fw-bold" style="margin-top: 1.5em; font-family: 'Oswald'; font-size: 70px; z-index: 3; color:#e38585;">Rentals</div>
+                    <div class=" display-1 fw-bold" style="margin-top: 1.5em; font-family: 'Oswald'; font-size: 70px; z-index: 3; color:#ffffff;">Rentals</div>
                 </div>
                 <div class="col-12">
                     <div class="fs-5 py-1">
-                        <a href="index.html#home" style="text-decoration: none; color:#ca9292;">Home</a>
-                        <span style="color:#ca9292;"> &lt; </span>
-                        <a href="rentals.html"style="text-decoration: none; color:#ca9292;">Rentals</a>          
+                        <a href="index.html#home" style="text-decoration: none; color:#ffffff;">Home</a>
+                        <span style="color:#ffffff;"> &lt; </span>
+                        <a href="rentals.html" style="text-decoration: none; color: #ffffff;">Rentals</a>          
                     </div>
                 </div>
             </div>
@@ -68,54 +68,13 @@
 
     <div class="container text-center my-5">
         <h2 class="fw-bold my-3">Browse From Over 100 Rental Products!</h2>
-        <div class="mt-1">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime accusantium esse culpa, dolorum, mollitia corrupti repellat accusamus magnam unde est, sit et! Nobis accusantium, veniam iure ad incidunt soluta necessitatibus!
+        <div class="mt-1 mb-5">
+            Find everything you need to bring your event to life — from tables and chairs to tents, décor, linens, and more. Our wide range of high-quality rental items is perfect for weddings, parties, corporate events, and celebrations of all sizes. Create the setup you want with reliable and stylish rental options.
         </div>
     </div>
 
     <div class="container text-center my-5" id="content">
-        <h2 class="fw-bold mt-5 mb-3 pt-5">TITLE</h2>
-        <div class="mt-1">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime accusantium esse culpa, dolorum, mollitia corrupti repellat accusamus magnam unde est, sit et! Nobis accusantium, veniam iure ad incidunt soluta necessitatibus!
-        </div>
-        <div class="row row-cols-1 row-cols-md-4 g-4 mt-2">
-            <div class="col">
-                <div class="card h-100 border-dark shadow">
-                <img src="..." class="card-img-top">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card h-100 border-dark shadow">
-                <img src="..." class="card-img-top">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">This is a short card.</p>
-                </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card h-100 border-dark shadow">
-                <img src="..." class="card-img-top">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content.</p>
-                </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card h-100 border-dark shadow">
-                <img src="..." class="card-img-top">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                </div>
-                </div>
-            </div>
-        </div>
+        
     </div>
 
     <!-- footer -->
@@ -153,6 +112,37 @@
         </div>
     </section>
 
+    <script src="items.js"></script>
+    <script>
+        var content = document.getElementById("content");
+        
+        for (var i=0; i < rentals.rntCategories.length; i++){
+            var category = rentals.rntCategories[i];
+            var sectionId = category.category.replace(/\s+/g, "");
+            
+            content.innerHTML += `
+            <hr class="m-5"></hr>
+            <h2 class="fw-bold m-3 mb-3">`+ category.category +`</h2>
+            <div class="mt-1">`+ category.description +`</div>
+            <div class="row row-cols-1 row-cols-md-4 g-4 mt-2" id="`+ sectionId +`"></div>`;
+
+            var row = document.getElementById(sectionId);
+            
+            for(var j=0; j < category.items.length; j++){
+                var item = category.items[j];
+                row.innerHTML += `
+                <div class="col">
+                    <div class="card border-dark shadow" >
+                        <img src="`+ item.img +`" class="card-img-top" style="height:200px; width:100%; object-fit: cover; object-position:center; background-color: #f8f9fa;">
+                        <div class="card-body text-start">
+                            <h5 class="card-title">`+ item.name +`</h5>
+                            <p class="card-text">$ `+ item.price.toFixed(2) +`</p>
+                        </div>
+                    </div>
+                </div>`;
+            }  
+        }
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"

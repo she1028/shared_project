@@ -16,6 +16,17 @@
     background-size: cover;
     background-position: top;
 }
+.hero-rentals::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: inherit;
+    background-size: cover;
+    background-position: center;
+    filter: blur(3px) brightness(70%);
+    transform: scale(1.1);
+    z-index: 0;
+}
 .hero-foodmenu {
     position: relative;
     background-image: url('images/FoodMenuPage/hero.jpg');
@@ -24,6 +35,18 @@
     background-repeat: no-repeat;
     background-size: cover;
     background-position: top;
+    overflow: hidden;
+}
+.hero-foodmenu::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: inherit;
+    background-size: cover;
+    background-position: center;
+    filter: blur(3px) brightness(70%);
+    transform: scale(1.1);
+    z-index: 0;
 }
 /* .hero::after {
     content: "";
