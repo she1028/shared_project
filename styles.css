@@ -132,3 +132,12 @@
         transform: translateX(-50%);
     }
 }
+
+#chatBotLink:hover{
+    transform: scale(0.95);
+    
+}
+#chatBotLink{
+    background-color: white;
+    border: 1px solid black;
+}
