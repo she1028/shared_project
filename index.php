@@ -133,7 +133,7 @@
         <div class="container-fluid my-5">
             <div class="row text-center d-flex justify-content-center">
                 <div class="col-md-4 col-10">
-                    <a href="#" class="index-menu-button rounded-5 px-3 py-2">View Menu</a>
+                    <a href="foodmenu.php" class="index-menu-button rounded-5 px-3 py-2">View Menu</a>
                 </div>
             </div>
         </div>
@@ -142,7 +142,7 @@
 
     <!-- Rentals -->
     <section id="rentals">
-        <div class="container-fluid my-5" style="background-color:#EADCC6;">
+        <div class="container-fluid my-5 pb-5" style="background-color: #EADCC6;">
             <div class="row">
                 <div class="col-12 text-center p-5">
                     <h2 class="display-6 fw-bold mb-2 mt-3 text-dark">Rentals</h2>
@@ -152,6 +152,11 @@
             </div>
             <div class="container-fluid">
                 <div class="row g-3 justify-content-center pb-5" id="rentalsRow">
+                </div>
+                <div class="row text-center d-flex justify-content-center">
+                    <div class="col-md-4 col-10">
+                        <a href="rentals.php" class="index-menu-button rounded-5 px-3 py-2">View More</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -387,7 +392,7 @@
         <div class="col-md-4 col-lg-3 col-10 mb-3">
             <div class="card border rental-card" style="height: 260px; overflow: hidden;">
                 <img src="`+ rntCategory.img + `" class="card-img-center" alt="` + rntCategory.title + `" style="height: 100%; object-fit: cover; filter: brightness(40%);">
-                <div class="card-img-overlay d-flex justify-content-center align-items-center p-2">
+                <div class="card-img-overlay d-flex justify-content-center align-items-center p-2 text-white">
                     <p class="fs-5 rounded-5 px-2 m-0">`+ rntCategory.title + `</p>
                 </div>
             </div>

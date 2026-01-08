@@ -12,67 +12,6 @@
     background-size: cover;
     background-position: center;
 }
-<<<<<<< HEAD
-.hero-rentals {
-    position: relative;
-    background-image: url('images/RentalPage/hero.jpg');
-    width: 100%;
-    height: 300px;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: top;
-}
-.hero-rentals::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: inherit;
-    background-size: cover;
-    background-position: center;
-    filter: blur(3px) brightness(70%);
-    transform: scale(1.1);
-    z-index: 0;
-}
-.hero-foodmenu {
-    position: relative;
-    background-image: url('images/FoodMenuPage/hero.jpg');
-    width: 100%;
-    height: 300px;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: top;
-    overflow: hidden;
-}
-.hero-foodmenu::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: inherit;
-    background-size: cover;
-    background-position: center;
-    filter: blur(3px) brightness(70%);
-    transform: scale(1.1);
-    z-index: 0;
-}
-/* .hero::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.3);
-    z-index: -1; 
-} */
-=======
-
-.rental-card:hover{
-    filter: brightness(200%);
-    transform: translateY(-10px);
-}
-.rental-card{
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    color: white;
-    font-weight: bold;
-}
->>>>>>> origin/main
 .card-pkg {
     position: relative;
     overflow: hidden;
@@ -96,10 +35,6 @@
 .card-pkg:hover .explore-text {
     transform: translateY(0);
     opacity: 1;
-}
-
-.card {
-    background-color: #E2D4D4;
 }
 
 .comment-img {
@@ -141,23 +76,6 @@
 .hiw-card {
     height: 320px;
     width: 280px;
-}
-
-.header-rentals{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); 
-    text-align: center;
-    color: white;
-}
-.header-foodmenu{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); 
-    text-align: center;
-    color: white;
 }
 
 @media (max-width: 800px) {
