@@ -18,7 +18,7 @@
     <!-- navbar -->
     <nav class="navbar navbar-expand-lg bg-light navbar-light fixed-top shadow-sm mt-3 rounded-4 mx-4">
         <div class="container-fluid ps-4 pe-4">
-            <a class="navbar-brand" href="index.html">
+            <a class="navbar-brand" href="index.php">
                 <img src="images/YMZM-logo.png" alt="Logo" class="logo" width="40" height="auto">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -26,11 +26,11 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="index.php##home">Home</a></li>
-                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="index.php##packages">Packages</a></li>
-                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="index.php##menu">Menu</a></li>
-                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="index.php##rentals">Rentals</a></li>
-                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="index.php##contact">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="index.php#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="index.php#packages">Packages</a></li>
+                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="index.php#menu">Menu</a></li>
+                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="index.php#rentals">Rentals</a></li>
+                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="index.php#contact">Contact</a></li>
                     <li class="nav-item"><a class="nav-link px-3 text-dark border border-primary rounded-5"
                             href="#sign-in">Sign in</a></li>
                 </ul>
@@ -75,6 +75,60 @@
 
     <div class="container text-center my-5" id="content">
         
+    </div>
+    <!--modal-->
+    <div class="modal fade" tabindex="-1" id="cardModal">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content p-3">
+                <div class="modal-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-6 align-items-center">
+                            <img src="Catering/table/rec1.jpg" class="img-fluid">
+                        </div>
+                        <div class="col-md-6">
+                            <div class="btn" data-bs-dismiss="modal">back</div>
+                            <div class="align-items-center px-5 mx-5">
+                                <div class="rounded-5 text-center my-2 py-1" style="background-color: gray; justify-content: center;">Tables</div>
+                            </div>
+                            <div class="row">
+                                <div class="h3 fw-bold" style="text-align:jjustify;">Foundry Cocktail Table - Black</div>
+                                <div class="details">
+                                    <h5>Details:</h5>
+                                    <p>Lorem ipsum</p>
+                                </div>
+                                <div class="description">
+                                    <h5>Description:</h5>
+                                    <p style="text-align: justify;">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sint dolorum facilis sit assumenda maxime pariatur molestias, officiis, at suscipit laboriosam eligendi accusantium delectus. Accusantium inventore dolorum provident ut non cum.</p>
+                                </div>
+                            </div>
+                            <hr class="my-5">
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <h4>Price: $</h4>
+                                </div>
+                                 <div class="col-md-6">
+                                    <h6>Available In: </h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <button type="button" id="qty-minus" style="margin:0 8px;">-</button>
+                                    <span id="modal-qty border">1</span>
+                                    <button type="button" id="qty-plus" style="margin:0 8px;">+</button>
+                                </div>
+                                <div class="col-md-6">
+                                    <button type="button" id="add-to-cart-btn" style="flex:1;background:#23272f;color:#fffbe7;font-weight:bold;padding:8px 0;border:none;border-radius:6px;cursor:pointer;">Add to Cart</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div> -->
+            </div>
+        </div>
     </div>
 
     <!-- footer -->
@@ -121,7 +175,7 @@
             var sectionId = category.category.replace(/\s+/g, "");
             
             content.innerHTML += `
-            <hr class="m-5"></hr>
+            <hr class="m-5">
             <h2 class="fw-bold m-3 mb-3">`+ category.category +`</h2>
             <div class="mt-1">`+ category.description +`</div>
             <div class="row row-cols-1 row-cols-md-4 g-4 mt-2" id="`+ sectionId +`"></div>`;
@@ -132,7 +186,7 @@
                 var item = category.items[j];
                 row.innerHTML += `
                 <div class="col">
-                    <div class="card border-dark shadow" >
+                    <div class="card border-dark shadow" onclick="openModal()">
                         <img src="`+ item.img +`" class="card-img-top" style="height:200px; width:100%; object-fit: cover; object-position:center; background-color: #f8f9fa;">
                         <div class="card-body text-start">
                             <h5 class="card-title">`+ item.name +`</h5>
@@ -141,6 +195,11 @@
                     </div>
                 </div>`;
             }  
+        }
+        
+        function openModal(){
+            const modal = new bootstrap.Modal(document.getElementById('cardModal'));
+            modal.show();
         }
     </script>
 

@@ -10,9 +10,7 @@
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.cdnfonts.com/css/oranienbaum" rel="stylesheet">
-
-
+    <link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet'>
 </head>
 
 <body>
@@ -42,7 +40,7 @@
 
     <div>
     <a href="#" id="chatBotLink"
-        class="position-fixed bottom-0 start-0 m-3 d-flex align-items-center gap-2 text-decoration-none rounded-pill shadow px-3 py-2"
+        class="position-fixed bottom-0 start-0 my-4 mx-3 d-flex align-items-center gap-2 text-decoration-none rounded-pill shadow px-3 py-2"
         style="z-index: 1055;">
 
         <img src="images/bot.png" alt="Chat Bot" width="50">
@@ -63,13 +61,11 @@
             <div class="row text-center">
                 <div class="col-12 z-5">
                     <div class=" display-1 fw-bold"
-                        style="margin-top: 2.3em; z-index: 3; color: tomato; font-family: 'Oranienbaum', serif;">
+                        style="margin-top: 2.3em; z-index: 3; color: white; font-family: 'Oswald'; font-size: 90px;">
                         CATERING</div>
                 </div>
-                <div class="col-12 mt-3">
-                    <sup class="fs-5 bg-light rounded-5 px-3 py-1">
-                        <a href="" class="text-warning" style="text-decoration: none;">Book Now</a>
-                    </sup>
+                <div class="col-12 mt-1">
+                    <a href="" class="btn btn-outline-secondary rounded-5 px-3 py-1" style="text-decoration: none;">Book Now</a>
                 </div>
             </div>
         </div>
@@ -260,8 +256,12 @@
                                 <div class="ms-3 w-100">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6 class="mb-1 fw-bold">Lorem I.</h6>
-                                        <div class="stars">
-                                            ★★★★☆
+                                        <div class="rating">
+                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
+                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
+                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
+                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
+                                            <i class="bi bi-star"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -283,8 +283,12 @@
                                 <div class="ms-3 w-100">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6 class="mb-1 fw-bold">Lorem I.</h6>
-                                        <div class="stars">
-                                            ★★★★☆
+                                        <div class="rating">
+                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
+                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
+                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
+                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
+                                            <i class="bi bi-star"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -306,8 +310,12 @@
                                 <div class="ms-3 w-100">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6 class="mb-1 fw-bold">Lorem I.</h6>
-                                        <div class="stars">
-                                            ★★★★☆
+                                        <div class="rating">
+                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
+                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
+                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
+                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
+                                            <i class="bi bi-star"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -330,11 +338,11 @@
 
     <!-- Contact Section -->
     <section id="contact">
-        <div class="container-fluid py-5 mt-5" style="background-color: #3E2723;">
-            <div class="display-5 fw-semibold text-center text-light pb-2">Make Your Event Hassle-Free</div>
+        <div class="container-fluid py-5 mt-5" style="background-color: #EADCC6;">
+            <div class="display-5 fw-semibold text-center text-dark pb-2">Make Your Event Hassle-Free</div>
             <div class="row d-flex justify-content-center">
-                <div class="col-md-10 text-center text-light">
-                    <p class=" mx-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores eos magnam
+                <div class="col-md-10 text-center text-dark">
+                    <p class=" mx-5 text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores eos magnam
                         debitis ex deleniti illum inventore accusantium. Vitae tenetur, maiores saepe aliquid doloribus
                         nam, nemo nobis mollitia laudantium aspernatur enim?</p>
                     <div class="text-center mt-4">
@@ -407,7 +415,7 @@
         packages.pkgCategories.forEach(pkgCategory => {
             packageRow.innerHTML += `
         <div class="col-md-4 col-lg-3 col-10">
-                    <div class="card-pkg card border h-100" style="height: 300px; overflow: hidden;">
+                    <div class="card-pkg card border" style="height: 350px; overflow: hidden;">
                         <img src="`+ pkgCategory.img + `" class="card-img-top h-100"
                             style="object-fit: cover;" alt="Wedding">
                         <div class="card-img-overlay d-flex justify-content-start align-items-start p-2">

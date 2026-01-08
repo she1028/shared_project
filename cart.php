@@ -46,15 +46,11 @@
       </div>
 
       <p class="text-muted small mb-2">Taxes and shipping calculated at checkout</p>
-
       <button class="btn btn-dark w-100">Check Out</button>
     </div>
   </div>
 
-<<<<<<< HEAD
 
-=======
->>>>>>> feature-tep
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

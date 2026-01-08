@@ -12,6 +12,18 @@
     background-size: cover;
     background-position: center;
 }
+.hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.200);
+    z-index: 0;
+    backdrop-filter: blur(1px);
+}
+.hero > * {
+    position: relative;
+    z-index: 2;
+}
 .card-pkg {
     position: relative;
     overflow: hidden;
