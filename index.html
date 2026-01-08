@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/oranienbaum" rel="stylesheet">
+
 
 </head>
 
@@ -38,16 +40,35 @@
         </div>
     </nav>
 
+    <div>
+    <a href="#" id="chatBotLink"
+        class="position-fixed bottom-0 start-0 m-3 d-flex align-items-center gap-2 text-decoration-none rounded-pill shadow px-3 py-2"
+        style="z-index: 1055;">
+
+        <img src="images/bot.png" alt="Chat Bot" width="50">
+        <span class="fw-medium text-dark">Chat with us!</span>
+    </a>
+
+    <script>
+        document.getElementById("chatBotLink").addEventListener("click", function (event) {
+            event.preventDefault();
+            alert("Chat opened!");
+        });
+    </script>
+    </div>
+
     <!-- Home -->
     <section id="home">
         <div class="container-fluid align-items-center hero">
             <div class="row text-center">
                 <div class="col-12 z-5">
-                    <div class=" display-1 fw-bold text-light" style="margin-top: 2.3em; z-index: 3;">CATERING</div>
+                    <div class=" display-1 fw-bold"
+                        style="margin-top: 2.3em; z-index: 3; color: tomato; font-family: 'Oranienbaum', serif;">
+                        CATERING</div>
                 </div>
                 <div class="col-12 mt-3">
-                    <sup class="fs-5 border rounded-5 px-3 py-1">
-                        <a href="#packages" class="text-light" style="text-decoration: none;">Book Now</a>
+                    <sup class="fs-5 bg-light rounded-5 px-3 py-1">
+                        <a href="" class="text-warning" style="text-decoration: none;">Book Now</a>
                     </sup>
                 </div>
             </div>
@@ -68,10 +89,9 @@
     </section>
 
     <!-- Packages -->
-    <section id="packages" class="mt-5" style="background-color: #ffffff;">
+    <section id="packages" class="my-5 pb-5 border" style="background-color:#EADCC6;">
         <div class="text-center text-dark p-5">
-            <h2 class="fw-bold display-6 mb-2 mt-3"
-                style="font-family: 'Poppins', sans-serif; color: rgb(251, 157, 173);">
+            <h2 class="fw-bold display-6 mb-2 mt-3 text-dark" style="font-family: 'Poppins', sans-serif;">
                 Packages
             </h2>
             <small class="text-muted">
@@ -82,120 +102,39 @@
 
         <div class="container">
             <div class="row g-3 justify-content-center" id="packageRow">
-
-                <!-- <div class="col-md-4 col-lg-3 col-10">
-                    <div class="card-pkg card border h-100" style="height: 300px; overflow: hidden;">
-                        <img src="images/packages/wedding-img-pkg.jpg" class="card-img-top h-100"
-                            style="object-fit: cover;" alt="Wedding">
-                        <div class="card-img-overlay d-flex justify-content-start align-items-start p-2">
-                            <p class="fw-bold text-muted bg-light rounded-5 px-3 mb-0">WEDDING</p>
-                        </div>
-                        <div
-                            class="card-img-overlay d-flex flex-column justify-content-end text-white text-start explore-text">
-                            <p class="small mb-2">
-                                Celebrate your dream day with elegance and style. Our wedding package handles every
-                                detail so you can enjoy every moment.
-                            </p>
-                            <a href="#" target="_blank" class="btn btn-light btn-sm"
-                                style="z-index: 6; color: rgb(231, 87, 231);">View Package</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4 col-lg-3 col-10">
-                    <div class="card-pkg card border h-100" style="height: 300px; overflow: hidden;">
-                        <img src="images/packages/debut-pkg.jpg" class="card-img-top h-100" style="object-fit: cover;"
-                            alt="Debut">
-                        <div class="card-img-overlay d-flex justify-content-start align-items-start p-2">
-                            <p class="fw-bold text-muted bg-light rounded-5 px-3 mb-0">DEBUT</p>
-                        </div>
-                        <div
-                            class="card-img-overlay d-flex flex-column justify-content-end text-white text-start explore-text">
-                            <p class="small mb-2">
-                                Make your milestone 18th birthday unforgettable. Our debut package provides delicious
-                                food and stylish setups to celebrate in style.
-                            </p>
-                            <a href="#" target="_blank" class="btn btn-light btn-sm"
-                                style="z-index: 6; color: rgb(231, 87, 231);">View Package</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4 col-lg-3 col-10">
-                    <div class="card-pkg card border h-100" style="height: 300px; overflow: hidden;">
-                        <img src="images/packages/kids party-pkg.jpg" class="card-img-top h-100"
-                            style="object-fit: cover;" alt="Kids Party">
-                        <div class="card-img-overlay d-flex justify-content-start align-items-start p-2">
-                            <p class="fw-bold text-muted bg-light rounded-5 px-3 mb-0">KID'S PARTY</p>
-                        </div>
-                        <div
-                            class="card-img-overlay d-flex flex-column justify-content-end text-white text-start explore-text">
-                            <p class="small mb-2">
-                                Turn your child’s special day into a fun-filled celebration. Our kids party package
-                                offers tasty treats and playful catering that everyone will enjoy.
-                            </p>
-                            <a href="#" target="_blank" class="btn btn-light btn-sm"
-                                style="z-index: 6; color: rgb(231, 87, 231);">View Package</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4 col-lg-3 col-10">
-                    <div class="card-pkg card border h-100" style="height: 300px; overflow: hidden;">
-                        <img src="images/packages/corporate-party-pkg.jpg" class="card-img-top h-100"
-                            style="object-fit: cover;" alt="Corporate Events">
-                        <div class="card-img-overlay d-flex justify-content-start align-items-start p-2">
-                            <p class="fw-bold text-muted bg-light rounded-5 px-3 mb-0">CORPORATE EVENTS</p>
-                        </div>
-                        <div
-                            class="card-img-overlay d-flex flex-column justify-content-end text-white text-start explore-text">
-                            <p class="small mb-2">
-                                Impress your guests with a professional and delicious spread. Our corporate events
-                                package ensures seamless catering for meetings, conferences, and office celebrations.
-                            </p>
-                            <a href="#" target="_blank" class="btn btn-light btn-sm"
-                                style="z-index: 6; color: rgb(231, 87, 231);">View Package</a>
-                        </div>
-                    </div>
-                </div> -->
             </div>
         </div>
     </section>
 
 
     <!-- Food Menu -->
-    <section id="menu" class="food-menu my-5 py-4" style="position: relative; z-index: 1;">
-        <div class="container content text-center text-light" style="position: relative; z-index: 1;">
-            <h2 class="fw-bold mb-2 mt-3">Food Menu</h2>
-            <p class="mb-5 px-4">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
-            <div class="row justify-content-center">
-                <div class="col-12 col-md-4 col-lg-4 d-flex justify-content-center mb-3">
-                    <div class="menu-card card p-0" style="overflow: hidden; height: 250px; width: 100%;">
-                        <img src="images/Food Menu/classic.jpg" class="img-fluid rounded-3" alt="menu 1"
-                            style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
+    <section id="category" class="food-menu my-5 py-4">
+        <div class="container-fluid my-5" id="menu" style="position: relative;">
+            <div class="row">
+                <div class="col-12">
+                    <div class="display-4 fw-bold home-text1 home-text text-center text-light"
+                        style="font-family: Poppins;">
+                        Food Menu </div>
                 </div>
-
-                <div class="col-12 col-md-4 col-lg-4 d-flex justify-content-center mb-3">
-                    <div class="menu-card card p-0" style="overflow: hidden; height: 250px; width: 100%;">
-                        <img src="images/Food Menu/intimate.jpg" class="img-fluid rounded-3" alt="menu 2"
-                            style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-                </div>
-
-                <div class="col-12 col-md-4 col-lg-4 d-flex justify-content-center mb-3">
-                    <div class="menu-card card p-0" style="overflow: hidden; height: 250px; width: 100%;">
-                        <img src="images/Food Menu/vogue.jpg" class="img-fluid rounded-3" alt="menu 3"
-                            style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
+            </div>
+            <div class="row mx-auto text-center justify-content-center text-dark mb-3">
+                <div class="col-lg-7 col-11 text-light">
+                    <small>Our catering menu offers a wide selection of delicious dishes, from savory mains to
+                        delectable desserts, perfect for any occasion. Each dish is crafted with fresh ingredients to
+                        delight your guests and make every event memorable.</small>
                 </div>
             </div>
 
-            <div class="text-end mt-4">
-                <a href="#" class="btn btn-light rounded-pill px-4">View More</a>
+            <div class="scroll-container">
+                <div class="scroll-content" id="foodCategory"></div>
+            </div>
+        </div>
+
+        <div class="container-fluid my-5">
+            <div class="row text-center d-flex justify-content-center">
+                <div class="col-md-4 col-10">
+                    <a href="#" class="index-menu-button rounded-5 px-3 py-2">View Menu</a>
+                </div>
             </div>
         </div>
     </section>
@@ -203,11 +142,11 @@
 
     <!-- Rentals -->
     <section id="rentals">
-        <div class="container-fluid my-5" style="background-color: #3E2723;">
+        <div class="container-fluid my-5" style="background-color:#EADCC6;">
             <div class="row">
-                <div class="col-12 text-center text-light p-5">
-                    <h2 class="fw-bold mb-2 mt-3">Rentals</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                <div class="col-12 text-center p-5">
+                    <h2 class="display-6 fw-bold mb-2 mt-3 text-dark">Rentals</h2>
+                    <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit,
                         sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                 </div>
             </div>
@@ -401,6 +340,7 @@
             </ul>
         </div>
     </section>
+
     <!-- Contact Section -->
     <section id="contact">
         <div class="container-fluid py-5 mt-5" style="background-color: #3E2723;">
@@ -463,18 +403,18 @@
         rentals.rntCategories.forEach(rntCategory => {
             rentalsRow.innerHTML += `
         <div class="col-md-4 col-lg-3 col-10 mb-3">
-            <div class="card border" style="height: 260px; overflow: hidden;">
-                <img src="`+ rntCategory.img + `" class="card-img-top" alt="` + rntCategory.title + `" style="height: 100%; object-fit: cover; filter: brightness(70%);">
-                <div class="card-img-overlay d-flex justify-content-end align-items-start p-2">
-                    <p class="fw-bold fs-6 text-muted bg-light rounded-5 px-2 m-0">`+ rntCategory.title + `</p>
+            <div class="card border rental-card" style="height: 260px; overflow: hidden;">
+                <img src="`+ rntCategory.img + `" class="card-img-center" alt="` + rntCategory.title + `" style="height: 100%; object-fit: cover; filter: brightness(40%);">
+                <div class="card-img-overlay d-flex justify-content-center align-items-center p-2">
+                    <p class="fs-5 rounded-5 px-2 m-0">`+ rntCategory.title + `</p>
                 </div>
             </div>
         </div>
     `;
         });
 
-        // Package Section
 
+        // Package Section
         var packageRow = document.getElementById("packageRow");
 
         packages.pkgCategories.forEach(pkgCategory => {
@@ -498,6 +438,33 @@
                 </div>
     `;
         });
+
+        // food menu 
+        const categories = [
+            { thumb: "images/Food Menu/food1.jpg" },
+            { thumb: "images/Food Menu/food2.jpg" },
+            { thumb: "images/Food Menu/food3.jpg" },
+            { thumb: "images/Food Menu/food4.jpg" },
+            { thumb: "images/Food Menu/food5.jpg" },
+            { thumb: "images/Food Menu/food6.jpg" }
+        ];
+        const foodCategory = document.getElementById("foodCategory");
+
+        function populateImages() {
+            for (let repeat = 0; repeat < 3; repeat++) {
+                for (let i = 0; i < categories.length; i++) {
+                    const cat = categories[i];
+
+                    const imgDiv = document.createElement("div");
+                    imgDiv.innerHTML = `
+                <a href="#"><img src="`+ cat.thumb + `" alt="` + cat.category + `" class="foodImg"></a>
+            `;
+                    foodCategory.appendChild(imgDiv);
+                }
+            }
+        }
+
+        populateImages();
     </script>
 
 
