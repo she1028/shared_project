@@ -4,10 +4,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>YMZM | Rentals</title>
+    <title>YMZM | Food Menu</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="pages.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet'>
@@ -26,11 +26,11 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="#home">Home</a></li>
-                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="#packages">Packages</a></li>
-                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="#menu">Menu</a></li>
-                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="#rentals">Rentals</a></li>
-                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="#contact">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="index.php#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="index.php#packages">Packages</a></li>
+                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="index.php#menu">Menu</a></li>
+                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="index.php#rentals">Rentals</a></li>
+                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="index.php#contact">Contact</a></li>
                     <li class="nav-item"><a class="nav-link px-3 text-dark border border-primary rounded-5"
                             href="#sign-in">Sign in</a></li>
                 </ul>
@@ -40,16 +40,16 @@
 
     <!-- Home -->
     <section id="home">
-        <div class="container-fluid align-items-center hero-rentals">
-            <div class="row text-center header-rentals">
+        <div class="container-fluid align-items-center hero-foodmenu">
+            <div class="row text-center header-foodmenu">
                 <div class="col-12 z-5">
-                    <div class=" display-1 fw-bold" style="margin-top: 1.5em; font-family: 'Oswald'; font-size: 70px; z-index: 3; color:#ffffff;">Rentals</div>
+                    <div class=" display-1 fw-bold" class="text-white" style="margin-top: 1.5em; font-family: 'Oswald'; font-size: 70px; z-index: 3;">Food Menu</div>
                 </div>
                 <div class="col-12">
                     <div class="fs-5 py-1">
-                        <a href="index.html#home" style="text-decoration: none; color:#ffffff;">Home</a>
+                        <a href="index.html#home" class="text-white" style="text-decoration: none;">Home</a>
                         <span style="color:#ffffff;"> &lt; </span>
-                        <a href="rentals.html" style="text-decoration: none; color: #ffffff;">Rentals</a>          
+                        <a href="foodmenu.html" class="text-white" style="text-decoration: none; color:#ca9292;">Food Menu</a>          
                     </div>
                 </div>
             </div>
@@ -67,9 +67,9 @@
     </div>
 
     <div class="container text-center my-5">
-        <h2 class="fw-bold my-3">Browse From Over 100 Rental Products!</h2>
-        <div class="mt-1 mb-5">
-            Find everything you need to bring your event to life — from tables and chairs to tents, décor, linens, and more. Our wide range of high-quality rental items is perfect for weddings, parties, corporate events, and celebrations of all sizes. Create the setup you want with reliable and stylish rental options.
+        <h2 class="fw-bold my-3">Browse Our Wide Selection of Delicious Menu Options!</h2>
+        <div class="mt-1">
+            Discover a variety of flavorful dishes made with fresh ingredients and lots of love. From comforting classics to exciting specialty meals, our menu is crafted to satisfy every craving and make every occasion more memorable. Enjoy great food that’s perfect for sharing with family and friends.
         </div>
     </div>
 
@@ -112,28 +112,35 @@
         </div>
     </section>
 
-    <script src="items.js"></script>
+    <script src="food.js"></script>
     <script>
         var content = document.getElementById("content");
-        
-        for (var i=0; i < rentals.rntCategories.length; i++){
-            var category = rentals.rntCategories[i];
-            var sectionId = category.category.replace(/\s+/g, "");
+
+        var menuSections = [
+            {title:"Appetizers", description: menu.appetizersDescription, items: menu.appetizers},
+            {title:"Main Courses", description: menu.mainCoursesDescription, items: menu.mainCourses},
+            {title:"Desserts", description: menu.dessertsDescription, items: menu.desserts}
+        ];
+
+        for (var i=0; i < menuSections.length; i++){
+            var section = menuSections[i];
+            var sectionId = section.title.replace(/\s+/g, "");
             
             content.innerHTML += `
             <hr class="m-5"></hr>
-            <h2 class="fw-bold m-3 mb-3">`+ category.category +`</h2>
-            <div class="mt-1">`+ category.description +`</div>
+            <h2 class="fw-bold mt-5 mb-3 pt-5">`+ section.title +`</h2>
+            <div class="mt-1">`+ section.description +`</div>
             <div class="row row-cols-1 row-cols-md-4 g-4 mt-2" id="`+ sectionId +`"></div>`;
 
             var row = document.getElementById(sectionId);
-            
-            for(var j=0; j < category.items.length; j++){
-                var item = category.items[j];
+
+            for(var j=0; j < section.items.length; j++){
+                var item = section.items[j];
+
                 row.innerHTML += `
                 <div class="col">
                     <div class="card border-dark shadow" >
-                        <img src="`+ item.img +`" class="card-img-top" style="height:200px; width:100%; object-fit: cover; object-position:center; background-color: #f8f9fa;">
+                        <img src="`+ item.image +`" class="card-img-top" style="height:200px; width:100%; object-fit: cover; object-position:center; background-color: #f8f9fa;">
                         <div class="card-body text-start">
                             <h5 class="card-title">`+ item.name +`</h5>
                             <p class="card-text">$ `+ item.price.toFixed(2) +`</p>
@@ -143,6 +150,7 @@
             }  
         }
     </script>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
