@@ -1,0 +1,22 @@
+.cart-card{
+  border-radius: 15px;
+  padding: 20px;
+  background:#fff;
+}
+
+.product-img{
+  width:80px;
+  height:80px;
+  background:#ddd;
+  border-radius:10px;
+}
+
+.qty-btn{
+  width:32px;
+  height:32px;
+}
+
+.cart-summary{
+  max-width:380px;
+  margin-left:auto;
+}

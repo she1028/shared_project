@@ -1,0 +1,72 @@
+.hero-rentals {
+    position: relative;
+    background-image: url('images/RentalPage/hero.png');
+    width: 100%;
+    height: 300px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: top;
+    overflow: hidden;
+}
+.hero-rentals::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: inherit;
+    background-size: cover;
+    background-position: center;
+    filter: blur(3px) brightness(70%);
+    transform: scale(1.1);
+    z-index: 0;
+}
+.hero-foodmenu {
+    position: relative;
+    background-image: url('images/FoodMenuPage/hero.jpg');
+    width: 100%;
+    height: 300px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: top;
+    overflow: hidden;
+}
+.hero-foodmenu::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: inherit;
+    background-size: cover;
+    background-position: center;
+    filter: blur(3px) brightness(70%);
+    transform: scale(1.1);
+    z-index: 0;
+}
+.rental-card:hover{
+    filter: brightness(200%);
+    transform: translateY(-10px);
+}
+.rental-card{
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    color: white;
+    font-weight: bold;
+}
+
+.card {
+    background-color: #E2D4D4;
+}
+
+.header-rentals{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    text-align: center;
+    color: white;
+}
+.header-foodmenu{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    text-align: center;
+    color: white;
+}

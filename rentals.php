@@ -7,7 +7,7 @@
     <title>YMZM | Rentals</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="pages.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet'>
@@ -26,11 +26,11 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="#home">Home</a></li>
-                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="#packages">Packages</a></li>
-                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="#menu">Menu</a></li>
-                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="#rentals">Rentals</a></li>
-                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="#contact">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="index.php##home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="index.php##packages">Packages</a></li>
+                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="index.php##menu">Menu</a></li>
+                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="index.php##rentals">Rentals</a></li>
+                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="index.php##contact">Contact</a></li>
                     <li class="nav-item"><a class="nav-link px-3 text-dark border border-primary rounded-5"
                             href="#sign-in">Sign in</a></li>
                 </ul>
