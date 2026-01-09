@@ -11,10 +11,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
 <body>
-
     <!-- navbar -->
     <nav class="navbar navbar-expand-lg bg-light navbar-light fixed-top shadow-sm mt-3 rounded-4 mx-4">
         <div class="container-fluid ps-4 pe-4">
@@ -76,61 +76,7 @@
     <div class="container text-center my-5" id="content">
 
     </div>
-    <!--modal-->
-    <div class="modal fade" tabindex="-1" id="cardModal">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content p-3">
-                <div class="modal-body">
-                    <div class="row align-items-center">
-                        <div class="col-md-6 align-items-center">
-                            <img src="Catering/table/rec1.jpg" class="img-fluid">
-                        </div>
-                        <div class="col-md-6">
-                            <div class="btn" data-bs-dismiss="modal">back</div>
-                            <div class="align-items-center px-5 mx-5">
-                                <div class="rounded-5 text-center my-2 py-1" style="background-color: gray; justify-content: center;">Tables</div>
-                            </div>
-                            <div class="row">
-                                <div class="h3 fw-bold" style="text-align:jjustify;">Foundry Cocktail Table - Black</div>
-                                <div class="details">
-                                    <h5>Details:</h5>
-                                    <p>Lorem ipsum</p>
-                                </div>
-                                <div class="description">
-                                    <h5>Description:</h5>
-                                    <p style="text-align: justify;">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sint dolorum facilis sit assumenda maxime pariatur molestias, officiis, at suscipit laboriosam eligendi accusantium delectus. Accusantium inventore dolorum provident ut non cum.</p>
-                                </div>
-                            </div>
-                            <hr class="my-5">
-                            <div class="row align-items-center">
-                                <div class="col-md-6">
-                                    <h4>Price: $</h4>
-                                </div>
-                                <div class="col-md-6">
-                                    <h6>Available In: </h6>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <button type="button" id="qty-minus" style="margin:0 8px;">-</button>
-                                    <span id="modal-qty border">1</span>
-                                    <button type="button" id="qty-plus" style="margin:0 8px;">+</button>
-                                </div>
-                                <div class="col-md-6">
-                                    <button type="button" id="add-to-cart-btn" style="flex:1;background:#23272f;color:#fffbe7;font-weight:bold;padding:8px 0;border:none;border-radius:6px;cursor:pointer;">Add to Cart</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div> -->
-            </div>
-        </div>
-    </div>
-
+    
     <!-- footer -->
     <section class="mt-5">
         <div class="container-fluid bg-dark">
@@ -164,7 +110,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section>    
 
     <script src="items.js"></script>
     <script>
@@ -196,17 +142,14 @@
                 </div>`;
             }
         }
-
-        function openModal() {
-            const modal = new bootstrap.Modal(document.getElementById('cardModal'));
-            modal.show();
-        }
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous">
     </script>
+
+    <?php include 'cardmodal.php' ?>
 
 </body>
 
