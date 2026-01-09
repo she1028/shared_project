@@ -12,58 +12,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Oranienbaum' rel='stylesheet'>
 
-    <style>
-        /* Hero Section */
-        .hero-debut {
-            position: relative;
-            background-image: url('images/packages/debut_header.jpg');
-            width: 100%;
-            height: 300px;
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: top;
-            overflow: hidden;
-        }
-
-        .hero-debut::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background-image: inherit;
-            background-size: cover;
-            background-position: center;
-            filter: blur(3px) brightness(70%);
-            transform: scale(1.1);
-            z-index: 0;
-        }
-
-        .header-debut {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            color: white;
-        }
-
-        .package-title {
-            font-family: 'poppins';
-            letter-spacing: 0.4em;
-            font-size: 16px;
-        }
-
-        .package-name {
-            font-family: 'Oranienbaum'; 
-        }
-
-        .package-description {
-            font-size: 16px;
-        }
-
-        .btn-primary-custom {
-            color: white;
-        }
-    </style>
     <script>
     const ACTIVE_PACKAGE_TYPE = "<?php echo $packageType; ?>";
 </script>
@@ -73,25 +21,22 @@
     <!-- Navbar -->
     <?php include("nav.php"); ?>
 
-    <!-- Hero Section -->
-    <section id="home">
-        <div class="container-fluid hero-debut d-flex align-items-center">
-            <div class="row text-center header-debut">
-                <div class="col-12">
-                    <div class="fw-bold text-white" style="font-family: 'Oswald';">
-                        <h1 class="display-5 display-md-3 display-lg-1">Debut Catering Packages</h1>
-        </div>
-                </div>
-                <div class="col-12">
-                    <div class="py-1" style="font-size: 16px;">
-                        <a href="index.html#home" class="text-white text-decoration-none">Home</a>
-                        <span style="color:#ffffff;"> &lt; </span>
-                        <a href="debut.php" class="text-white text-decoration-none" style="color:#ca9292;">Debut Packages</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+   <?php
+$heroTitle = "Debut Catering Packages";
+$heroImage = "images/packages/debut_header.jpg";
+
+$heroBreadcrumb = '
+    <a href="index.html#home" class="text-white text-decoration-none">Home</a>
+    <span style="color:#ffffff;"> &lt; </span>
+    <a href="debut.php"
+       class="text-white text-decoration-none"
+       style="color:#ca9292;">
+        Debut Packages
+    </a>
+';
+
+include("header.php");
+?>
 
       <!-- Packages Section -->
 <div id="packagesContainer"></div>

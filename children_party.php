@@ -16,7 +16,6 @@
         /* Hero Section */
         .hero-children-party {
             position: relative;
-            background-image: url('images/packages/children_header.jpg');
             width: 100%;
             height: 300px;
             background-repeat: no-repeat;
@@ -74,24 +73,22 @@
     <?php include("nav.php"); ?>
 
     <!-- Hero Section -->
-    <section id="home">
-        <div class="container-fluid hero-children-party d-flex align-items-center">
-            <div class="row text-center header-children-party">
-                <div class="col-12">
-                    <div class="fw-bold text-white" style="font-family: 'Oranienbaum';">
-                        <h1 class="display-5 display-md-3 display-lg-1 pt-5">Children's Party Catering Packages</h1>
-        </div>
-                </div>
-                <div class="col-12">
-                    <div class="py-1" style="font-size: 16px;">
-                        <a href="index.html#home" class="text-white text-decoration-none">Home</a>
-                        <span style="color:#ffffff;"> &lt; </span>
-                        <a href="children_party.php" class="text-white text-decoration-none" style="color:#ca9292;">Children's Party Packages</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <?php
+$heroTitle = "Children's Party Catering Packages";
+$heroImage = "images/packages/children_header.jpg";
+
+$heroBreadcrumb = '
+    <a href="index.html#home" class="text-white text-decoration-none">Home</a>
+    <span style="color:#ffffff;"> &lt; </span>
+    <a href="children_party.php"
+       class="text-white text-decoration-none"
+       style="color:#ca9292;">
+        Children Party Packages
+    </a>
+';
+
+include("header.php");
+?>
 
       <!-- Packages Section -->
 <div id="packagesContainer"></div>

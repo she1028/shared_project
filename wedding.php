@@ -16,7 +16,6 @@
         /* Hero Section */
         .hero-wedding {
             position: relative;
-            background-image: url('images/packages/wedding_header.jpg');
             width: 100%;
             height: 300px;
             background-repeat: no-repeat;
@@ -75,24 +74,22 @@
     <?php include("nav.php"); ?>
 
     <!-- Hero Section -->
-    <section id="home">
-        <div class="container-fluid hero-wedding d-flex align-items-center">
-            <div class="row text-center header-wedding">
-                <div class="col-12">
-                    <div class="fw-bold text-white" style="font-family: 'Oranienbaum';">
-                        <h1 class="display-5 display-md-3 display-lg-1 pt-5">Wedding Catering Packages</h1>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="py-1" style="font-size: 16px;">
-                        <a href="index.html#home" class="text-white text-decoration-none">Home</a>
-                        <span style="color:#ffffff;"> &lt; </span>
-                        <a href="wedding.php" class="text-white text-decoration-none" style="color:#ca9292;">Wedding Packages</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <?php
+$heroTitle = "Wedding Catering Packages";
+$heroImage = "images/packages/wedding_header.jpg";
+
+$heroBreadcrumb = '
+    <a href="index.html#home" class="text-white text-decoration-none">Home</a>
+    <span style="color:#ffffff;"> &lt; </span>
+    <a href="wedding.php"
+       class="text-white text-decoration-none"
+       style="color:#ca9292;">
+        Wedding Packages
+    </a>
+';
+
+include("header.php");
+?>
 
     <!-- Packages Section -->
     <div id="packagesContainer"></div>
