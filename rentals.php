@@ -61,6 +61,7 @@
     <div class="mt-4 me-5" style="display:flex; align-items:center; gap:18px; justify-content:right;">
         <div class="rounded-5 p-2" style="border:1px solid #000000; display:flex; align-items:center; width:350px;">
             <input type="text" id="searchInput" placeholder="Search" style="border:none; outline:none; width:100%; font-size:15px;">
+            <span id="clearBtn" style="position: right; right:12px; cursor:pointer; font-size:18px; display:none;">&times;</span>
         </div>
         <i class="bi bi-search" id="searchBtn" style="font-size:23px; cursor:pointer;"></i>
         <a href="cart.php" class="btn" style="text-decoration:none;">
@@ -120,6 +121,7 @@
         var searchInput = document.getElementById("searchInput");
         var searchBtn = document.getElementById("searchBtn");
         var introSection = document.querySelector(".container.text-center.my-5"); // intro section
+        var clearBtn = document.getElementById("clearBtn");
 
         // Flatten all items for search purposes
         var allItems = [];
@@ -191,6 +193,9 @@
         // Function to handle search
         function searchItems() {
             var query = searchInput.value.trim().toLowerCase();
+
+            clearBtn.style.display = query ? "block" : "none";
+            
             if (query === "") {
                 renderFullCategories(); // render original category layout
                 return;
@@ -210,6 +215,13 @@
         searchInput.addEventListener("keydown", function(e) {
             if (e.key === "Enter") searchItems();
         });
+
+        clearBtn.addEventListener("click", function() {
+            searchInput.value = "";
+            clearBtn.style.display = "none";
+            renderFullCategories(); // restore intro + content
+        });
+
     </script>
 
 
