@@ -11,10 +11,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
 <body>
-
     <!-- navbar -->
     <nav class="navbar navbar-expand-lg bg-light navbar-light fixed-top shadow-sm mt-3 rounded-4 mx-4">
         <div class="container-fluid ps-4 pe-4">
@@ -47,9 +47,9 @@
                 </div>
                 <div class="col-12">
                     <div class="fs-5 py-1">
-                        <a href="index.html#home" style="text-decoration: none; color:#ffffff;">Home</a>
+                        <a href="index.php#home" style="text-decoration: none; color:#ffffff;">Home</a>
                         <span style="color:#ffffff;"> &lt; </span>
-                        <a href="rentals.html" style="text-decoration: none; color: #ffffff;">Rentals</a>          
+                        <a href="rentals.php" style="text-decoration: none; color: #ffffff;">Rentals</a>
                     </div>
                 </div>
             </div>
@@ -59,11 +59,13 @@
     </section>
 
     <div class="mt-4 me-5" style="display:flex; align-items:center; gap:18px; justify-content:right;">
-        <div class="rounded-5 p-2"style="border:1px solid #000000; display:flex; align-items:center; width:350px;">
+        <div class="rounded-5 p-2" style="border:1px solid #000000; display:flex; align-items:center; width:350px;">
             <input type="text" placeholder="Search" style="border:none; outline:none; width:100%; font-size:15px;">
         </div>
         <i class="bi bi-search" style="font-size:23px; cursor:pointer;"></i>
-        <i class="bi bi-cart3" style="font-size:23px; cursor:pointer;"></i>
+        <a href="cart.php" class="btn" style="text-decoration:none;">
+            <i class="bi bi-cart3" style="font-size:23px; cursor:pointer;"></i>
+        </a>
     </div>
 
     <div class="container text-center my-5">
@@ -74,61 +76,7 @@
     </div>
 
     <div class="container text-center my-5" id="content">
-        
-    </div>
-    <!--modal-->
-    <div class="modal fade" tabindex="-1" id="cardModal">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content p-3">
-                <div class="modal-body">
-                    <div class="row align-items-center">
-                        <div class="col-md-6 align-items-center">
-                            <img src="Catering/table/rec1.jpg" class="img-fluid">
-                        </div>
-                        <div class="col-md-6">
-                            <div class="btn" data-bs-dismiss="modal">back</div>
-                            <div class="align-items-center px-5 mx-5">
-                                <div class="rounded-5 text-center my-2 py-1" style="background-color: gray; justify-content: center;">Tables</div>
-                            </div>
-                            <div class="row">
-                                <div class="h3 fw-bold" style="text-align:jjustify;">Foundry Cocktail Table - Black</div>
-                                <div class="details">
-                                    <h5>Details:</h5>
-                                    <p>Lorem ipsum</p>
-                                </div>
-                                <div class="description">
-                                    <h5>Description:</h5>
-                                    <p style="text-align: justify;">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sint dolorum facilis sit assumenda maxime pariatur molestias, officiis, at suscipit laboriosam eligendi accusantium delectus. Accusantium inventore dolorum provident ut non cum.</p>
-                                </div>
-                            </div>
-                            <hr class="my-5">
-                            <div class="row align-items-center">
-                                <div class="col-md-6">
-                                    <h4>Price: $</h4>
-                                </div>
-                                 <div class="col-md-6">
-                                    <h6>Available In: </h6>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <button type="button" id="qty-minus" style="margin:0 8px;">-</button>
-                                    <span id="modal-qty border">1</span>
-                                    <button type="button" id="qty-plus" style="margin:0 8px;">+</button>
-                                </div>
-                                <div class="col-md-6">
-                                    <button type="button" id="add-to-cart-btn" style="flex:1;background:#23272f;color:#fffbe7;font-weight:bold;padding:8px 0;border:none;border-radius:6px;cursor:pointer;">Add to Cart</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div> -->
-            </div>
-        </div>
+
     </div>
 
     <!-- footer -->
@@ -169,37 +117,32 @@
     <script src="items.js"></script>
     <script>
         var content = document.getElementById("content");
-        
-        for (var i=0; i < rentals.rntCategories.length; i++){
+
+        for (var i = 0; i < rentals.rntCategories.length; i++) {
             var category = rentals.rntCategories[i];
             var sectionId = category.category.replace(/\s+/g, "");
-            
+
             content.innerHTML += `
             <hr class="m-5">
-            <h2 class="fw-bold m-3 mb-3">`+ category.category +`</h2>
-            <div class="mt-1">`+ category.description +`</div>
-            <div class="row row-cols-1 row-cols-md-4 g-4 mt-2" id="`+ sectionId +`"></div>`;
+            <h2 class="fw-bold m-3 mb-3">` + category.category + `</h2>
+            <div class="mt-1">` + category.description + `</div>
+            <div class="row row-cols-1 row-cols-md-4 g-4 mt-2" id="` + sectionId + `"></div>`;
 
             var row = document.getElementById(sectionId);
-            
-            for(var j=0; j < category.items.length; j++){
+
+            for (var j = 0; j < category.items.length; j++) {
                 var item = category.items[j];
                 row.innerHTML += `
                 <div class="col">
                     <div class="card border-dark shadow" onclick="openModal()">
-                        <img src="`+ item.img +`" class="card-img-top" style="height:200px; width:100%; object-fit: cover; object-position:center; background-color: #f8f9fa;">
+                        <img src="` + item.img + `" class="card-img-top" style="height:200px; width:100%; object-fit: cover; object-position:center; background-color: #f8f9fa;">
                         <div class="card-body text-start">
-                            <h5 class="card-title">`+ item.name +`</h5>
-                            <p class="card-text">$ `+ item.price.toFixed(2) +`</p>
+                            <h5 class="card-title">` + item.name + `</h5>
+                            <p class="card-text">$ ` + item.price.toFixed(2) + `</p>
                         </div>
                     </div>
                 </div>`;
-            }  
-        }
-        
-        function openModal(){
-            const modal = new bootstrap.Modal(document.getElementById('cardModal'));
-            modal.show();
+            }
         }
     </script>
 
@@ -207,6 +150,8 @@
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous">
     </script>
+
+    <?php include 'cardmodal.php' ?>
 
 </body>
 
