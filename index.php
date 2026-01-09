@@ -39,20 +39,20 @@
     </nav>
 
     <div>
-    <a href="#" id="chatBotLink"
-        class="position-fixed bottom-0 start-0 my-4 mx-3 d-flex align-items-center gap-2 text-decoration-none rounded-pill shadow px-3 py-2"
-        style="z-index: 1055;">
+        <a href="#" id="chatBotLink"
+            class="position-fixed bottom-0 start-0 my-4 mx-3 d-flex align-items-center gap-2 text-decoration-none rounded-pill shadow px-3 py-2"
+            style="z-index: 1055;">
 
-        <img src="images/bot.png" alt="Chat Bot" width="50">
-        <span class="fw-medium text-dark">Chat with us!</span>
-    </a>
+            <img src="images/bot.png" alt="Chat Bot" width="50">
+            <span class="fw-medium text-dark">Chat with us!</span>
+        </a>
 
-    <script>
-        document.getElementById("chatBotLink").addEventListener("click", function (event) {
-            event.preventDefault();
-            alert("Chat opened!");
-        });
-    </script>
+        <script>
+            document.getElementById("chatBotLink").addEventListener("click", function(event) {
+                event.preventDefault();
+                alert("Chat opened!");
+            });
+        </script>
     </div>
 
     <!-- Home -->
@@ -391,7 +391,6 @@
     <script src="data.js"></script>
 
     <script>
-
         // Rentals Section
         var rentalsRow = document.getElementById("rentalsRow");
 
@@ -399,9 +398,9 @@
             rentalsRow.innerHTML += `
         <div class="col-md-4 col-lg-3 col-10 mb-3">
             <div class="card border rental-card" style="height: 260px; overflow: hidden;">
-                <img src="`+ rntCategory.img + `" class="card-img-center" alt="` + rntCategory.title + `" style="height: 100%; object-fit: cover; filter: brightness(40%);">
+                <img src="` + rntCategory.img + `" class="card-img-center" alt="` + rntCategory.title + `" style="height: 100%; object-fit: cover; filter: brightness(40%);">
                 <div class="card-img-overlay d-flex justify-content-center align-items-center p-2 text-white">
-                    <p class="fs-5 rounded-5 px-2 m-0">`+ rntCategory.title + `</p>
+                    <p class="fs-5 rounded-5 px-2 m-0">` + rntCategory.title + `</p>
                 </div>
             </div>
         </div>
@@ -416,14 +415,14 @@
             packageRow.innerHTML += `
         <div class="col-md-4 col-lg-3 col-10">
                     <div class="card-pkg card border" style="height: 350px; overflow: hidden;">
-                        <img src="`+ pkgCategory.img + `" class="card-img-top h-100"
+                        <img src="` + pkgCategory.img + `" class="card-img-top h-100"
                             style="object-fit: cover;" alt="Wedding">
                         <div class="card-img-overlay d-flex justify-content-start align-items-start p-2">
-                            <p class="fw-bold text-muted bg-light rounded-5 px-3 mb-0">`+ pkgCategory.title + `</p>
+                            <p class="fw-bold text-muted bg-light rounded-5 px-3 mb-0">` + pkgCategory.title + `</p>
                         </div>
                         <div
                             class="card-img-overlay d-flex flex-column justify-content-end text-white text-start explore-text">
-                            <p class="small mb-2">`+ pkgCategory.desc + `
+                            <p class="small mb-2">` + pkgCategory.desc + `
                                 
                             </p>
                             <a href="#" target="_blank" class="btn btn-light btn-sm"
@@ -435,13 +434,24 @@
         });
 
         // food menu 
-        const categories = [
-            { thumb: "images/Food Menu/food1.jpg" },
-            { thumb: "images/Food Menu/food2.jpg" },
-            { thumb: "images/Food Menu/food3.jpg" },
-            { thumb: "images/Food Menu/food4.jpg" },
-            { thumb: "images/Food Menu/food5.jpg" },
-            { thumb: "images/Food Menu/food6.jpg" }
+        const categories = [{
+                thumb: "images/Food Menu/food1.jpg"
+            },
+            {
+                thumb: "images/Food Menu/food2.jpg"
+            },
+            {
+                thumb: "images/Food Menu/food3.jpg"
+            },
+            {
+                thumb: "images/Food Menu/food4.jpg"
+            },
+            {
+                thumb: "images/Food Menu/food5.jpg"
+            },
+            {
+                thumb: "images/Food Menu/food6.jpg"
+            }
         ];
         const foodCategory = document.getElementById("foodCategory");
 
@@ -452,7 +462,7 @@
 
                     const imgDiv = document.createElement("div");
                     imgDiv.innerHTML = `
-                <a href="#"><img src="`+ cat.thumb + `" alt="` + cat.category + `" class="foodImg"></a>
+                <a href="#"><img src="` + cat.thumb + `" alt="` + cat.category + `" class="foodImg"></a>
             `;
                     foodCategory.appendChild(imgDiv);
                 }

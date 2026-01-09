@@ -49,7 +49,7 @@
                     <div class="fs-5 py-1">
                         <a href="index.html#home" style="text-decoration: none; color:#ffffff;">Home</a>
                         <span style="color:#ffffff;"> &lt; </span>
-                        <a href="rentals.html" style="text-decoration: none; color: #ffffff;">Rentals</a>          
+                        <a href="rentals.html" style="text-decoration: none; color: #ffffff;">Rentals</a>
                     </div>
                 </div>
             </div>
@@ -59,7 +59,7 @@
     </section>
 
     <div class="mt-4 me-5" style="display:flex; align-items:center; gap:18px; justify-content:right;">
-        <div class="rounded-5 p-2"style="border:1px solid #000000; display:flex; align-items:center; width:350px;">
+        <div class="rounded-5 p-2" style="border:1px solid #000000; display:flex; align-items:center; width:350px;">
             <input type="text" placeholder="Search" style="border:none; outline:none; width:100%; font-size:15px;">
         </div>
         <i class="bi bi-search" style="font-size:23px; cursor:pointer;"></i>
@@ -74,7 +74,7 @@
     </div>
 
     <div class="container text-center my-5" id="content">
-        
+
     </div>
     <!--modal-->
     <div class="modal fade" tabindex="-1" id="cardModal">
@@ -106,7 +106,7 @@
                                 <div class="col-md-6">
                                     <h4>Price: $</h4>
                                 </div>
-                                 <div class="col-md-6">
+                                <div class="col-md-6">
                                     <h6>Available In: </h6>
                                 </div>
                             </div>
@@ -169,35 +169,35 @@
     <script src="items.js"></script>
     <script>
         var content = document.getElementById("content");
-        
-        for (var i=0; i < rentals.rntCategories.length; i++){
+
+        for (var i = 0; i < rentals.rntCategories.length; i++) {
             var category = rentals.rntCategories[i];
             var sectionId = category.category.replace(/\s+/g, "");
-            
+
             content.innerHTML += `
             <hr class="m-5">
-            <h2 class="fw-bold m-3 mb-3">`+ category.category +`</h2>
-            <div class="mt-1">`+ category.description +`</div>
-            <div class="row row-cols-1 row-cols-md-4 g-4 mt-2" id="`+ sectionId +`"></div>`;
+            <h2 class="fw-bold m-3 mb-3">` + category.category + `</h2>
+            <div class="mt-1">` + category.description + `</div>
+            <div class="row row-cols-1 row-cols-md-4 g-4 mt-2" id="` + sectionId + `"></div>`;
 
             var row = document.getElementById(sectionId);
-            
-            for(var j=0; j < category.items.length; j++){
+
+            for (var j = 0; j < category.items.length; j++) {
                 var item = category.items[j];
                 row.innerHTML += `
                 <div class="col">
                     <div class="card border-dark shadow" onclick="openModal()">
-                        <img src="`+ item.img +`" class="card-img-top" style="height:200px; width:100%; object-fit: cover; object-position:center; background-color: #f8f9fa;">
+                        <img src="` + item.img + `" class="card-img-top" style="height:200px; width:100%; object-fit: cover; object-position:center; background-color: #f8f9fa;">
                         <div class="card-body text-start">
-                            <h5 class="card-title">`+ item.name +`</h5>
-                            <p class="card-text">$ `+ item.price.toFixed(2) +`</p>
+                            <h5 class="card-title">` + item.name + `</h5>
+                            <p class="card-text">$ ` + item.price.toFixed(2) + `</p>
                         </div>
                     </div>
                 </div>`;
-            }  
+            }
         }
-        
-        function openModal(){
+
+        function openModal() {
             const modal = new bootstrap.Modal(document.getElementById('cardModal'));
             modal.show();
         }

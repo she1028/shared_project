@@ -49,7 +49,7 @@
                     <div class="fs-5 py-1">
                         <a href="index.html#home" class="text-white" style="text-decoration: none;">Home</a>
                         <span style="color:#ffffff;"> &lt; </span>
-                        <a href="foodmenu.html" class="text-white" style="text-decoration: none; color:#ca9292;">Food Menu</a>          
+                        <a href="foodmenu.html" class="text-white" style="text-decoration: none; color:#ca9292;">Food Menu</a>
                     </div>
                 </div>
             </div>
@@ -59,7 +59,7 @@
     </section>
 
     <div class="mt-4 me-5" style="display:flex; align-items:center; gap:18px; justify-content:right;">
-        <div class="rounded-5 p-2"style="border:1px solid #000000; display:flex; align-items:center; width:350px;">
+        <div class="rounded-5 p-2" style="border:1px solid #000000; display:flex; align-items:center; width:350px;">
             <input type="text" placeholder="Search" style="border:none; outline:none; width:100%; font-size:15px;">
         </div>
         <i class="bi bi-search" style="font-size:23px; cursor:pointer;"></i>
@@ -74,7 +74,7 @@
     </div>
 
     <div class="container text-center my-5" id="content">
-        
+
     </div>
 
     <!-- footer -->
@@ -116,38 +116,49 @@
     <script>
         var content = document.getElementById("content");
 
-        var menuSections = [
-            {title:"Appetizers", description: menu.appetizersDescription, items: menu.appetizers},
-            {title:"Main Courses", description: menu.mainCoursesDescription, items: menu.mainCourses},
-            {title:"Desserts", description: menu.dessertsDescription, items: menu.desserts}
+        var menuSections = [{
+                title: "Appetizers",
+                description: menu.appetizersDescription,
+                items: menu.appetizers
+            },
+            {
+                title: "Main Courses",
+                description: menu.mainCoursesDescription,
+                items: menu.mainCourses
+            },
+            {
+                title: "Desserts",
+                description: menu.dessertsDescription,
+                items: menu.desserts
+            }
         ];
 
-        for (var i=0; i < menuSections.length; i++){
+        for (var i = 0; i < menuSections.length; i++) {
             var section = menuSections[i];
             var sectionId = section.title.replace(/\s+/g, "");
-            
+
             content.innerHTML += `
             <hr class="m-5"></hr>
-            <h2 class="fw-bold mt-5 mb-3 pt-5">`+ section.title +`</h2>
-            <div class="mt-1">`+ section.description +`</div>
-            <div class="row row-cols-1 row-cols-md-4 g-4 mt-2" id="`+ sectionId +`"></div>`;
+            <h2 class="fw-bold mt-5 mb-3 pt-5">` + section.title + `</h2>
+            <div class="mt-1">` + section.description + `</div>
+            <div class="row row-cols-1 row-cols-md-4 g-4 mt-2" id="` + sectionId + `"></div>`;
 
             var row = document.getElementById(sectionId);
 
-            for(var j=0; j < section.items.length; j++){
+            for (var j = 0; j < section.items.length; j++) {
                 var item = section.items[j];
 
                 row.innerHTML += `
                 <div class="col">
                     <div class="card border-dark shadow" >
-                        <img src="`+ item.image +`" class="card-img-top" style="height:200px; width:100%; object-fit: cover; object-position:center; background-color: #f8f9fa;">
+                        <img src="` + item.image + `" class="card-img-top" style="height:200px; width:100%; object-fit: cover; object-position:center; background-color: #f8f9fa;">
                         <div class="card-body text-start">
-                            <h5 class="card-title">`+ item.name +`</h5>
-                            <p class="card-text">$ `+ item.price.toFixed(2) +`</p>
+                            <h5 class="card-title">` + item.name + `</h5>
+                            <p class="card-text">$ ` + item.price.toFixed(2) + `</p>
                         </div>
                     </div>
                 </div>`;
-            }  
+            }
         }
     </script>
 
