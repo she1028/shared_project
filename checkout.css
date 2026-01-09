@@ -1,0 +1,56 @@
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    background: #ffffff;
+}
+
+.hero-section {
+    background-color: #EADCC6;
+    padding: 20px 0;
+    width: 100%;
+}
+
+.hero-section .logo {
+    max-width: 110px;
+    height: auto;
+}
+
+.logo {
+    max-width: 90px;
+    height: auto;
+}
+
+.checkout-box {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.order-summary {
+    background: #e9e9e9;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.form-control,
+.form-select {
+    font-size: 14px;
+    padding: 6px 10px;
+}
+
+.item-number {
+    width: 28px;
+    height: 28px;
+    background: #000;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    margin-right: 12px;
+}

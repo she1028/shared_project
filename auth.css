@@ -1,0 +1,162 @@
+body {
+        min-height: 100vh;
+    background: #000; 
+    overflow: hidden
+    }
+
+    .bg-blur {
+    position: fixed;
+    inset: 0;
+    background: url("images/hero-banner-6.jpg") no-repeat center center fixed;
+    background-size: cover;
+    opacity: 0.5;
+
+    filter: blur(12px);           
+    transform: scale(1.1);        
+    z-index: -1;
+    }
+
+    .auth-wrapper {
+         position: relative;
+        z-index: 1;
+        min-height: 100vh;
+    }
+
+    .auth-toggle {
+        position: relative;
+        width: 300px;
+        height: 50px;
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(6px);
+        border-radius: 50px;
+        display: flex;
+        overflow: hidden;
+        margin: auto 0 2rem 0;
+    }
+
+    .toggle-bg {
+        position: absolute;
+        width: 50%;
+        height: 100%;
+        background: #212529;
+        border-radius: 50px;
+        transition: transform 0.4s ease;
+    }
+
+    .toggle-btn {
+        width: 50%;
+        border: none;
+        background: transparent;
+        z-index: 1;
+        font-weight: 600;
+        font-size: 15px;
+        transition: color 0.3s ease;
+    }
+
+    .toggle-btn.active {
+        color: #fff;
+    }
+
+    .form-check-label {
+        user-select: none;
+    }
+
+    .auth-card {
+        max-width: 450px;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+        color: #fff;
+    }
+
+    .auth-form {
+        opacity: 1;
+        transition: opacity 0.3s ease;
+    }
+
+    .auth-form.fade-out {
+        opacity: 0;
+    }
+    .auth-card label,
+    .auth-card .form-label,
+    .auth-card a,
+    .auth-card span {
+        color: #f1f1f1;
+    }
+
+    .auth-card a:hover {
+        color: #ffffff;
+    }
+
+    .auth-card .form-control {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        color: #fff;
+    }
+
+    .auth-card .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .auth-card .form-control:focus {
+        background: rgba(255, 255, 255, 0.25);
+        color: #fff;
+        box-shadow: none;
+        border-color: #fff;
+    }
+
+    .auth-card .form-control {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        color: #fff;
+    }
+
+    .auth-card .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .auth-card .form-control:focus {
+        background: rgba(255, 255, 255, 0.25);
+        color: #fff;
+        box-shadow: none;
+        border-color: #fff;
+    }
+
+    .password-toggle {
+        position: absolute;
+        top: 50%;
+        right: 15px;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 1.2rem;
+        user-select: none;
+        z-index: 10;
+    }
+
+    .password-toggle:hover {
+        color: #fff;
+        transform: translateY(-50%) scale(1.1);
+    }
+    .modal {
+        z-index: 1055; 
+    }
+    body.modal-open {
+        overflow: auto !important;
+    }
+    .modal-content.custom-modal {
+        background: rgba(255, 255, 255, 0.15); 
+        backdrop-filter: blur(15px);            
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        color: #fff;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    }
+
+    .modal-body {
+        max-height: 60vh; 
+        overflow-y: auto;
+    }

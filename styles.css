@@ -1,0 +1,145 @@
+:root{
+    --primary-color: #EADCC6;
+    --secondary-color: #3E2723;
+}
+
+.hero {
+    position: relative;
+    background-image: url('images/hero-banner-6.jpg');
+    width: 100%;
+    height: 85vh;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+.hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.200);
+    z-index: 0;
+    backdrop-filter: blur(1px);
+}
+.hero > * {
+    position: relative;
+    z-index: 2;
+}
+.card-pkg {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-pkg:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    z-index: 2;
+}
+
+.card-pkg .explore-text {
+    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+    transform: translateY(20%);
+    opacity: 0;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+    padding: 1rem;
+}
+
+.card-pkg:hover .explore-text {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.comment-img {
+    width: 150px;
+    height: 100px;
+    object-fit: cover;
+    object-position: top;
+}
+
+.text-home {
+    position: relative;
+    margin-top: -6em;
+    text-align: justify;
+}
+.food-menu,
+.choose-us {
+    position: relative;
+    padding: 5rem 0;
+    background: url("images/hero.jpg") center/cover no-repeat;
+}
+
+.food-menu::after,
+.choose-us::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(5px);
+    z-index: -1;
+}
+
+.menu-card img {
+    border-radius: 14px;
+    width: 100%;
+    height: 360px;
+    object-fit: cover;
+}
+
+.hiw-card {
+    height: 320px;
+    width: 280px;
+}
+
+@media (max-width: 800px) {
+    .text-home {
+        margin-top: -13.5em;
+    }
+}
+.index-menu-button{
+    text-decoration: none;
+    color: orange;
+    border: 2px solid orange;
+}
+.scroll-container {
+    overflow: hidden;         
+    position: relative;
+    width: 100%;
+    height: auto;             
+}
+
+#foodCategory {
+    display: flex;
+    gap: 15px;
+    animation: scrollLeft 20s linear infinite; 
+}
+
+.foodImg {
+    width: 150px;
+    height: 400px;
+    object-fit: cover;
+    transition: transform 0.3s, filter 0.3s;
+    cursor: pointer;
+}
+
+.foodImg:hover {
+    filter: none;
+    transform: scale(1.1);
+}
+
+@keyframes scrollLeft {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+#chatBotLink:hover{
+    transform: scale(0.95);
+    
+}
+#chatBotLink{
+    background-color: white;
+    border: 1px solid black;
+}

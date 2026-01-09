@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>YMZM</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet'>
+</head>
+
+<body>
+
+    <!-- navbar -->
+    <nav class="navbar navbar-expand-lg bg-light navbar-light fixed-top shadow-sm mt-3 rounded-4 mx-4">
+        <div class="container-fluid ps-4 pe-4">
+            <a class="navbar-brand" href="index.html">
+                <img src="images/YMZM-logo.png" alt="Logo" class="logo" width="40" height="auto">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="#packages">Packages</a></li>
+                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="#menu">Menu</a></li>
+                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="#rentals">Rentals</a></li>
+                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="#contact">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link px-3 text-dark border border-primary rounded-5"
+                            href="#sign-in">Sign in</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div>
+        <a href="#" id="chatBotLink"
+            class="position-fixed bottom-0 start-0 my-4 mx-3 d-flex align-items-center gap-2 text-decoration-none rounded-pill shadow px-3 py-2"
+            style="z-index: 1055;">
+
+            <img src="images/bot.png" alt="Chat Bot" width="50">
+            <span class="fw-medium text-dark">Chat with us!</span>
+        </a>
+
+        <script>
+            document.getElementById("chatBotLink").addEventListener("click", function(event) {
+                event.preventDefault();
+                alert("Chat opened!");
+            });
+        </script>
+    </div>
+
+    <!-- Home -->
+    <section id="home">
+        <div class="container-fluid align-items-center hero">
+            <div class="row text-center">
+                <div class="col-12 z-5">
+                    <div class=" display-1 fw-bold"
+                        style="margin-top: 2.3em; z-index: 3; color: white; font-family: 'Oswald'; font-size: 90px;">
+                        CATERING</div>
+                </div>
+                <div class="col-12 mt-1">
+                    <a href="" class="btn btn-outline-secondary rounded-5 px-3 py-1" style="text-decoration: none;">Book Now</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="container bg-light p-4 px-5 shadow rounded-4 text-home">
+            <h3>About Us</h3>
+            <div class="home-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae odit ducimus
+                porro laboriosam sit tempora natus similique consectetur pariatur at sed quod nesciunt in, ut
+                voluptatum, voluptatem maiores facilis. Hic.
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit natus, quis eligendi accusantium
+                doloribus iste omnis? Quaerat fugit dolorum dolor nobis totam ipsum fuga temporibus minus, reiciendis,
+                eum modi in! Lorem, ipsum dolor sit amet consectetur adipisicing elit. Libero eos officia expedita
+                dolores ratione, asperiores harum ad nostrum ut architecto quo temporibus doloremque! Vero tenetur at
+                provident maxime sed voluptates. <a href="https:" target="_blank">Read more</a></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Packages -->
+    <section id="packages" class="my-5 pb-5 border" style="background-color:#EADCC6;">
+        <div class="text-center text-dark p-5">
+            <h2 class="fw-bold display-6 mb-2 mt-3 text-dark" style="font-family: 'Poppins', sans-serif;">
+                Packages
+            </h2>
+            <small class="text-muted">
+                Our catering packages are made to fit any celebration big or small, bringing great food and seamless
+                service to your special moments.
+            </small>
+        </div>
+
+        <div class="container">
+            <div class="row g-3 justify-content-center" id="packageRow">
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Food Menu -->
+    <section id="category" class="food-menu my-5 py-4">
+        <div class="container-fluid my-5" id="menu" style="position: relative;">
+            <div class="row">
+                <div class="col-12">
+                    <div class="display-4 fw-bold home-text1 home-text text-center text-light"
+                        style="font-family: Poppins;">
+                        Food Menu </div>
+                </div>
+            </div>
+            <div class="row mx-auto text-center justify-content-center text-dark mb-3">
+                <div class="col-lg-7 col-11 text-light">
+                    <small>Our catering menu offers a wide selection of delicious dishes, from savory mains to
+                        delectable desserts, perfect for any occasion. Each dish is crafted with fresh ingredients to
+                        delight your guests and make every event memorable.</small>
+                </div>
+            </div>
+
+            <div class="scroll-container">
+                <div class="scroll-content" id="foodCategory"></div>
+            </div>
+        </div>
+
+        <div class="container-fluid my-5">
+            <div class="row text-center d-flex justify-content-center">
+                <div class="col-md-4 col-10">
+                    <a href="foodmenu.php" class="index-menu-button rounded-5 px-3 py-2">View Menu</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Rentals -->
+    <section id="rentals">
+        <div class="container-fluid my-5 pb-5" style="background-color: #EADCC6;">
+            <div class="row">
+                <div class="col-12 text-center p-5">
+                    <h2 class="display-6 fw-bold mb-2 mt-3 text-dark">Rentals</h2>
+                    <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                        sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row g-3 justify-content-center pb-5" id="rentalsRow">
+                </div>
+                <div class="row text-center d-flex justify-content-center">
+                    <div class="col-md-4 col-10">
+                        <a href="rentals.php" class="index-menu-button rounded-5 px-3 py-2">View More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it works -->
+    <section id="how-it-works" class="my-5">
+        <hr style="width: 90%; margin: 0 auto;">
+        <div class="container text-start my-5">
+            <h2 class="fw-bold mb-2 mt-3 px-3">How It Works</h2>
+            <p class="mb-5 px-3">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </p>
+            <div class="row justify-content-center gy-5">
+                <div class="col-12 col-sm-6 col-md-4 col-lg-2 d-flex justify-content-center">
+                    <div
+                        class="d-flex flex-column align-items-center justify-content-center border rounded-4 shadow p-3 hiw-card">
+                        <i class="bi bi-box-seam fs-1 mb-1"></i>
+                        <h5 class="fw-bold text-center pb-3">Choose a Package</h5>
+                        <p class="text-center">Browse our catering packages, food menu, and rental items that fit your
+                            event.</p>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4 col-lg-2 d-flex justify-content-center">
+                    <div
+                        class="d-flex flex-column align-items-center justify-content-center border rounded-4 shadow p-3 hiw-card">
+                        <i class="bi bi-pencil-square fs-1 mb-1"></i>
+                        <h5 class="fw-bold text-center pb-3">Customize Your Order</h5>
+                        <p class="text-center">Adjust the menu, add equipment rentals, and tell us your event details.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4 col-lg-2 d-flex justify-content-center">
+                    <div
+                        class="d-flex flex-column align-items-center justify-content-center border rounded-4 shadow p-3 hiw-card">
+                        <i class="bi bi-quote fs-1 mb-1"></i>
+                        <h5 class="fw-bold text-center pb-3">Request a Quote & Confirm</h5>
+                        <p class="text-center">Receive a detailed quotation and confirm your booking with a reservation
+                            payment.</p>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4 col-lg-2 d-flex justify-content-center">
+                    <div
+                        class="d-flex flex-column align-items-center justify-content-center border rounded-4 shadow p-3 hiw-card">
+                        <i class="bi bi-check2-circle fs-1 mb-1"></i>
+                        <h5 class="fw-bold text-center pb-3">Catering Head Confirmation</h5>
+                        <p class="text-center">Our catering head reviews and approves all event details for accuracy.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4 col-lg-2 d-flex justify-content-center">
+                    <div
+                        class="d-flex flex-column align-items-center justify-content-center border rounded-4 shadow p-3 hiw-card">
+                        <i class="bi bi-truck fs-1 mb-1"></i>
+                        <h5 class="fw-bold text-center pb-3">Event Day Service</h5>
+                        <p class="text-center">We prepare, deliver, set up, serve, and clean up—so you can enjoy your
+                            event.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr style="width: 90%; margin: 0 auto;">
+    </section>
+
+    <!-- why choose us no cards only text with bulleted checks but bg of container is picture blur like food-menu -->
+    <section id="why-choose-us" class="choose-us my-5 py-4" style="position: relative; z-index: 1;">
+        <div class="container content text-center text-light" style="position: relative; z-index: 1;">
+            <h2 class="fw-bold mb-4 mt-3 text-start px-3">Why Choose Us</h2>
+            <ul class="list-unstyled fs-5 text-start px-5">
+                <li class="mb-3"><i class="bi bi-check-circle-fill me-2"></i>Experienced and professional catering team
+                </li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill me-2"></i>Customizable packages to fit your needs
+                </li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill me-2"></i>High-quality ingredients and presentation
+                </li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill me-2"></i>Reliable and timely service</li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill me-2"></i>Comprehensive rental options for all event
+                    needs</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- testimonials -->
+    <section class="mt-5">
+
+        <div class="container">
+            <hr style="margin: 0 auto;">
+            <div class="text-center mt-4">
+                <sup class="border border-dark rounded-5 px-2 py-1">Testimonials</sup>
+                <div class="fs-2 fw-bold">What Our Client Says</div>
+            </div>
+            <div class="container my-5">
+                <div class="row g-4">
+
+                    <!-- Comment Card -->
+                    <div class="col-lg-4">
+                        <div class="card comment-card border border-dark p-2">
+                            <div class="d-flex align-items-center">
+                                <img src="images/man-profile.png" class="comment-img" alt="User">
+                                <div class="ms-3 w-100">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-1 fw-bold">Lorem I.</h6>
+                                        <div class="rating">
+                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
+                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
+                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
+                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
+                                            <i class="bi bi-star"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <p class="comment-text mt-2">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="card comment-card border border-dark p-2">
+                            <div class="d-flex align-items-center">
+                                <img src="images/man-profile.png" class="comment-img" alt="User">
+                                <div class="ms-3 w-100">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-1 fw-bold">Lorem I.</h6>
+                                        <div class="rating">
+                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
+                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
+                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
+                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
+                                            <i class="bi bi-star"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <p class="comment-text mt-2">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="card comment-card border border-dark p-2">
+                            <div class="d-flex align-items-center">
+                                <img src="images/man-profile.png" class="comment-img" alt="User">
+                                <div class="ms-3 w-100">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-1 fw-bold">Lorem I.</h6>
+                                        <div class="rating">
+                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
+                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
+                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
+                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
+                                            <i class="bi bi-star"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <p class="comment-text mt-2">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <hr style="margin: 0 auto;">
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="container-fluid py-5 mt-5" style="background-color: #EADCC6;">
+            <div class="display-5 fw-semibold text-center text-dark pb-2">Make Your Event Hassle-Free</div>
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-10 text-center text-dark">
+                    <p class=" mx-5 text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores eos magnam
+                        debitis ex deleniti illum inventore accusantium. Vitae tenetur, maiores saepe aliquid doloribus
+                        nam, nemo nobis mollitia laudantium aspernatur enim?</p>
+                    <div class="text-center mt-4">
+                        <a href="#" class="btn btn-light rounded-pill px-4">Contact Us</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- footer -->
+    <section class="mt-5">
+        <div class="container-fluid bg-dark">
+            <div class="container">
+                <div class="row d-flex justify-content-center text-center pb-3">
+                    <div class="col-lg-2 col-5">
+                        <img src="images/YMZM-logo.png" class="w-75 pt-5">
+                    </div>
+                    <div class="col-10 pt-5">
+                        <ul class="list-unstyled text-light text-start">
+                            <li><i class="bi bi-clock" style="width: 1em;"></i> 9:00 AM - 7:00 PM | Monday to Friday
+                            </li>
+                            <li><i class="bi bi-geo-alt" style="width: 1em;"></i> 123 Main Street, City, Country</li>
+                            <li><i class="bi bi-telephone" style="width: 1em;"></i> Catering Services 0912 XXX XXXX |
+                                09XX XXX XXXX</li>
+                            <li><i class="bi bi-telephone" style="width: 1em;"></i> Food Order 09XX XXX XXXX | 09XX XXX
+                                XXXX</li>
+                        </ul>
+                    </div>
+                </div>
+                <hr style="margin: 0 auto;" class="text-light">
+                <div class="row">
+                    <div class="col text-light d-flex justify-content-between py-3">
+                        <p>@2025 copy right.</p>
+                        <div>
+                            <a href="#"><i class="bi bi-instagram fs-3 text-light"></i></a>
+                            <a href="#"><i class="bi bi-facebook fs-3 text-light"></i></a>
+                            <a href="#"><i class="bi bi-x fs-3 text-light"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="data.js"></script>
+
+    <script>
+        // Rentals Section
+        var rentalsRow = document.getElementById("rentalsRow");
+
+        rentals.rntCategories.forEach(rntCategory => {
+            rentalsRow.innerHTML += `
+        <div class="col-md-4 col-lg-3 col-10 mb-3">
+            <div class="card border rental-card" style="height: 260px; overflow: hidden;">
+                <img src="` + rntCategory.img + `" class="card-img-center" alt="` + rntCategory.title + `" style="height: 100%; object-fit: cover; filter: brightness(40%);">
+                <div class="card-img-overlay d-flex justify-content-center align-items-center p-2 text-white">
+                    <p class="fs-5 rounded-5 px-2 m-0">` + rntCategory.title + `</p>
+                </div>
+            </div>
+        </div>
+    `;
+        });
+
+
+        // Package Section
+        var packageRow = document.getElementById("packageRow");
+
+        packages.pkgCategories.forEach(pkgCategory => {
+            packageRow.innerHTML += `
+        <div class="col-md-4 col-lg-3 col-10">
+                    <div class="card-pkg card border" style="height: 350px; overflow: hidden;">
+                        <img src="` + pkgCategory.img + `" class="card-img-top h-100"
+                            style="object-fit: cover;" alt="Wedding">
+                        <div class="card-img-overlay d-flex justify-content-start align-items-start p-2">
+                            <p class="fw-bold text-muted bg-light rounded-5 px-3 mb-0">` + pkgCategory.title + `</p>
+                        </div>
+                        <div
+                            class="card-img-overlay d-flex flex-column justify-content-end text-white text-start explore-text">
+                            <p class="small mb-2">` + pkgCategory.desc + `
+                                
+                            </p>
+                            <a href="#" target="_blank" class="btn btn-light btn-sm"
+                                style="z-index: 6; color: rgb(231, 87, 231);">View Package</a>
+                        </div>
+                    </div>
+                </div>
+    `;
+        });
+
+        // food menu 
+        const categories = [{
+                thumb: "images/Food Menu/food1.jpg"
+            },
+            {
+                thumb: "images/Food Menu/food2.jpg"
+            },
+            {
+                thumb: "images/Food Menu/food3.jpg"
+            },
+            {
+                thumb: "images/Food Menu/food4.jpg"
+            },
+            {
+                thumb: "images/Food Menu/food5.jpg"
+            },
+            {
+                thumb: "images/Food Menu/food6.jpg"
+            }
+        ];
+        const foodCategory = document.getElementById("foodCategory");
+
+        function populateImages() {
+            for (let repeat = 0; repeat < 3; repeat++) {
+                for (let i = 0; i < categories.length; i++) {
+                    const cat = categories[i];
+
+                    const imgDiv = document.createElement("div");
+                    imgDiv.innerHTML = `
+                <a href="#"><img src="` + cat.thumb + `" alt="` + cat.category + `" class="foodImg"></a>
+            `;
+                    foodCategory.appendChild(imgDiv);
+                }
+            }
+        }
+
+        populateImages();
+    </script>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
