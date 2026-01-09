@@ -47,9 +47,9 @@
                 </div>
                 <div class="col-12">
                     <div class="fs-5 py-1">
-                        <a href="index.html#home" style="text-decoration: none; color:#ffffff;">Home</a>
+                        <a href="index.php#home" style="text-decoration: none; color:#ffffff;">Home</a>
                         <span style="color:#ffffff;"> &lt; </span>
-                        <a href="rentals.html" style="text-decoration: none; color: #ffffff;">Rentals</a>
+                        <a href="rentals.php" style="text-decoration: none; color: #ffffff;">Rentals</a>
                     </div>
                 </div>
             </div>
@@ -63,7 +63,9 @@
             <input type="text" placeholder="Search" style="border:none; outline:none; width:100%; font-size:15px;">
         </div>
         <i class="bi bi-search" style="font-size:23px; cursor:pointer;"></i>
-        <i class="bi bi-cart3" style="font-size:23px; cursor:pointer;"></i>
+        <a href="cart.php" class="btn" style="text-decoration:none;">
+            <i class="bi bi-cart3" style="font-size:23px; cursor:pointer;"></i>
+        </a>
     </div>
 
     <div class="container text-center my-5">
@@ -76,7 +78,7 @@
     <div class="container text-center my-5" id="content">
 
     </div>
-    
+
     <!-- footer -->
     <section class="mt-5">
         <div class="container-fluid bg-dark">
@@ -110,7 +112,7 @@
                 </div>
             </div>
         </div>
-    </section>    
+    </section>
 
     <script src="items.js"></script>
     <script>

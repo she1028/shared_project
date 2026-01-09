@@ -11,6 +11,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
 <body>
@@ -47,9 +48,9 @@
                 </div>
                 <div class="col-12">
                     <div class="fs-5 py-1">
-                        <a href="index.html#home" class="text-white" style="text-decoration: none;">Home</a>
+                        <a href="index.php#home" class="text-white" style="text-decoration: none;">Home</a>
                         <span style="color:#ffffff;"> &lt; </span>
-                        <a href="foodmenu.html" class="text-white" style="text-decoration: none; color:#ca9292;">Food Menu</a>
+                        <a href="foodmenu.php" class="text-white" style="text-decoration: none; color:#ca9292;">Food Menu</a>
                     </div>
                 </div>
             </div>
@@ -63,7 +64,9 @@
             <input type="text" placeholder="Search" style="border:none; outline:none; width:100%; font-size:15px;">
         </div>
         <i class="bi bi-search" style="font-size:23px; cursor:pointer;"></i>
-        <i class="bi bi-cart3" style="font-size:23px; cursor:pointer;"></i>
+        <a href="cart.php" class="btn" style="text-decoration:none;">
+            <i class="bi bi-cart3" style="font-size:23px; cursor:pointer;"></i>
+        </a>
     </div>
 
     <div class="container text-center my-5">
@@ -150,7 +153,7 @@
 
                 row.innerHTML += `
                 <div class="col">
-                    <div class="card border-dark shadow" >
+                    <div class="card border-dark shadow" onclick="openModal()">
                         <img src="` + item.image + `" class="card-img-top" style="height:200px; width:100%; object-fit: cover; object-position:center; background-color: #f8f9fa;">
                         <div class="card-body text-start">
                             <h5 class="card-title">` + item.name + `</h5>
@@ -167,6 +170,8 @@
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous">
     </script>
+
+    <?php include 'cardmodal.php' ?>
 
 </body>
 

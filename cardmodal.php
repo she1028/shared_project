@@ -4,7 +4,6 @@
         width: fit-content;
 
     } */
-
     .custom-modal .modal-content {
         height: auto;
     }

@@ -21,54 +21,54 @@ $cart = $_SESSION['cart'] ?? [];
   <div class="container py-4">
 
     <div class="container my-4">
-      <a href="index.php" class="btn btn-outline-dark text-decoration-none">
+      <button onclick="history.back()" class="btn btn-outline-dark text-decoration-none">
         &larr; Back
-      </a>
+      </button>
     </div>
 
     <h3 class="text-center fw-bold my-3">SHOPPING CART</h3>
 
     <div id="cartList" class="cart-card shadow-sm p-3">
-    <h6 class="fw-bold mb-3">CART ITEMS</h6>
+      <h6 class="fw-bold mb-3">CART ITEMS</h6>
 
-    <?php
-    $subtotal = 0;
-    foreach ($cart as $index => $item):
+      <?php
+      $subtotal = 0;
+      foreach ($cart as $index => $item):
         $subtotal += $item['price'];
-    ?>
+      ?>
         <div class="d-flex mb-3 align-items-center">
-            <div class="item-number"><?= $index + 1 ?></div>
-            <div class="flex-grow-1 ms-2">
-                <div class="fw-semibold"><?= $item['name'] ?></div>
-                <small class="text-muted"><?= $item['qty'] ?></small>
-            </div>
-            <div>₱<?= number_format($item['price'], 2) ?></div>
+          <div class="item-number"><?= $index + 1 ?></div>
+          <div class="flex-grow-1 ms-2">
+            <div class="fw-semibold"><?= $item['name'] ?></div>
+            <small class="text-muted"><?= $item['qty'] ?></small>
+          </div>
+          <div>₱<?= number_format($item['price'], 2) ?></div>
         </div>
-    <?php endforeach; ?>
+      <?php endforeach; ?>
 
-    <hr>
+      <hr>
 
-    <?php
-    $shipping = 120; // example shipping
-    $total = $subtotal + $shipping;
-    ?>
+      <?php
+      $shipping = 120; // example shipping
+      $total = $subtotal + $shipping;
+      ?>
 
-    <div class="d-flex justify-content-between">
+      <div class="d-flex justify-content-between">
         <span>Subtotal</span>
         <span>₱<?= number_format($subtotal, 2) ?></span>
-    </div>
-    <div class="d-flex justify-content-between">
+      </div>
+      <div class="d-flex justify-content-between">
         <span>Shipping</span>
         <span>₱<?= number_format($shipping, 2) ?></span>
-    </div>
+      </div>
 
-    <hr>
+      <hr>
 
-    <div class="d-flex justify-content-between fw-bold">
+      <div class="d-flex justify-content-between fw-bold">
         <span>TOTAL</span>
         <span>₱<?= number_format($total, 2) ?></span>
+      </div>
     </div>
-</div>
 
     <div class="card p-3 mt-3 shadow-sm" style="max-width: 350px; margin-left: auto;">
 
