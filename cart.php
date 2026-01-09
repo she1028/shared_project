@@ -1,3 +1,9 @@
+<?php
+session_start();
+$cart = $_SESSION['cart'] ?? [];
+?>
+
+
 <!doctype html>
 <html lang="en">
 
@@ -22,7 +28,47 @@
 
     <h3 class="text-center fw-bold my-3">SHOPPING CART</h3>
 
-    <div id="cartList" class="cart-card shadow-sm"></div>
+    <div id="cartList" class="cart-card shadow-sm p-3">
+    <h6 class="fw-bold mb-3">CART ITEMS</h6>
+
+    <?php
+    $subtotal = 0;
+    foreach ($cart as $index => $item):
+        $subtotal += $item['price'];
+    ?>
+        <div class="d-flex mb-3 align-items-center">
+            <div class="item-number"><?= $index + 1 ?></div>
+            <div class="flex-grow-1 ms-2">
+                <div class="fw-semibold"><?= $item['name'] ?></div>
+                <small class="text-muted"><?= $item['qty'] ?></small>
+            </div>
+            <div>₱<?= number_format($item['price'], 2) ?></div>
+        </div>
+    <?php endforeach; ?>
+
+    <hr>
+
+    <?php
+    $shipping = 120; // example shipping
+    $total = $subtotal + $shipping;
+    ?>
+
+    <div class="d-flex justify-content-between">
+        <span>Subtotal</span>
+        <span>₱<?= number_format($subtotal, 2) ?></span>
+    </div>
+    <div class="d-flex justify-content-between">
+        <span>Shipping</span>
+        <span>₱<?= number_format($shipping, 2) ?></span>
+    </div>
+
+    <hr>
+
+    <div class="d-flex justify-content-between fw-bold">
+        <span>TOTAL</span>
+        <span>₱<?= number_format($total, 2) ?></span>
+    </div>
+</div>
 
     <div class="card p-3 mt-3 shadow-sm" style="max-width: 350px; margin-left: auto;">
 
@@ -46,7 +92,11 @@
       </div>
 
       <p class="text-muted small mb-2">Taxes and shipping calculated at checkout</p>
-      <button class="btn btn-dark w-100">Check Out</button>
+
+      <form action="checkout.php" method="get">
+        <button type="submit" class="btn btn-dark w-100">Check Out</button>
+      </form>
+
     </div>
   </div>
 
