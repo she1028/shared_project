@@ -13,54 +13,8 @@
     <link href='https://fonts.googleapis.com/css?family=Oranienbaum' rel='stylesheet'>
 
     <style>
-        /* Hero Section */
-        .hero-wedding {
-            position: relative;
-            width: 100%;
-            height: 300px;
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: top;
-            overflow: hidden;
-        }
-
-        .hero-wedding::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background-image: inherit;
-            background-size: cover;
-            background-position: center;
-            filter: blur(3px) brightness(70%);
-            transform: scale(1.1);
-            z-index: 0;
-        }
-
-        .header-wedding {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            color: white;
-        }
-
-        .package-title {
-            font-family: 'poppins';
-            letter-spacing: 0.4em;
-        }
-
-        .package-name {
-            font-family: 'Oranienbaum';
-        }
-
-        .package-description {
-            font-size: 16px;
-        }
-
         .btn-primary-custom {
             background-color: #6D4302;
-            color: white;
         }
     </style>
 

@@ -12,56 +12,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Oranienbaum' rel='stylesheet'>
 
-    <style>
-        /* Hero Section */
-        .hero-Corporate {
-            position: relative;
-            width: 100%;
-            height: 300px;
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: top;
-            overflow: hidden;
-        }
-
-        .hero-Corporate::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background-image: inherit;
-            background-size: cover;
-            background-position: center;
-            filter: blur(3px) brightness(70%);
-            transform: scale(1.1);
-            z-index: 0;
-        }
-
-        .header-Corporate {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            color: white;
-        }
-
-        .package-title {
-            font-family: 'poppins';
-            letter-spacing: 0.4em;
-        }
-
-        .package-name {
-            font-family: 'Oranienbaum';
-        }
-
-        .package-description {
-            font-size: 16px;
-        }
-
-        .btn-primary-custom {
-            color: white;
-        }
-    </style>
     <script>
     const ACTIVE_PACKAGE_TYPE = "<?php echo $packageType; ?>";
 </script>
