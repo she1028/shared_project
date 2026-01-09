@@ -48,7 +48,7 @@
             <div class="modal-body">
                 <div class="row align-items-center justify-content-center">
                     <div class="col-lg-5 col-12 align-items-center">
-                        <img src="Catering/table/rec1.jpg" class="img-fluid">
+                        <img src="images/Catering/table/rec1.jpg" class="img-fluid">
                     </div>
                     <!-- Back button -->
                     <div class="col-lg-7 col-12 p-2 mt-2">

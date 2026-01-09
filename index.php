@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Oranienbaum' rel='stylesheet'>
 </head>
 
 <body>
@@ -18,7 +18,7 @@
     <!-- navbar -->
     <nav class="navbar navbar-expand-lg bg-light navbar-light fixed-top shadow-sm mt-3 rounded-4 mx-4">
         <div class="container-fluid ps-4 pe-4">
-            <a class="navbar-brand" href="index.html">
+            <a class="navbar-brand" href="index.php">
                 <img src="images/YMZM-logo.png" alt="Logo" class="logo" width="40" height="auto">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -61,7 +61,7 @@
             <div class="row text-center">
                 <div class="col-12 z-5">
                     <div class=" display-1 fw-bold"
-                        style="margin-top: 2.3em; z-index: 3; color: white; font-family: 'Oswald'; font-size: 90px;">
+                        style="margin-top: 2.3em; z-index: 3; color: white; font-family: 'Oranienbaum'; font-size: 90px;">
                         CATERING</div>
                 </div>
                 <div class="col-12 mt-1">
