@@ -116,23 +116,22 @@
       padding: 0.15rem 0.6rem;
       font-size: 0.9rem;
     }
-<<<<<<< HEAD
-=======
 
     .back-action {
         cursor: pointer;
         user-select: none;
         width: fit-content;
+        position: fixed;
+        z-index: 10;
     }
->>>>>>> origin/main
   </style>
 </head>
 
 <body>
   <div class="m-4">
-    <span class="d-inline-flex align-items-center back-action g-2" onclick="history.back()">
+    <span class="d-inline-flex align-items-center border bg-light px-3 py-2 rounded-5 back-action  btn-outline-darkg-2" onclick="history.back()">
       <i class="material-icons">&#xe5c4;</i>
-      <span>back</span>
+      <span> Back</span>
     </span>
   </div>
 
@@ -146,15 +145,6 @@
         <form action="#" class="mt-5">
           <div class="row g-4">
             <div class="col-12 col-lg-4">
-<<<<<<< HEAD
-                
-              <!-- billing info -->
-              <fieldset class="info-panel shadow-sm mb-4" style="height: 97%;">
-            <legend class="info-legend">
-              <div class="px-3 bg-white" style="margin-top: -2em;width: fit-content;">Billing Information</div>
-            </legend>
-=======
->>>>>>> origin/main
 
               <!-- billing info -->
               <fieldset class="info-panel shadow-sm mb-4" style="height: 97%;">
@@ -349,53 +339,12 @@
                   </div>
                 </div>
 
-<<<<<<< HEAD
-            <div class="row mb-2 align-items-start">
-              <label class="col-sm-3 col-form-label">Payment Method:</label>
-              <div class="col-sm-9">
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="PaymentMethod" id="pay-cash" value="cash" checked>
-                  <label class="form-check-label" for="pay-cash">Cash</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="PaymentMethod" id="pay-paypal" value="paypal">
-                  <label class="form-check-label" for="pay-paypal">Paypal</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="PaymentMethod" id="pay-bank" value="bank">
-                  <label class="form-check-label" for="pay-bank">Bank</label>
-                </div>
-              </div>
-            </div>
-              </fieldset>
-            </div>
-            <div class="col-12 col-lg-8">
-
-              <!-- delivery details -->
-              <fieldset class="info-panel shadow-sm mb-4 pb-5">
-            <legend class="info-legend">
-              <div class="px-3 bg-white" style="margin-top: -2em;width: fit-content;">Delivery Details</div>
-            </legend>
-
-            <div class="row mb-3 align-items-center">
-              <label class="col-sm-3 col-form-label" for="EventDate">Event Date &amp; Time:</label>
-              <div class="col-sm-9">
-                <div class="row g-2">
-                  <div class="col-md-4">
-                    <input type="date" id="EventDate" name="EventDate" class="form-control bg-light" required>
-                    <div class="floating-hint">Date</div>
-                  </div>
-                  <div class="col-md-4">
-                    <input type="time" id="EventTime" name="EventTime" class="form-control bg-light" required>
-                    <div class="floating-hint">Hour Minutes</div>
-=======
                 <div class="row mb-3 align-items-center">
                   <label class="col-sm-3 col-form-label" for="GuestCount">Number of Guest:</label>
                   <div class="col-sm-9 d-flex align-items-center gap-3">
                     <input type="number" id="GuestCount" name="GuestCount" class="form-control bg-light" min="1"
                       placeholder="50" required>
                     <span class="package-price-note">$500 per guest</span>
->>>>>>> origin/main
                   </div>
                 </div>
 
@@ -408,63 +357,6 @@
                 </div>
               </fieldset>
             </div>
-<<<<<<< HEAD
-              </fieldset>
-
-              <!-- package details -->
-              <fieldset class="info-panel shadow-sm mb-4">
-            <legend class="info-legend">
-              <div class="px-3 bg-white" style="margin-top: -2em;width: fit-content;">Package Details</div>
-            </legend>
-
-            <div class="row mb-3 align-items-start">
-              <label class="col-sm-3 col-form-label" for="SelectPackage">Select Package:</label>
-              <div class="col-sm-9">
-                <select id="SelectPackage" name="SelectPackage" class="form-select bg-light" required>
-                  <option value="" selected disabled>Choose a package</option>
-                  <option value="wedding">Wedding Bliss</option>
-                  <option value="corporate">Corporate Feast</option>
-                  <option value="birthday">Birthday Bash</option>
-                </select>
-                <div class="floating-hint">Package Type</div>
-                <div class="d-flex flex-wrap gap-4 pt-2">
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="PackageTier" id="pkg-standard" value="standard"
-                      checked>
-                    <label class="form-check-label" for="pkg-standard">Standard Package</label>
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="PackageTier" id="pkg-premium" value="premium">
-                    <label class="form-check-label" for="pkg-premium">Premium Package</label>
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="PackageTier" id="pkg-deluxe" value="deluxe">
-                    <label class="form-check-label" for="pkg-deluxe">Deluxe Package</label>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="row mb-3 align-items-center">
-              <label class="col-sm-3 col-form-label" for="GuestCount">Number of Guest:</label>
-              <div class="col-sm-9 d-flex align-items-center gap-3">
-                <input type="number" id="GuestCount" name="GuestCount" class="form-control bg-light" min="1"
-                  placeholder="50" required>
-                <span class="package-price-note">$500 per guest</span>
-              </div>
-            </div>
-
-            <div class="row mb-2 align-items-center">
-              <label class="col-sm-3 col-form-label" for="PackageSubtotal">Subtotal:</label>
-              <div class="col-sm-9">
-                <input type="text" id="PackageSubtotal" name="PackageSubtotal" class="form-control bg-light"
-                  placeholder="$0.00">
-              </div>
-            </div>
-              </fieldset>
-            </div>
-=======
->>>>>>> origin/main
           </div>
 
           <div class="row g-4 mt-2">
@@ -472,23 +364,6 @@
               <!-- food menu -->
               <fieldset class="info-panel shadow-sm mb-4">
                 <legend class="info-legend">
-<<<<<<< HEAD
-                <div class="px-3 bg-white" style="margin-top: -2em;width: fit-content;">Food Menu</div>
-                </legend>
-
-                <div class="row mb-3 align-items-center">
-                <div class="col-sm-12 d-flex gap-5 justify-content-center">
-                    <div class="form-check">
-                    <input class="form-check-input" type="radio" name="ServingStyle" id="style-serving"
-                        value="per-serving" checked>
-                    <label class="form-check-label" for="style-serving">Per serving</label>
-                    </div>
-                    <div class="form-check">
-                    <input class="form-check-input" type="radio" name="ServingStyle" id="style-buffet" value="buffet">
-                    <label class="form-check-label" for="style-buffet">Buffet style</label>
-                    </div>
-                </div>
-=======
                   <div class="px-3 bg-white" style="margin-top: -2em;width: fit-content;">Food Menu</div>
                 </legend>
 
@@ -504,19 +379,13 @@
                       <label class="form-check-label" for="style-buffet">Buffet style</label>
                     </div>
                   </div>
->>>>>>> origin/main
                 </div>
 
                 <div id="menu-category-container"></div>
 
                 <div class="mb-3">
-<<<<<<< HEAD
-                <label for="MenuNote" class="form-label fw-semibold">Note / Request:</label>
-                <textarea id="MenuNote" name="MenuNote" class="form-control notes-area"
-=======
                   <label for="MenuNote" class="form-label fw-semibold">Note / Request:</label>
                   <textarea id="MenuNote" name="MenuNote" class="form-control notes-area"
->>>>>>> origin/main
                     placeholder="Note any request..."></textarea>
                 </div>
               </fieldset>
@@ -525,15 +394,6 @@
               <!-- decoration -->
               <fieldset class="info-panel shadow-sm mb-4">
                 <legend class="info-legend">
-<<<<<<< HEAD
-                <div class="px-3 bg-white" style="margin-top: -2em;width: fit-content;">Decoration</div>
-                </legend>
-
-                <div class="mb-3">
-                <label for="DecorationNotes" class="form-label">Describe your preferred color, theme, or
-                    decoration:</label>
-                <textarea id="DecorationNotes" name="DecorationNotes" class="form-control notes-area"
-=======
                   <div class="px-3 bg-white" style="margin-top: -2em;width: fit-content;">Decoration</div>
                 </legend>
 
@@ -541,7 +401,6 @@
                   <label for="DecorationNotes" class="form-label">Describe your preferred color, theme, or
                     decoration:</label>
                   <textarea id="DecorationNotes" name="DecorationNotes" class="form-control notes-area"
->>>>>>> origin/main
                     placeholder="e.g., blush pink, rustic theme, floral arch"></textarea>
                 </div>
               </fieldset>
@@ -551,20 +410,13 @@
           <div class="text-center mt-4">
             <button type="submit" class="btn btn-outline-secondary px-5 rounded-5">Submit Order</button>
           </div>
-<<<<<<< HEAD
-=======
       </div>
->>>>>>> origin/main
     </div>
     </div>
  </div>
 
 
-<<<<<<< HEAD
- <!-- JavaScript -->
-=======
   <!-- JavaScript -->
->>>>>>> origin/main
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
     crossorigin="anonymous"></script>
@@ -860,13 +712,8 @@
         col.innerHTML = `
           <div class="form-check d-flex justify-content-between align-items-center px-3">
             <div class="d-flex align-items-center">
-<<<<<<< HEAD
-              <input class="form-check-input me-2" type="checkbox" value="`+ item.id + `" id="` + item.id + `">
-              <label style="font-size: 14px;" class="form-check-label" for="`+ item.id + `">` + item.label + `</label>
-=======
               <input class="form-check-input me-2" type="checkbox" value="` + item.id + `" id="` + item.id + `">
               <label style="font-size: 14px;" class="form-check-label" for="` + item.id + `">` + item.label + `</label>
->>>>>>> origin/main
             </div>
             <span class="menu-price">` + formatPrice(item.price) + `</span>
           </div>
@@ -895,8 +742,4 @@
   </script>
 </body>
 
-<<<<<<< HEAD
 </html>
-=======
-</html>
->>>>>>> origin/main

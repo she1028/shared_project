@@ -52,14 +52,12 @@
 
         <div class="container bg-light p-4 px-5 shadow rounded-4 text-home">
             <h3>About Us</h3>
-            <div class="home-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae odit ducimus
-                porro laboriosam sit tempora natus similique consectetur pariatur at sed quod nesciunt in, ut
-                voluptatum, voluptatem maiores facilis. Hic.
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit natus, quis eligendi accusantium
-                doloribus iste omnis? Quaerat fugit dolorum dolor nobis totam ipsum fuga temporibus minus, reiciendis,
-                eum modi in! Lorem, ipsum dolor sit amet consectetur adipisicing elit. Libero eos officia expedita
-                dolores ratione, asperiores harum ad nostrum ut architecto quo temporibus doloremque! Vero tenetur at
-                provident maxime sed voluptates. <a href="https:" target="_blank">Read more</a></p>
+            <div class="home-text"> At YMZM Event Catering Services, we are dedicated to making every event unforgettable. We offer a wide range of services, 
+                including delicious food catering, stylish event rentals, and creative event design. Whether you need individual services like tables, chairs,
+                 and tableware, or a fully customized package from basic to premium, we tailor our offerings to meet your unique needs.
+
+                Our team is committed to delivering smooth, stress-free, and high-quality experiences for gatherings of any size. From intimate 
+                celebrations to grand events, we focus on creating memorable moments that leave a lasting impression.</p>
             </div>
         </div>
     </section>
@@ -109,7 +107,7 @@
         <div class="container-fluid my-5">
             <div class="row text-center d-flex justify-content-center">
                 <div class="col-md-4 col-10">
-                    <a href="foodmenu.php" class="index-menu-button rounded-5 px-3 py-2">View Menu</a>
+                    <a href="foodmenu.php" class="index-menu-button rounded-5 px-5 py-2">View Menu</a>
                 </div>
             </div>
         </div>
@@ -120,10 +118,10 @@
     <section id="rentals">
         <div class="container-fluid my-5 pb-5" style="background-color: #EADCC6;">
             <div class="row">
-                <div class="col-12 text-center p-5">
+                <div class="col-9 mx-auto text-center p-5">
                     <h2 class="display-6 fw-bold mb-2 mt-3 text-dark">Rentals</h2>
-                    <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                        sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    <p class="text-muted">High-quality event rentals to complement your catering from tables and chairs to décor and serving essentials, we provide
+                        everything you need for a seamless celebration.</p>
                 </div>
             </div>
             <div class="container-fluid">
@@ -131,7 +129,7 @@
                 </div>
                 <div class="row text-center d-flex justify-content-center">
                     <div class="col-md-4 col-10">
-                        <a href="rentals.php" class="index-menu-button rounded-5 px-3 py-2">View More</a>
+                        <a href="rentals.php" class="index-menu-button rounded-5 px-5 py-2">View More</a>
                     </div>
                 </div>
             </div>
@@ -144,8 +142,7 @@
         <div class="container text-start my-5">
             <h2 class="fw-bold mb-2 mt-3 px-3">How It Works</h2>
             <p class="mb-5 px-3">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                Planning your event is simple with our step-by-step catering process—from selection to service.
             </p>
             <div class="row justify-content-center gy-5">
                 <div class="col-12 col-sm-6 col-md-4 col-lg-2 d-flex justify-content-center">
@@ -153,8 +150,7 @@
                         class="d-flex flex-column align-items-center justify-content-center border rounded-4 shadow p-3 hiw-card">
                         <i class="bi bi-box-seam fs-1 mb-1"></i>
                         <h5 class="fw-bold text-center pb-3">Choose a Package</h5>
-                        <p class="text-center">Browse our catering packages, food menu, and rental items that fit your
-                            event.</p>
+                        <p class="text-center">Explore our catering packages, menu options, and rental items that suit your event needs.</p>
                     </div>
                 </div>
                 <div class="col-12 col-sm-6 col-md-4 col-lg-2 d-flex justify-content-center">
@@ -162,7 +158,7 @@
                         class="d-flex flex-column align-items-center justify-content-center border rounded-4 shadow p-3 hiw-card">
                         <i class="bi bi-pencil-square fs-1 mb-1"></i>
                         <h5 class="fw-bold text-center pb-3">Customize Your Order</h5>
-                        <p class="text-center">Adjust the menu, add equipment rentals, and tell us your event details.
+                        <p class="text-center">Personalize your menu, add equipment rentals, and share your event details with us.
                         </p>
                     </div>
                 </div>
@@ -171,8 +167,7 @@
                         class="d-flex flex-column align-items-center justify-content-center border rounded-4 shadow p-3 hiw-card">
                         <i class="bi bi-quote fs-1 mb-1"></i>
                         <h5 class="fw-bold text-center pb-3">Request a Quote & Confirm</h5>
-                        <p class="text-center">Receive a detailed quotation and confirm your booking with a reservation
-                            payment.</p>
+                        <p class="text-center">Receive a detailed quotation and secure your booking with a reservation payment.</p>
                     </div>
                 </div>
                 <div class="col-12 col-sm-6 col-md-4 col-lg-2 d-flex justify-content-center">
@@ -180,7 +175,7 @@
                         class="d-flex flex-column align-items-center justify-content-center border rounded-4 shadow p-3 hiw-card">
                         <i class="bi bi-check2-circle fs-1 mb-1"></i>
                         <h5 class="fw-bold text-center pb-3">Catering Head Confirmation</h5>
-                        <p class="text-center">Our catering head reviews and approves all event details for accuracy.
+                        <p class="text-center">Our catering head carefully reviews and confirms all event details for accuracy.
                         </p>
                     </div>
                 </div>
@@ -189,8 +184,7 @@
                         class="d-flex flex-column align-items-center justify-content-center border rounded-4 shadow p-3 hiw-card">
                         <i class="bi bi-truck fs-1 mb-1"></i>
                         <h5 class="fw-bold text-center pb-3">Event Day Service</h5>
-                        <p class="text-center">We prepare, deliver, set up, serve, and clean up—so you can enjoy your
-                            event.</p>
+                        <p class="text-center">We handle the preparation, delivery, setup, service, and cleanup, so you can relax and enjoy your event.</p>
                     </div>
                 </div>
             </div>
@@ -232,7 +226,6 @@
                     <div class="col-lg-4">
                         <div class="card comment-card border border-dark p-2">
                             <div class="d-flex align-items-center">
-                                <img src="images/man-profile.png" class="comment-img" alt="User">
                                 <div class="ms-3 w-100">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6 class="mb-1 fw-bold">Lorem I.</h6>
@@ -259,7 +252,6 @@
                     <div class="col-lg-4">
                         <div class="card comment-card border border-dark p-2">
                             <div class="d-flex align-items-center">
-                                <img src="images/man-profile.png" class="comment-img" alt="User">
                                 <div class="ms-3 w-100">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6 class="mb-1 fw-bold">Lorem I.</h6>
@@ -286,7 +278,6 @@
                     <div class="col-lg-4">
                         <div class="card comment-card border border-dark p-2">
                             <div class="d-flex align-items-center">
-                                <img src="images/man-profile.png" class="comment-img" alt="User">
                                 <div class="ms-3 w-100">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6 class="mb-1 fw-bold">Lorem I.</h6>
@@ -322,9 +313,9 @@
             <div class="display-5 fw-semibold text-center text-dark pb-2">Make Your Event Hassle-Free</div>
             <div class="row d-flex justify-content-center">
                 <div class="col-md-10 text-center text-dark">
-                    <p class=" mx-5 text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores eos magnam
-                        debitis ex deleniti illum inventore accusantium. Vitae tenetur, maiores saepe aliquid doloribus
-                        nam, nemo nobis mollitia laudantium aspernatur enim?</p>
+                    <p class=" mx-5 text-muted">Planning an event doesn’t have to be stressful. Contact us for personalized catering solutions, expert guidance,
+                        and reliable service from start to finish.
+                        We’re here to take care of the details so you can enjoy the moment.</p>
                     <div class="text-center mt-4">
                         <a href="#" class="btn btn-light rounded-pill px-4">Contact Us</a>
                     </div>
@@ -388,7 +379,7 @@
                             <p class="small mb-2">` + pkgCategory.desc + `
                                 
                             </p>
-                            <a href="`+ link +`" class="btn btn-light btn-sm"
+                            <a href="` + link + `" class="btn btn-light btn-sm"
                                 style="z-index: 6; color: rgb(231, 87, 231);">View Package</a>
                         </div>
                     </div>
