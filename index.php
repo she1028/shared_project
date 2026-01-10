@@ -333,7 +333,7 @@
         </div>
     </section>
 
-        <!-- Footer -->
+    <!-- Footer -->
     <?php include("footer.php"); ?>
 
     <script src="data.js"></script>
@@ -360,6 +360,21 @@
         var packageRow = document.getElementById("packageRow");
 
         packages.pkgCategories.forEach(pkgCategory => {
+            let link = "";
+            switch (pkgCategory.title.toLowerCase()) {
+                case "wedding":
+                    link = "wedding.php";
+                    break;
+                case "debut":
+                    link = "debut.php";
+                    break;
+                case "kids party":
+                    link = "children_party.php";
+                    break;
+                case "corporate events":
+                    link = "corporate.php";
+                    break;
+            }
             packageRow.innerHTML += `
         <div class="col-md-4 col-lg-3 col-10">
                     <div class="card-pkg card border" style="height: 350px; overflow: hidden;">
@@ -373,7 +388,7 @@
                             <p class="small mb-2">` + pkgCategory.desc + `
                                 
                             </p>
-                            <a href="#" target="_blank" class="btn btn-light btn-sm"
+                            <a href="`+ link +`" class="btn btn-light btn-sm"
                                 style="z-index: 6; color: rgb(231, 87, 231);">View Package</a>
                         </div>
                     </div>
