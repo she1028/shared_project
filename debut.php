@@ -38,11 +38,14 @@ $heroBreadcrumb = '
 include("header.php");
 ?>
 
-      <!-- Packages Section -->
-<div id="packagesContainer"></div>
+<!-- Packages Section -->
+    <div id="packagesContainer"></div>
 
-      <!-- Full Inclusion Modal -->
-<?php include("modal.php"); ?>
+<!-- Full Inclusion Modal -->
+    <?php include("modal.php"); ?>
+
+<!-- Footer -->
+    <?php include("footer.php"); ?>
 
 <script src="packages.js"></script>
 <script src="inclusion.js"></script>
