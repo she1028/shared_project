@@ -351,7 +351,7 @@ const corporateInclusions = [
 // Debut Packages
 const debutInclusions = [
   {
-    id: "Grace",
+    id: "grace",
     offer: "CLASSIC OFFER",
     title: "Grace Package",
     price: "$500 per guest",
@@ -452,7 +452,7 @@ const debutInclusions = [
     ],
     decorations: [
       "Elegant table styling",
-      "Birthday signage and themed décor",
+      "Birthday signage and themed decor",
       "Table centerpieces",
       "Fresh floral arrangements",
       "Stage or backdrop styling",
@@ -476,6 +476,5 @@ const inclusionMap = {
     corporate: corporateInclusions,
     wedding: weddingInclusions,
     children: childrensPartyInclusions,
-    corporate: corporateInclusions,
     debut: debutInclusions
 };
