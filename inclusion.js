@@ -427,9 +427,9 @@ const debutInclusions = [
   },
   {
     id: "radiance",
-    offer: "PRESTIGE OFFER",
+    offer: "SIGNATURE OFFER",
     title: "Radiance Package",
-    price: "$1,200 per guest",
+    price: "$850 per guest",
     note: "Best for grand debut celebrations of 80–120 guests with full-service catering, premium styling, entertainment, and dedicated staff.",
     image: "images/packages/radiance.jpg",
     menu: [

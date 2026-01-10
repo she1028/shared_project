@@ -71,7 +71,7 @@ include("header.php");
                                     ${pkg.description}
                                     <p class="text-muted mb-1">${pkg.note}</p>
                                     <button class="btn btn-sm btn-primary-custom" style="background-color: ${pkg.buttoncolor || '#172783'};" 
-                                    onclick="openInclusionModal('${pkg.id}')">${pkg.buttonText}
+                                    onclick="openInclusionModal('${pkg.id}')">Full Inclusion
                                     </button>
                                 </p>
                                 <hr class="my-3">
@@ -79,7 +79,7 @@ include("header.php");
                                     <div>
                                         <span style="font-family: 'poppins'; font-size: 16px;">Party starts at </span><span class="fs-2" style="font-family: 'Oranienbaum';">${pkg.currency}${pkg.startsAt}</span>
                                     </div>
-                                <a href="${pkg.bookLink}" class="btn btn btn-primary-custom" style="background-color: ${pkg.buttoncolor || '#172783'};">
+                                <a href="event_form.php" class="btn btn btn-primary-custom" style="background-color: ${pkg.buttoncolor || '#172783'};">
                                     Book Now
                                 </a>
                             </div>

@@ -75,14 +75,14 @@ include("header.php");
                                 <p class="pt-1 package-description">
                                     ${pkg.description}
                                     <p class="text-muted mb-1">${pkg.note}</p>
-                                    <button class="btn btn-sm btn-primary-custom" onclick="openInclusionModal('${pkg.id}')">${pkg.buttonText}</button>
+                                    <button class="btn btn-sm btn-primary-custom" onclick="openInclusionModal('${pkg.id}')">Full Inclusion</button>
                                 </p>
                                 <hr class="my-3">
                                 <div class="d-flex justify-content-between align-items-center" style="font-size: 20px;">
                                     <div>
                                         <span style="font-family: 'poppins'; font-size: 16px;">Starts at </span><span class="fs-2" style="font-family: 'Oranienbaum';">${pkg.currency}${pkg.startsAt}</span>
                                     </div>
-                                    <a href="${pkg.bookLink}" class="btn btn btn-primary-custom">Book Now</a>
+                                    <a href="event_form.php" class="btn btn btn-primary-custom">Book Now</a>
                                 </div>
                             </div>
                         </div>

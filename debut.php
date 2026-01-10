@@ -69,23 +69,23 @@ include("header.php");
                     <div class="flex-fill h-100 d-flex align-items-center">
                         <div>
                             <h6 class="package-title">${pkg.packageTitle}</h6>
-                            <h1 class="package-name display-5 pt-5">${pkg.packageName}</h1>
+                            <h1 class="package-name display-5">${pkg.packageName}</h1>
 
                             <p class="pt-1 package-description">
                                 ${pkg.description}
                                 <p class="text-muted mb-1">${pkg.note}</p>
                                 <button class="btn btn-sm btn-primary-custom" style="background-color: ${pkg.buttoncolor || '#BE4738'};" 
-                                    onclick="openInclusionModal('${pkg.id}')">${pkg.buttonText}
-                                </button>
+                                    onclick="openInclusionModal('${pkg.id}')">Full Inclusion
+                                    </button>
                             </p>
 
                             <hr class="my-3">
 
                             <div class="d-flex justify-content-between align-items-center" style="font-size: 20px;">
                                 <div>
-                                        <span style="font-family: 'poppins'; font-size: 16px;">Party starts at </span><span class="fs-2" style="font-family: 'Oranienbaum';">${pkg.currency}${pkg.startsAt}</span>
+                                        <span style="font-family: 'poppins'; font-size: 16px;">Starts at </span><span class="fs-2" style="font-family: 'Oranienbaum';">${pkg.currency}${pkg.startsAt}</span>
                                     </div>
-                                <a href="${pkg.bookLink}" class="btn btn btn-primary-custom" style="background-color: ${pkg.buttoncolor || '#BE4738'};">
+                                <a href="event_form.php" class="btn btn btn-primary-custom" style="background-color: ${pkg.buttoncolor || '#BE4738'};">
                                     Book Now
                                 </a>
                             </div>
