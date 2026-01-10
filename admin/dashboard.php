@@ -73,8 +73,14 @@ $total_foods = $conn->query("SELECT COUNT(*) AS cnt FROM foods")->fetch_assoc()[
                 </div>
             </div>
 
-            <!-- Total Users Card -->
+           
             <div class="row">
+                <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
+                    <div class="card card-admin shadow text-center w-100 m-3" style="max-width: 300px;">
+                        <h5 class="mb-2">Sections Content</h5>
+                        <a href="manage_sections.php" class="btn btn-primary btn-sm">Manage Sections</a>
+                    </div>
+                </div>
                 <!-- Total Users Card -->
                 <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
                     <div class="card card-admin shadow text-center w-100 m-3" style="max-width: 300px;">
