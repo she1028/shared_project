@@ -7,7 +7,6 @@
     <title>YMZM | Food Menu</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="pages.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Oranienbaum' rel='stylesheet'>
@@ -16,48 +15,25 @@
 
 <body>
 
-    <!-- navbar -->
-    <nav class="navbar navbar-expand-lg bg-light navbar-light fixed-top shadow-sm mt-3 rounded-4 mx-4">
-        <div class="container-fluid ps-4 pe-4">
-            <a class="navbar-brand" href="index.php">
-                <img src="images/YMZM-logo.png" alt="Logo" class="logo" width="40" height="auto">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="index.php#home">Home</a></li>
-                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="index.php##packages">Packages</a></li>
-                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="index.php##menu">Menu</a></li>
-                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="index.php##rentals">Rentals</a></li>
-                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="index.php##contact">Contact</a></li>
-                    <li class="nav-item"><a class="nav-link px-3 text-dark border border-primary rounded-5"
-                            href="#sign-in">Sign in</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <!-- Navbar -->
+    <?php include("nav.php"); ?>
 
-    <!-- Home -->
-    <section id="home">
-        <div class="container-fluid hero-foodmenu d-flex align-items-center">
-            <div class="row text-center header-foodmenu">
-                <div class="col-12">
-                    <div class="fw-bold text-white" style="font-family: 'Oranienbaum';">
-                        <h1 class="display-5 display-md-3 display-lg-1">Food Menu</h1>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="py-1" style="font-size: 16px;">
-                        <a href="index.php" class="text-white text-decoration-none">Home</a>
-                        <span style="color: #ffffff;"> &lt; </span>
-                        <a href="foodmenu.php" class="text-white text-decoration-none" style="color: #ca9292;">Food Menu</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- Hero Section -->
+    <?php
+    $heroTitle = "Food Menu";
+    $heroImage = "images/RentalPage/hero.png";
+
+    $heroBreadcrumb = '
+    <a href="index.php#home" class="text-white text-decoration-none">Home</a>
+    <span style="color:#ffffff;"> &lt; </span>
+    <a href="foodmenu.php"
+       class="text-white text-decoration-none"
+       style="color:#ca9292;">
+        Food Menu
+    </a>';
+
+    include("header.php");
+    ?><!--  -->
 
     <div class="mt-4 me-5" style="display:flex; align-items:center; gap:18px; justify-content:right;">
         <div class="rounded-5 p-2" style="border:1px solid #000000; display:flex; align-items:center; width:350px;">
@@ -81,7 +57,7 @@
 
     </div>
 
-        <!-- Footer -->
+    <!-- Footer -->
     <?php include("footer.php"); ?>
 
     <script src="food.js"></script>
@@ -137,7 +113,7 @@
                 section.items.forEach(function(item) {
                     row.innerHTML += `
                     <div class="col">
-                        <div class="card border-dark shadow" onclick="openModal()">
+                        <div class="card border-dark shadow" onclick="openModal()" style="background-color: #E2D4D4;">
                             <img src="${item.image}" class="card-img-top" style="height:200px; width:100%; object-fit: cover; object-position:center; background-color: #f8f9fa;">
                             <div class="card-body text-start">
                                 <h5 class="card-title">${item.name}</h5>
@@ -207,13 +183,12 @@
         searchInput.addEventListener("keydown", function(e) {
             if (e.key === "Enter") searchItems();
         });
-        
+
         clearBtn.addEventListener("click", function() {
             searchInput.value = "";
             clearBtn.style.display = "none";
             renderFullCategories(); // restore intro + content
         });
-
     </script>
 
 

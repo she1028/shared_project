@@ -27,7 +27,7 @@ $heroTitle = "Children's Party Catering Packages";
 $heroImage = "images/packages/children_header.jpg";
 
 $heroBreadcrumb = '
-    <a href="index.html#home" class="text-white text-decoration-none">Home</a>
+    <a href="index.php#home" class="text-white text-decoration-none">Home</a>
     <span style="color:#ffffff;"> &lt; </span>
     <a href="children_party.php"
        class="text-white text-decoration-none"

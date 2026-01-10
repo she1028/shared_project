@@ -33,7 +33,7 @@ $heroTitle = "Wedding Catering Packages";
 $heroImage = "images/packages/wedding_header.jpg";
 
 $heroBreadcrumb = '
-    <a href="index.html#home" class="text-white text-decoration-none">Home</a>
+    <a href="index.php#home" class="text-white text-decoration-none">Home</a>
     <span style="color:#ffffff;"> &lt; </span>
     <a href="wedding.php"
        class="text-white text-decoration-none"
