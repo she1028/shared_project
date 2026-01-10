@@ -351,7 +351,7 @@ const corporateInclusions = [
 // Debut Packages
 const debutInclusions = [
   {
-    id: "grace",
+    id: "Grace",
     offer: "CLASSIC OFFER",
     title: "Grace Package",
     price: "$500 per guest",
