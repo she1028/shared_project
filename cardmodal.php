@@ -11,6 +11,7 @@
     .back-action {
         cursor: pointer;
         user-select: none;
+        width: fit-content;
     }
 
     .qty-box {
@@ -48,17 +49,19 @@
             <div class="modal-body">
                 <div class="row align-items-center justify-content-center">
                     <div class="col-lg-5 col-12 align-items-center">
-                        <img src="Catering/table/rec1.jpg" class="img-fluid">
+                        <img src="images/Catering/table/rec1.jpg" class="img-fluid">
                     </div>
                     <!-- Back button -->
                     <div class="col-lg-7 col-12 p-2 mt-2">
-                        <div class="d-flex align-items-center back-action g-2" data-bs-dismiss="modal">
-                            <i class="material-icons">&#xe5c4;</i>
-                            <span>back</span>
+                        <div class="m-2">
+                            <span class="d-inline-flex align-items-center back-action g-2" data-bs-dismiss="modal">
+                                <i class="material-icons">&#xe5c4;</i>
+                                <span>back</span>
+                            </span>
                         </div>
                         <!-- Category -->
                         <div class="d-flex align-items-center justify-content-center m-2">
-                            <span class="rounded-5 text-center py-1 px-5" style="background-color: #c6c6c6cc; justify-content: center;">Tables</span>
+                            <span class="rounded-5 text-center py-1 px-3" style="background-color: #c6c6c6cc; justify-content: center; font-size: 13px;">Tables</span>
                         </div>
                         <div class="row mt-2">
                             <!-- Title -->

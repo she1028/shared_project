@@ -54,3 +54,8 @@ body {
     font-size: 14px;
     margin-right: 12px;
 }
+.back-action {
+  cursor: pointer;
+  user-select: none;
+  width: fit-content;
+}

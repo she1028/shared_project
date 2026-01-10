@@ -11,11 +11,18 @@ $cart = $_SESSION['cart'] ?? [];
     <title>Checkout</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="checkout.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
 <body>
     <!-- HERO / LOGO -->
     <section class="hero-section">
+        <div class="mx-4">
+            <span class="d-inline-flex align-items-center back-action g-2" onclick="history.back()">
+                <i class="material-icons">&#xe5c4;</i>
+                <span>back</span>
+            </span>
+        </div>
         <div class="text-center">
             <img src="images/YMZM-logo.png" class="logo mb-2">
             <h5 class="fw-bold m-0">YMZM</h5>
@@ -130,7 +137,7 @@ $cart = $_SESSION['cart'] ?? [];
                     $subtotal = 0;
                     foreach ($cart as $index => $item):
                         $subtotal += $item['price'];
-                        ?>
+                    ?>
                         <div class="d-flex mb-3 align-items-center">
                             <div class="item-number"><?= $index + 1 ?></div>
                             <div class="flex-grow-1 ms-2">
@@ -166,7 +173,6 @@ $cart = $_SESSION['cart'] ?? [];
     </div>
 
     <script>
-
         document.addEventListener("DOMContentLoaded", () => {
 
             // --- DELIVERY METHOD TOGGLE ---
@@ -362,7 +368,7 @@ $cart = $_SESSION['cart'] ?? [];
         const deliverySelect = document.querySelector('select.form-select');
         const checkoutError = document.getElementById("checkoutError");
 
-        checkoutForm.addEventListener("submit", function (e) {
+        checkoutForm.addEventListener("submit", function(e) {
             e.preventDefault(); // prevent form submission
 
             // Hide previous error message
@@ -407,7 +413,6 @@ $cart = $_SESSION['cart'] ?? [];
                 window.location.href = "paypal.php";
             }
         });
-
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>

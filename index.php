@@ -10,33 +10,13 @@
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Oranienbaum' rel='stylesheet'>
 </head>
 
 <body>
 
-    <!-- navbar -->
-    <nav class="navbar navbar-expand-lg bg-light navbar-light fixed-top shadow-sm mt-3 rounded-4 mx-4">
-        <div class="container-fluid ps-4 pe-4">
-            <a class="navbar-brand" href="index.html">
-                <img src="images/YMZM-logo.png" alt="Logo" class="logo" width="40" height="auto">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="#home">Home</a></li>
-                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="#packages">Packages</a></li>
-                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="#menu">Menu</a></li>
-                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="#rentals">Rentals</a></li>
-                    <li class="nav-item"><a class="nav-link px-3 text-dark" href="#contact">Contact</a></li>
-                    <li class="nav-item"><a class="nav-link px-3 text-dark border border-primary rounded-5"
-                            href="#sign-in">Sign in</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <!-- Navbar -->
+    <?php include("nav.php"); ?>
 
     <div>
         <a href="#" id="chatBotLink"
@@ -61,7 +41,7 @@
             <div class="row text-center">
                 <div class="col-12 z-5">
                     <div class=" display-1 fw-bold"
-                        style="margin-top: 2.3em; z-index: 3; color: white; font-family: 'Oswald'; font-size: 90px;">
+                        style="margin-top: 2.3em; z-index: 3; color: white; font-family: 'Oranienbaum'; font-size: 90px;">
                         CATERING</div>
                 </div>
                 <div class="col-12 mt-1">
@@ -353,40 +333,8 @@
         </div>
     </section>
 
-    <!-- footer -->
-    <section class="mt-5">
-        <div class="container-fluid bg-dark">
-            <div class="container">
-                <div class="row d-flex justify-content-center text-center pb-3">
-                    <div class="col-lg-2 col-5">
-                        <img src="images/YMZM-logo.png" class="w-75 pt-5">
-                    </div>
-                    <div class="col-10 pt-5">
-                        <ul class="list-unstyled text-light text-start">
-                            <li><i class="bi bi-clock" style="width: 1em;"></i> 9:00 AM - 7:00 PM | Monday to Friday
-                            </li>
-                            <li><i class="bi bi-geo-alt" style="width: 1em;"></i> 123 Main Street, City, Country</li>
-                            <li><i class="bi bi-telephone" style="width: 1em;"></i> Catering Services 0912 XXX XXXX |
-                                09XX XXX XXXX</li>
-                            <li><i class="bi bi-telephone" style="width: 1em;"></i> Food Order 09XX XXX XXXX | 09XX XXX
-                                XXXX</li>
-                        </ul>
-                    </div>
-                </div>
-                <hr style="margin: 0 auto;" class="text-light">
-                <div class="row">
-                    <div class="col text-light d-flex justify-content-between py-3">
-                        <p>@2025 copy right.</p>
-                        <div>
-                            <a href="#"><i class="bi bi-instagram fs-3 text-light"></i></a>
-                            <a href="#"><i class="bi bi-facebook fs-3 text-light"></i></a>
-                            <a href="#"><i class="bi bi-x fs-3 text-light"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- Footer -->
+    <?php include("footer.php"); ?>
 
     <script src="data.js"></script>
 
@@ -398,9 +346,9 @@
             rentalsRow.innerHTML += `
         <div class="col-md-4 col-lg-3 col-10 mb-3">
             <div class="card border rental-card" style="height: 260px; overflow: hidden;">
-                <img src="` + rntCategory.img + `" class="card-img-center" alt="` + rntCategory.title + `" style="height: 100%; object-fit: cover; filter: brightness(40%);">
-                <div class="card-img-overlay d-flex justify-content-center align-items-center p-2 text-white">
-                    <p class="fs-5 rounded-5 px-2 m-0">` + rntCategory.title + `</p>
+                <img src="` + rntCategory.img + `" class="card-img-center" alt="` + rntCategory.title + `" style="height: 100%; object-fit: cover;">
+                <div class="card-img-overlay d-flex justify-content-center align-items-center p-2">
+                    <p class="fs-5 rounded-5 px-2 m-0 text-white">` + rntCategory.title + `</p>
                 </div>
             </div>
         </div>
@@ -412,6 +360,21 @@
         var packageRow = document.getElementById("packageRow");
 
         packages.pkgCategories.forEach(pkgCategory => {
+            let link = "";
+            switch (pkgCategory.title.toLowerCase()) {
+                case "wedding":
+                    link = "wedding.php";
+                    break;
+                case "debut":
+                    link = "debut.php";
+                    break;
+                case "kids party":
+                    link = "children_party.php";
+                    break;
+                case "corporate events":
+                    link = "corporate.php";
+                    break;
+            }
             packageRow.innerHTML += `
         <div class="col-md-4 col-lg-3 col-10">
                     <div class="card-pkg card border" style="height: 350px; overflow: hidden;">
@@ -425,7 +388,7 @@
                             <p class="small mb-2">` + pkgCategory.desc + `
                                 
                             </p>
-                            <a href="#" target="_blank" class="btn btn-light btn-sm"
+                            <a href="`+ link +`" class="btn btn-light btn-sm"
                                 style="z-index: 6; color: rgb(231, 87, 231);">View Package</a>
                         </div>
                     </div>

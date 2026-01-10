@@ -14,16 +14,16 @@ $cart = $_SESSION['cart'] ?? [];
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="cart.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
 <body class="bg-light">
-
   <div class="container py-4">
-
-    <div class="container my-4">
-      <button onclick="history.back()" class="btn btn-outline-dark text-decoration-none">
-        &larr; Back
-      </button>
+    <div class="m-2">
+      <span class="d-inline-flex align-items-center back-action g-2" onclick="history.back()">
+        <i class="material-icons">&#xe5c4;</i>
+        <span>back</span>
+      </span>
     </div>
 
     <h3 class="text-center fw-bold my-3">SHOPPING CART</h3>
