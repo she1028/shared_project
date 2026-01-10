@@ -11,6 +11,7 @@
     body {
       background-color: #f7f4f1;
       font-family: "Helvetica", "Arial", sans-serif;
+      font-size: 14px;
     }
 
     .form-wrapper {
@@ -18,7 +19,6 @@
       border-radius: 1.25rem;
       border: 2px solid #e0d6cf;
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
-      max-width: 900px;
     }
 
     .info-panel {
@@ -107,6 +107,13 @@
       background-color: #fbf7f5;
       border-color: #eadfda;
     }
+
+    .form-control,
+    .form-select,
+    .notes-area {
+      padding: 0.15rem 0.6rem;
+      font-size: 0.9rem;
+    }
   </style>
 </head>
 
@@ -114,13 +121,17 @@
 
   <img src="images/YMZM-logo.png" class="mx-auto d-block" height="200" alt="YMZM Logo">
 
-  <div class="container py-5 px-4 px-md-5 form-wrapper mt-4">
+  <div class="container-fluid py-5 form-wrapper mt-4">
     <div class="row">
       <div class="col-12">
         <div class="display-5 text-center fw-semibold">Catering Order Form</div>
 
         <form action="#" class="mt-5">
-          <fieldset class="info-panel shadow mb-5">
+          <div class="row g-4">
+            <div class="col-12 col-lg-4">
+                
+              <!-- billing info -->
+              <fieldset class="info-panel shadow-sm mb-4" style="height: 97%;">
             <legend class="info-legend">
               <div class="px-3 bg-white" style="margin-top: -2em;width: fit-content;">Billing Information</div>
             </legend>
@@ -211,10 +222,12 @@
                 </div>
               </div>
             </div>
-          </fieldset>
+              </fieldset>
+            </div>
+            <div class="col-12 col-lg-8">
 
-
-          <fieldset class="info-panel mt-4 shadow mb-5">
+              <!-- delivery details -->
+              <fieldset class="info-panel shadow-sm mb-4 pb-5">
             <legend class="info-legend">
               <div class="px-3 bg-white" style="margin-top: -2em;width: fit-content;">Delivery Details</div>
             </legend>
@@ -274,10 +287,10 @@
                 </div>
               </div>
             </div>
-          </fieldset>
+              </fieldset>
 
-
-          <fieldset class="info-panel mt-4 shadow mb-5">
+              <!-- package details -->
+              <fieldset class="info-panel shadow-sm mb-4">
             <legend class="info-legend">
               <div class="px-3 bg-white" style="margin-top: -2em;width: fit-content;">Package Details</div>
             </legend>
@@ -326,60 +339,67 @@
                   placeholder="$0.00">
               </div>
             </div>
-          </fieldset>
-
-
-          <fieldset class="info-panel mt-4 shadow mb-5">
-            <legend class="info-legend">
-              <div class="px-3 bg-white" style="margin-top: -2em;width: fit-content;">Food Menu</div>
-            </legend>
-
-            <div class="row mb-3 align-items-center">
-              <div class="col-sm-12 d-flex gap-5 justify-content-center">
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="ServingStyle" id="style-serving"
-                    value="per-serving" checked>
-                  <label class="form-check-label" for="style-serving">Per serving</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="ServingStyle" id="style-buffet" value="buffet">
-                  <label class="form-check-label" for="style-buffet">Buffet style</label>
-                </div>
-              </div>
+              </fieldset>
             </div>
-
-            <div id="menu-category-container"></div>
-
-            <div class="mb-3">
-              <label for="MenuNote" class="form-label fw-semibold">Note / Request:</label>
-              <textarea id="MenuNote" name="MenuNote" class="form-control notes-area"
-                placeholder="Note any request..."></textarea>
-            </div>
-          </fieldset>
-
-
-          <fieldset class="info-panel mt-4 shadow mb-5">
-            <legend class="info-legend">
-              <div class="px-3 bg-white" style="margin-top: -2em;width: fit-content;">Decoration</div>
-            </legend>
-
-            <div class="mb-3">
-              <label for="DecorationNotes" class="form-label">Describe your preferred color, theme, or
-                decoration:</label>
-              <textarea id="DecorationNotes" name="DecorationNotes" class="form-control notes-area"
-                placeholder="e.g., blush pink, rustic theme, floral arch"></textarea>
-            </div>
-          </fieldset>
-
-          <div class="text-end mt-4">
-            <button type="submit" class="btn btn-outline-secondary px-5">Submit Order</button>
           </div>
-        </form>
-      </div>
+
+          <div class="row g-4 mt-2">
+            <div class="col-12">
+              <!-- food menu -->
+              <fieldset class="info-panel shadow-sm mb-4">
+                <legend class="info-legend">
+                <div class="px-3 bg-white" style="margin-top: -2em;width: fit-content;">Food Menu</div>
+                </legend>
+
+                <div class="row mb-3 align-items-center">
+                <div class="col-sm-12 d-flex gap-5 justify-content-center">
+                    <div class="form-check">
+                    <input class="form-check-input" type="radio" name="ServingStyle" id="style-serving"
+                        value="per-serving" checked>
+                    <label class="form-check-label" for="style-serving">Per serving</label>
+                    </div>
+                    <div class="form-check">
+                    <input class="form-check-input" type="radio" name="ServingStyle" id="style-buffet" value="buffet">
+                    <label class="form-check-label" for="style-buffet">Buffet style</label>
+                    </div>
+                </div>
+                </div>
+
+                <div id="menu-category-container"></div>
+
+                <div class="mb-3">
+                <label for="MenuNote" class="form-label fw-semibold">Note / Request:</label>
+                <textarea id="MenuNote" name="MenuNote" class="form-control notes-area"
+                    placeholder="Note any request..."></textarea>
+                </div>
+              </fieldset>
+            </div>
+            <div class="col-12">
+              <!-- decoration -->
+              <fieldset class="info-panel shadow-sm mb-4">
+                <legend class="info-legend">
+                <div class="px-3 bg-white" style="margin-top: -2em;width: fit-content;">Decoration</div>
+                </legend>
+
+                <div class="mb-3">
+                <label for="DecorationNotes" class="form-label">Describe your preferred color, theme, or
+                    decoration:</label>
+                <textarea id="DecorationNotes" name="DecorationNotes" class="form-control notes-area"
+                    placeholder="e.g., blush pink, rustic theme, floral arch"></textarea>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+
+          <div class="text-center mt-4">
+            <button type="submit" class="btn btn-outline-secondary px-5 rounded-5">Submit Order</button>
+          </div>
     </div>
-  </div>
+    </div>
+ </div>
 
 
+ <!-- JavaScript -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
     crossorigin="anonymous"></script>
@@ -474,10 +494,10 @@
         const col = document.createElement('div');
         col.className = 'col';
         col.innerHTML = `
-          <div class="form-check d-flex justify-content-between align-items-center px-5">
+          <div class="form-check d-flex justify-content-between align-items-center px-3">
             <div class="d-flex align-items-center">
               <input class="form-check-input me-2" type="checkbox" value="`+ item.id + `" id="` + item.id + `">
-              <label class="form-check-label" for="`+ item.id + `">` + item.label + `</label>
+              <label style="font-size: 14px;" class="form-check-label" for="`+ item.id + `">` + item.label + `</label>
             </div>
             <span class="menu-price">`+ formatPrice(item.price) + `</span>
           </div>
@@ -496,7 +516,7 @@
         `;
 
         const row = document.createElement('div');
-        row.className = 'row row-cols-1 row-cols-md-2 g-2 menu-items';
+        row.className = 'row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-2 menu-items';
         category.items.forEach((item) => row.appendChild(createMenuItem(item)));
         section.appendChild(row);
 
@@ -507,4 +527,3 @@
 </body>
 
 </html>
-S
