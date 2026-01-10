@@ -121,15 +121,17 @@
         cursor: pointer;
         user-select: none;
         width: fit-content;
+        position: fixed;
+        z-index: 10;
     }
   </style>
 </head>
 
 <body>
   <div class="m-4">
-    <span class="d-inline-flex align-items-center back-action g-2" onclick="history.back()">
+    <span class="d-inline-flex align-items-center border bg-light px-3 py-2 rounded-5 back-action  btn-outline-darkg-2" onclick="history.back()">
       <i class="material-icons">&#xe5c4;</i>
-      <span>back</span>
+      <span> Back</span>
     </span>
   </div>
 
@@ -410,7 +412,8 @@
           </div>
       </div>
     </div>
-  </div>
+    </div>
+ </div>
 
 
   <!-- JavaScript -->
