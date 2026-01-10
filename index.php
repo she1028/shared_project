@@ -353,40 +353,8 @@
         </div>
     </section>
 
-    <!-- footer -->
-    <section class="mt-5">
-        <div class="container-fluid bg-dark">
-            <div class="container">
-                <div class="row d-flex justify-content-center text-center pb-3">
-                    <div class="col-lg-2 col-5">
-                        <img src="images/YMZM-logo.png" class="w-75 pt-5">
-                    </div>
-                    <div class="col-10 pt-5">
-                        <ul class="list-unstyled text-light text-start">
-                            <li><i class="bi bi-clock" style="width: 1em;"></i> 9:00 AM - 7:00 PM | Monday to Friday
-                            </li>
-                            <li><i class="bi bi-geo-alt" style="width: 1em;"></i> 123 Main Street, City, Country</li>
-                            <li><i class="bi bi-telephone" style="width: 1em;"></i> Catering Services 0912 XXX XXXX |
-                                09XX XXX XXXX</li>
-                            <li><i class="bi bi-telephone" style="width: 1em;"></i> Food Order 09XX XXX XXXX | 09XX XXX
-                                XXXX</li>
-                        </ul>
-                    </div>
-                </div>
-                <hr style="margin: 0 auto;" class="text-light">
-                <div class="row">
-                    <div class="col text-light d-flex justify-content-between py-3">
-                        <p>@2025 copy right.</p>
-                        <div>
-                            <a href="#"><i class="bi bi-instagram fs-3 text-light"></i></a>
-                            <a href="#"><i class="bi bi-facebook fs-3 text-light"></i></a>
-                            <a href="#"><i class="bi bi-x fs-3 text-light"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+        <!-- Footer -->
+    <?php include("footer.php"); ?>
 
     <script src="data.js"></script>
 
