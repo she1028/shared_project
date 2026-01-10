@@ -58,7 +58,7 @@
                         </div>
                         <!-- Category -->
                         <div class="d-flex align-items-center justify-content-center m-2">
-                            <span class="rounded-5 text-center py-1 px-5" style="background-color: #c6c6c6cc; justify-content: center;">Tables</span>
+                            <span class="rounded-5 text-center py-1 px-3" style="background-color: #c6c6c6cc; justify-content: center; font-size: 13px;">Tables</span>
                         </div>
                         <div class="row mt-2">
                             <!-- Title -->

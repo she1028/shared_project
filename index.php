@@ -398,9 +398,9 @@
             rentalsRow.innerHTML += `
         <div class="col-md-4 col-lg-3 col-10 mb-3">
             <div class="card border rental-card" style="height: 260px; overflow: hidden;">
-                <img src="` + rntCategory.img + `" class="card-img-center" alt="` + rntCategory.title + `" style="height: 100%; object-fit: cover; filter: brightness(40%);">
-                <div class="card-img-overlay d-flex justify-content-center align-items-center p-2 text-white">
-                    <p class="fs-5 rounded-5 px-2 m-0">` + rntCategory.title + `</p>
+                <img src="` + rntCategory.img + `" class="card-img-center" alt="` + rntCategory.title + `" style="height: 100%; object-fit: cover;">
+                <div class="card-img-overlay d-flex justify-content-center align-items-center p-2">
+                    <p class="fs-5 rounded-5 px-2 m-0 text-white">` + rntCategory.title + `</p>
                 </div>
             </div>
         </div>
