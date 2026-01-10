@@ -16,6 +16,20 @@
     const ACTIVE_PACKAGE_TYPE = "<?php echo $packageType; ?>";
 </script>
 </head>
+<style>
+    .package-img {
+    max-width: 500px;
+    max-height: 500px;
+    object-fit: contain;
+}
+
+@media (max-width: 600px) {
+    .package-img {
+        max-width: 100%;
+    max-height: 500px;
+    }
+}
+</style>
 
 <body>
     <!-- Navbar -->
@@ -60,9 +74,8 @@ include("header.php");
                 <div class="d-flex flex-column flex-lg-row align-items-center gap-4">
                     
                     <!-- Package Image -->
-                    <div class="flex-fill h-100 text-center d-flex align-items-center">
-                        <img src="${pkg.image}" alt="debut" class="img-fluid"
-                            style="max-height:${pkg.maxImageHeight}; width: 100%; object-fit: contain;">
+                    <div class="flex-fill h-100 text-center d-flex align-items-center justify-content-center">
+                        <img src="${pkg.image}" alt="debut" class="img-fluid package-img">
                     </div>
 
                     <!-- Package Details -->
@@ -83,7 +96,7 @@ include("header.php");
 
                             <div class="d-flex justify-content-between align-items-center" style="font-size: 20px;">
                                 <div>
-                                        <span style="font-family: 'poppins'; font-size: 16px;">Starts at </span><span class="fs-2" style="font-family: 'Oranienbaum';">${pkg.currency}${pkg.startsAt}</span>
+                                        <span style="font-family: 'poppins'; font-size: 16px;">Starts at </span><span class="fs-2" style="font-family: 'Oranienbaum';"> ₱${pkg.startsAt}</span>
                                     </div>
                                 <a href="event_form.php" class="btn btn btn-primary-custom" style="background-color: ${pkg.buttoncolor || '#BE4738'};">
                                     Book Now

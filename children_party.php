@@ -17,6 +17,21 @@
 </script>
 </head>
 
+<style>
+    .package-img {
+    max-width: 500px;
+    max-height: 500px;
+    object-fit: contain;
+}
+
+@media (max-width: 600px) {
+    .package-img {
+        max-width: 100%;
+    max-height: 500px;
+    }
+}
+</style>
+
 <body>
     <!-- Navbar -->
     <?php include("nav.php"); ?>
@@ -59,10 +74,9 @@ include("header.php");
             <div class="container-fluid">
                 <div class="row my-5 p-5 shadow-sm" style="background-color: ${pkg.backgroundColor || '#E5F7FB'};">
                     <div class="d-flex flex-column flex-lg-row align-items-center gap-4">
-                        <div class="flex-fill h-100 text-center d-flex align-items-center">
-                            <img src="${pkg.image}" alt="wedding" class="img-fluid"
-                                style="max-height:${pkg.maxImageHeight}; width: 100%; object-fit: contain;">
-                        </div>
+                    <div class="flex-fill h-100 text-center d-flex align-items-center justify-content-center">
+                        <img src="${pkg.image}" alt="childrenparty" class="img-fluid package-img">
+                    </div>
                         <div class="flex-fill h-100 d-flex align-items-center">
                             <div>
                                 <h6 class="package-title">${pkg.packageTitle}</h6>
@@ -77,7 +91,7 @@ include("header.php");
                                 <hr class="my-3">
                                 <div class="d-flex justify-content-between align-items-center" style="font-size: 20px;">
                                     <div>
-                                        <span style="font-family: 'poppins'; font-size: 16px;">Party starts at </span><span class="fs-2" style="font-family: 'Oranienbaum';">${pkg.currency}${pkg.startsAt}</span>
+                                        <span style="font-family: 'poppins'; font-size: 16px;">Party starts at </span><span class="fs-2" style="font-family: 'Oranienbaum';"> ₱${pkg.startsAt}</span>
                                     </div>
                                 <a href="event_form.php" class="btn btn btn-primary-custom" style="background-color: ${pkg.buttoncolor || '#172783'};">
                                     Book Now

@@ -1,4 +1,4 @@
-<?php $packageType = "wedding";?>
+<?php $packageType = "wedding"; ?>
 <!doctype html>
 <html lang="en">
 
@@ -13,14 +13,27 @@
     <link href='https://fonts.googleapis.com/css?family=Oranienbaum' rel='stylesheet'>
 
     <style>
+        .package-img {
+            max-width: 500px;
+            max-height: 500px;
+            object-fit: contain;
+        }
+
+        @media (max-width: 600px) {
+            .package-img {
+                max-width: 100%;
+                max-height: 500px;
+            }
+        }
+
         .btn-primary-custom {
             background-color: #6D4302;
         }
     </style>
 
     <script>
-    const ACTIVE_PACKAGE_TYPE = "<?php echo $packageType; ?>";
-</script>
+        const ACTIVE_PACKAGE_TYPE = "<?php echo $packageType; ?>";
+    </script>
 </head>
 
 <body>
@@ -29,10 +42,10 @@
 
     <!-- Hero Section -->
     <?php
-$heroTitle = "Wedding Catering Packages";
-$heroImage = "images/packages/wedding_header.jpg";
+    $heroTitle = "Wedding Catering Packages";
+    $heroImage = "images/packages/wedding_header.jpg";
 
-$heroBreadcrumb = '
+    $heroBreadcrumb = '
     <a href="index.php#home" class="text-white text-decoration-none">Home</a>
     <span style="color:#ffffff;"> &lt; </span>
     <a href="wedding.php"
@@ -42,8 +55,8 @@ $heroBreadcrumb = '
     </a>
 ';
 
-include("header.php");
-?>
+    include("header.php");
+    ?>
 
     <!-- Packages Section -->
     <div id="packagesContainer"></div>
@@ -64,9 +77,9 @@ include("header.php");
             <div class="container-fluid">
                 <div class="row my-5 p-5 shadow-sm" style="background-color: ${pkg.backgroundColor || '#EADCC6'};">
                     <div class="d-flex flex-column flex-lg-row align-items-center gap-4">
-                        <div class="flex-fill h-100 text-center d-flex align-items-center">
-                            <img src="${pkg.image}" alt="wedding" class="img-fluid"
-                                style="max-height:${pkg.maxImageHeight}; width: 100%; object-fit: contain;">
+                        <!-- Package Image -->
+                        <div class="flex-fill h-100 text-center d-flex align-items-center justify-content-center">
+                            <img src="${pkg.image}" alt="wedding" class="img-fluid package-img">
                         </div>
                         <div class="flex-fill h-100 d-flex align-items-center">
                             <div>
@@ -80,7 +93,7 @@ include("header.php");
                                 <hr class="my-3">
                                 <div class="d-flex justify-content-between align-items-center" style="font-size: 20px;">
                                     <div>
-                                        <span style="font-family: 'poppins'; font-size: 16px;">Starts at </span><span class="fs-2" style="font-family: 'Oranienbaum';">${pkg.currency}${pkg.startsAt}</span>
+                                        <span style="font-family: 'poppins'; font-size: 16px;">Starts at </span><span class="fs-2" style="font-family: 'Oranienbaum';"> ₱${pkg.startsAt}</span>
                                     </div>
                                     <a href="event_form.php" class="btn btn btn-primary-custom">Book Now</a>
                                 </div>
@@ -99,4 +112,5 @@ include("header.php");
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
 </body>
+
 </html>
