@@ -9,9 +9,11 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
 }
 
 // Fetch example counts
-$res_users = mysqli_query($conn, "SELECT COUNT(*) as total_users FROM users");
+$total_sections = $conn->query("SELECT COUNT(*) AS cnt FROM sections")->fetch_assoc()['cnt'];
 $total_users = $conn->query("SELECT COUNT(*) AS cnt FROM users")->fetch_assoc()['cnt'];
+$total_food_categories = $conn->query("SELECT COUNT(*) AS cnt FROM food_categories")->fetch_assoc()['cnt'];
 $total_foods = $conn->query("SELECT COUNT(*) AS cnt FROM foods")->fetch_assoc()['cnt'];
+
 
 ?>
 
@@ -29,7 +31,7 @@ $total_foods = $conn->query("SELECT COUNT(*) AS cnt FROM foods")->fetch_assoc()[
 <body>
     <div class="bg-blur"></div>
 
-    <div class="container admin-wrapper d-flex justify-content-center align-items-start py-5">
+    <div class="container admin-wrapper d-flex justify-content-start align-items-start py-5">
 
         <!-- Top Row with Logout -->
         <div class="row w-100 mb-4">
@@ -66,18 +68,17 @@ $total_foods = $conn->query("SELECT COUNT(*) AS cnt FROM foods")->fetch_assoc()[
 
             <!-- Main Welcome Card -->
             <div class="col-12 d-flex justify-content-center">
-                <div class="card card-admin shadow w-100" style="max-width: 1000px;">
-                    <h4 class="mb-3">Welcome, <?php echo $_SESSION['name']; ?></h4>
-                    <p>Use the navigation above or cards to manage your website content.</p>
-                    <p>Future: Add charts, recent activity, or content stats here.</p>
+                <div class="card card-admin shadow w-100 text-center" style="max-width: 1000px;">
+                    <h4>Welcome, <?php echo $_SESSION['name']; ?></h4>
                 </div>
             </div>
 
-           
+            <!-- Sections Content Card -->
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
                     <div class="card card-admin shadow text-center w-100 m-3" style="max-width: 300px;">
                         <h5 class="mb-2">Sections Content</h5>
+                        <h2 class="mb-3"><?php echo $total_sections; ?></h2>
                         <a href="manage_sections.php" class="btn btn-primary btn-sm">Manage Sections</a>
                     </div>
                 </div>
@@ -93,21 +94,24 @@ $total_foods = $conn->query("SELECT COUNT(*) AS cnt FROM foods")->fetch_assoc()[
                 <!-- Total Foods Card -->
                 <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
                     <div class="card card-admin shadow text-center w-100 m-3" style="max-width: 300px;">
+                        <h5 class="mb-2">Total Food Categories</h5>
+                        <h2 class="mb-3"><?php echo $total_food_categories; ?></h2>
+                        <a href="food_categories.php" class="btn btn-primary btn-sm">Manage Food Categories</a>
+                    </div>
+                </div>
+                <!-- Total Foods Card -->
+                <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
+                    <div class="card card-admin shadow text-center w-100 m-3" style="max-width: 300px;">
                         <h5 class="mb-2">Total Foods</h5>
                         <h2 class="mb-3"><?php echo $total_foods; ?></h2>
                         <a href="food.php" class="btn btn-primary btn-sm">Manage Foods</a>
                     </div>
                 </div>
 
-
-
-            <!-- Future Overview Cards -->
-            <!-- Example: Rentals, Packages overview cards -->
-
+            </div>
         </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
