@@ -18,22 +18,7 @@
     <!-- Navbar -->
     <?php include("nav.php"); ?>
 
-    <div>
-        <a href="#" id="chatBotLink"
-            class="position-fixed bottom-0 start-0 my-4 mx-3 d-flex align-items-center gap-2 text-decoration-none rounded-pill shadow px-3 py-2"
-            style="z-index: 1055;">
-
-            <img src="images/bot.png" alt="Chat Bot" width="50">
-            <span class="fw-medium text-dark">Chat with us!</span>
-        </a>
-
-        <script>
-            document.getElementById("chatBotLink").addEventListener("click", function(event) {
-                event.preventDefault();
-                alert("Chat opened!");
-            });
-        </script>
-    </div>
+    <?php include("includes/chatbot.php"); ?>
 
     <!-- Home -->
     <section id="home">

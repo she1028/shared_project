@@ -4,7 +4,7 @@ const weddingInclusions = [
         id: "standard",
         offer: "CLASSIC OFFER",
         title: "Standard Package",
-        price: "$700 per guest",
+        price: "700 per guest",
         note: "Price may vary depending on menu selection, number of guests, service preferences, and location.",
         image: "images/packages/standard.jpg",
         menu: [
@@ -38,7 +38,7 @@ const weddingInclusions = [
         id: "premium",
         offer: "SIGNATURE OFFER",
         title: "Premium Package",
-        price: "$1,200 per guest",
+        price: "1,200 per guest",
         note: "Premium inclusions with upgraded styling and menu options.",
         image: "images/packages/premium.jpg",
         menu: [
@@ -77,7 +77,7 @@ const weddingInclusions = [
         id: "deluxe",
         offer: "PRESTIGE OFFER",
         title: "Deluxe Package",
-        price: "$1,800 per guest",
+        price: "1,800 per guest",
         note: "Deluxe inclusions with premium styling and menu options.",
         image: "images/packages/deluxe.jpg",
         menu: [
@@ -120,7 +120,7 @@ const childrensPartyInclusions = [
     id: "little-star",
     offer: "CLASSIC OFFER",
     title: "Little Star Package",
-    price: "$500 per guest",
+    price: "500 per guest",
     note: "Perfect for small children’s parties. Price may vary depending on menu selection, number of guests, and decorations.",
     image: "images/packages/little-star.jpg",
     menu: [
@@ -154,7 +154,7 @@ const childrensPartyInclusions = [
     id: "super-star",
     offer: "SIGNATURE OFFER",
     title: "Super Star Package",
-    price: "$650 per guest",
+    price: "750 per guest",
     note: "Ideal for medium-sized children’s parties with added decorations and activities.",
     image: "images/packages/super-star.jpg",
     menu: [
@@ -194,7 +194,7 @@ const childrensPartyInclusions = [
     id: "mega-star",
     offer: "PRESTIGE OFFER",
     title: "Mega Star Package",
-    price: "$800 per guest",
+    price: "850 per guest",
     note: "Best for large and grand children’s parties with full decorations and entertainment.",
     image: "images/packages/mega-star.jpg",
     menu: [
@@ -240,7 +240,7 @@ const corporateInclusions = [
     id: "essential",
     offer: "CLASSIC OFFER",
     title: "Essential Package",
-    price: "$500 per guest",
+    price: "600 per guest",
     note: "Perfect for small corporate gatherings. Price may vary depending on menu selection, number of attendees, and styling.",
     image: "images/packages/essential.jpg",
     menu: [
@@ -274,7 +274,7 @@ const corporateInclusions = [
     id: "professional",
     offer: "SIGNATURE OFFER",
     title: "Professional Package",
-    price: "$750 per guest",
+    price: "800 per guest",
     note: "Ideal for medium-sized corporate events with enhanced styling and catering options.",
     image: "images/packages/professional.jpg",
     menu: [
@@ -311,7 +311,7 @@ const corporateInclusions = [
     id: "executive",
     offer: "PRESTIGE OFFER",
     title: "Executive Package",
-    price: "$1,200 per guest",
+    price: "1,200 per guest",
     note: "Best for large corporate events with full-service catering, premium styling, and executive-level support.",
     image: "images/packages/executive.jpg",
     menu: [
@@ -354,7 +354,7 @@ const debutInclusions = [
     id: "Grace",
     offer: "CLASSIC OFFER",
     title: "Grace Package",
-    price: "$500 per guest",
+    price: "700 per guest",
     note: "Perfect for intimate 18th birthday celebrations of 30–40 guests. Price may vary depending on menu selection, number of attendees, and styling preferences.",
     image: "images/packages/grace.jpg",
     menu: [
@@ -390,7 +390,7 @@ const debutInclusions = [
     id: "elegance",
     offer: "SIGNATURE OFFER",
     title: "Elegance Package",
-    price: "$750 per guest",
+    price: "900 per guest",
     note: "Ideal for medium-sized debut celebrations of 50–70 guests with enhanced styling, curated menus, and coordinated event setup.",
     image: "images/packages/elegance.jpg",
     menu: [
@@ -429,7 +429,7 @@ const debutInclusions = [
     id: "radiance",
     offer: "SIGNATURE OFFER",
     title: "Radiance Package",
-    price: "$850 per guest",
+    price: "1100 per guest",
     note: "Best for grand debut celebrations of 80–120 guests with full-service catering, premium styling, entertainment, and dedicated staff.",
     image: "images/packages/radiance.jpg",
     menu: [

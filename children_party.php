@@ -72,7 +72,7 @@ include("header.php");
     function renderPackage(pkg) {
             const html = `
             <div class="container-fluid">
-                <div class="row my-5 p-5 shadow-sm" style="background-color: ${pkg.backgroundColor || '#E5F7FB'};">
+                <div class="row my-5 p-5 shadow-sm" style="background-color:#F5D1E7;">
                     <div class="d-flex flex-column flex-lg-row align-items-center gap-4">
                     <div class="flex-fill h-100 text-center d-flex align-items-center justify-content-center">
                         <img src="${pkg.image}" alt="childrenparty" class="img-fluid package-img">
@@ -84,7 +84,7 @@ include("header.php");
                                 <p class="pt-1 package-description">
                                     ${pkg.description}
                                     <p class="text-muted mb-1">${pkg.note}</p>
-                                    <button class="btn btn-sm btn-primary-custom" style="background-color: ${pkg.buttoncolor || '#172783'};" 
+                                    <button class="btn btn-sm btn-primary-custom" style="background-color: #830050;" 
                                     onclick="openInclusionModal('${pkg.id}')">Full Inclusion
                                     </button>
                                 </p>
@@ -93,7 +93,7 @@ include("header.php");
                                     <div>
                                         <span style="font-family: 'poppins'; font-size: 16px;">Party starts at </span><span class="fs-2" style="font-family: 'Oranienbaum';"> ₱${pkg.startsAt}</span>
                                     </div>
-                                <a href="event_form.php" class="btn btn btn-primary-custom" style="background-color: ${pkg.buttoncolor || '#172783'};">
+                                <a href="event_form.php" class="btn btn btn-primary-custom" style="background-color: #830050;">
                                     Book Now
                                 </a>
                             </div>

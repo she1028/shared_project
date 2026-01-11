@@ -70,7 +70,7 @@ include("header.php");
     function renderPackage(pkg) {
         const html = `
         <div class="container-fluid">
-            <div class="row my-5 p-5 shadow-sm" style="background-color: ${pkg.backgroundColor || '#F8CEC9'};">
+            <div class="row my-5 p-5 shadow-sm" style="background-color: #F8CEC9;">
                 <div class="d-flex flex-column flex-lg-row align-items-center gap-4">
                     
                     <!-- Package Image -->
@@ -87,7 +87,7 @@ include("header.php");
                             <p class="pt-1 package-description">
                                 ${pkg.description}
                                 <p class="text-muted mb-1">${pkg.note}</p>
-                                <button class="btn btn-sm btn-primary-custom" style="background-color: ${pkg.buttoncolor || '#BE4738'};" 
+                                <button class="btn btn-sm btn-primary-custom" style="background-color:#BE4738;" 
                                     onclick="openInclusionModal('${pkg.id}')">Full Inclusion
                                     </button>
                             </p>
@@ -98,7 +98,7 @@ include("header.php");
                                 <div>
                                         <span style="font-family: 'poppins'; font-size: 16px;">Starts at </span><span class="fs-2" style="font-family: 'Oranienbaum';"> ₱${pkg.startsAt}</span>
                                     </div>
-                                <a href="event_form.php" class="btn btn btn-primary-custom" style="background-color: ${pkg.buttoncolor || '#BE4738'};">
+                                <a href="event_form.php" class="btn btn btn-primary-custom" style="background-color: #BE4738;">
                                     Book Now
                                 </a>
                             </div>

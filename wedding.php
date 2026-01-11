@@ -75,7 +75,7 @@
         function renderPackage(pkg) {
             const html = `
             <div class="container-fluid">
-                <div class="row my-5 p-5 shadow-sm" style="background-color: ${pkg.backgroundColor || '#EADCC6'};">
+                <div class="row my-5 p-5 shadow-sm" style="background-color: #EADCC6;">
                     <div class="d-flex flex-column flex-lg-row align-items-center gap-4">
                         <!-- Package Image -->
                         <div class="flex-fill h-100 text-center d-flex align-items-center justify-content-center">
