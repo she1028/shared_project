@@ -30,6 +30,21 @@ try {
     $total_package_details = 0;
 }
 
+// Rentals counts (optional)
+$total_rental_groups = 0;
+$total_rental_items = 0;
+try {
+    $total_rental_groups = $conn->query("SELECT COUNT(*) AS cnt FROM rental_groups")->fetch_assoc()['cnt'];
+} catch (mysqli_sql_exception $e) {
+    $total_rental_groups = 0;
+}
+
+try {
+    $total_rental_items = $conn->query("SELECT COUNT(*) AS cnt FROM rental_items")->fetch_assoc()['cnt'];
+} catch (mysqli_sql_exception $e) {
+    $total_rental_items = 0;
+}
+
 
 ?>
 
@@ -139,6 +154,24 @@ try {
                         <h5 class="mb-2">Package Details</h5>
                         <h2 class="mb-3"><?php echo $total_package_details; ?></h2>
                         <a href="package_details.php" class="btn btn-primary btn-sm">Manage Inclusions</a>
+                    </div>
+                </div>
+
+                <!-- Rentals Groups Card -->
+                <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
+                    <div class="card card-admin shadow text-center w-100 m-3" style="max-width: 300px;">
+                        <h5 class="mb-2">Rental Groups</h5>
+                        <h2 class="mb-3"><?php echo $total_rental_groups; ?></h2>
+                        <a href="rentals.php" class="btn btn-primary btn-sm">Manage Rentals</a>
+                    </div>
+                </div>
+
+                <!-- Rentals Items Card -->
+                <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
+                    <div class="card card-admin shadow text-center w-100 m-3" style="max-width: 300px;">
+                        <h5 class="mb-2">Rental Items</h5>
+                        <h2 class="mb-3"><?php echo $total_rental_items; ?></h2>
+                        <a href="rentals.php?group_id=8" class="btn btn-primary btn-sm">Manage Rentals</a>
                     </div>
                 </div>
 

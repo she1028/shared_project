@@ -1,0 +1,412 @@
+-- Rentals seed script (from items.js)
+-- How to use: phpMyAdmin -> SQL tab -> paste this whole file -> Go
+
+SET NAMES utf8mb4;
+
+CREATE DATABASE IF NOT EXISTS ymzm
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+
+USE ymzm;
+
+-- =========================
+-- Tables
+-- =========================
+
+CREATE TABLE IF NOT EXISTS rental_groups (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  group_key VARCHAR(80) NOT NULL UNIQUE,
+  group_name VARCHAR(120) NOT NULL,
+  description TEXT NULL,
+  cover_img VARCHAR(255) NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS rental_items (
+  id VARCHAR(40) NOT NULL PRIMARY KEY,
+  group_id INT UNSIGNED NOT NULL,
+  item_category VARCHAR(120) NOT NULL,
+  name VARCHAR(160) NOT NULL,
+  price DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  img VARCHAR(255) NULL,
+  stock INT NOT NULL DEFAULT 0,
+  default_qty INT NOT NULL DEFAULT 1,
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_rental_items_group
+    FOREIGN KEY (group_id) REFERENCES rental_groups(id)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS rental_item_colors (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  item_id VARCHAR(40) NOT NULL,
+  color_name VARCHAR(60) NOT NULL,
+  color_hex VARCHAR(20) NOT NULL,
+  CONSTRAINT fk_rental_item_colors_item
+    FOREIGN KEY (item_id) REFERENCES rental_items(id)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- =========================
+-- Data
+-- =========================
+
+-- Group: Chairs
+INSERT INTO rental_groups (group_key, group_name, description, cover_img)
+VALUES (
+  'chairs',
+  'Chairs',
+  'Comfortable and stylish chairs perfect for any event, available in different designs and colors to match your theme.',
+  'images/Catering/chair/c1.jpg'
+)
+ON DUPLICATE KEY UPDATE
+  group_name=VALUES(group_name),
+  description=VALUES(description),
+  cover_img=VALUES(cover_img);
+
+SET @chairs_id = (SELECT id FROM rental_groups WHERE group_key='chairs' LIMIT 1);
+
+INSERT INTO rental_items (id, group_id, item_category, name, price, img, stock, default_qty)
+VALUES
+('chr-001', @chairs_id, 'Chairs', 'Kids Chair', 50.00, 'images/Catering/chair/c1.jpg', 150, 1),
+('chr-002', @chairs_id, 'Chairs', 'Tiffany Chair', 20.00, 'images/Catering/chair/c2.jpg', 150, 1),
+('chr-003', @chairs_id, 'Chairs', 'Tiffany Chair', 80.00, 'images/Catering/chair/c3.jpg', 150, 1),
+('chr-004', @chairs_id, 'Chairs', 'Gold Chair', 80.00, 'images/Catering/chair/c4.jpg', 150, 1),
+('chr-005', @chairs_id, 'Chairs', 'Gold Chair', 80.00, 'images/Catering/chair/c5.jpg', 150, 1)
+ON DUPLICATE KEY UPDATE
+  group_id=VALUES(group_id),
+  item_category=VALUES(item_category),
+  name=VALUES(name),
+  price=VALUES(price),
+  img=VALUES(img),
+  stock=VALUES(stock),
+  default_qty=VALUES(default_qty);
+
+DELETE FROM rental_item_colors WHERE item_id IN ('chr-001','chr-002','chr-003','chr-004','chr-005');
+INSERT INTO rental_item_colors (item_id, color_name, color_hex) VALUES
+('chr-001','White','#FFFFFF'),
+('chr-002','White','#FFFFFF'),
+('chr-003','Gray','#838282ff'),
+('chr-004','Gold','#D4AF37'),
+('chr-005','Black','#000000');
+
+-- Group: Containers
+INSERT INTO rental_groups (group_key, group_name, description, cover_img)
+VALUES (
+  'containers',
+  'Containers',
+  'Durable and practical containers for food and beverage storage, ideal for parties, catering, and gatherings.',
+  'images/Catering/Containers/s1.jpg'
+)
+ON DUPLICATE KEY UPDATE
+  group_name=VALUES(group_name),
+  description=VALUES(description),
+  cover_img=VALUES(cover_img);
+
+SET @containers_id = (SELECT id FROM rental_groups WHERE group_key='containers' LIMIT 1);
+
+INSERT INTO rental_items (id, group_id, item_category, name, price, img, stock, default_qty)
+VALUES
+('styro-001', @containers_id, 'Containers', 'Styro Container', 30.00, 'images/Catering/Containers/s1.jpg', 150, 1),
+('wj-001', @containers_id, 'Containers', 'Water Jug', 30.00, 'images/Catering/Containers/wj1.jpg', 150, 1)
+ON DUPLICATE KEY UPDATE
+  group_id=VALUES(group_id),
+  item_category=VALUES(item_category),
+  name=VALUES(name),
+  price=VALUES(price),
+  img=VALUES(img),
+  stock=VALUES(stock),
+  default_qty=VALUES(default_qty);
+
+DELETE FROM rental_item_colors WHERE item_id IN ('styro-001','wj-001');
+INSERT INTO rental_item_colors (item_id, color_name, color_hex) VALUES
+('styro-001','White','#FFFFFF'),
+('wj-001','White','#FFFFFF');
+
+-- Group: Decorations
+INSERT INTO rental_groups (group_key, group_name, description, cover_img)
+VALUES (
+  'decorations',
+  'Decorations',
+  'Beautiful decorative pieces including flowers and lights to enhance your event ambiance and create a stunning setup.',
+  'images/Catering/Decorations/gb1.jpg'
+)
+ON DUPLICATE KEY UPDATE
+  group_name=VALUES(group_name),
+  description=VALUES(description),
+  cover_img=VALUES(cover_img);
+
+SET @decorations_id = (SELECT id FROM rental_groups WHERE group_key='decorations' LIMIT 1);
+
+INSERT INTO rental_items (id, group_id, item_category, name, price, img, stock, default_qty)
+VALUES
+('cf-001', @decorations_id, 'Decorations', 'Ceiling Flower', 20.00, 'images/Catering/Decorations/cf1.jpg', 150, 1),
+('gb-001', @decorations_id, 'Decorations', 'Glass Ball Lights', 50.00, 'images/Catering/Decorations/gb1.jpg', 20, 1),
+('lb-001', @decorations_id, 'Decorations', 'Light Bulb Lights', 50.00, 'images/Catering/Decorations/lb1.jpg', 20, 1),
+('ll-001', @decorations_id, 'Decorations', 'Led Lights', 50.00, 'images/Catering/Decorations/ll1.jpg', 20, 1),
+('tb-001', @decorations_id, 'Decorations', 'Table Flower', 20.00, 'images/Catering/Decorations/tb1.jpg', 150, 1),
+('vt-001', @decorations_id, 'Decorations', 'Vase Flower', 20.00, 'images/Catering/Decorations/vt1.jpg', 150, 1)
+ON DUPLICATE KEY UPDATE
+  group_id=VALUES(group_id),
+  item_category=VALUES(item_category),
+  name=VALUES(name),
+  price=VALUES(price),
+  img=VALUES(img),
+  stock=VALUES(stock),
+  default_qty=VALUES(default_qty);
+
+DELETE FROM rental_item_colors WHERE item_id IN ('cf-001','gb-001','lb-001','ll-001','tb-001','vt-001');
+INSERT INTO rental_item_colors (item_id, color_name, color_hex) VALUES
+('cf-001','White','#FFFFFF'),
+('cf-001','Pink','#FFC0CB'),
+('cf-001','Purple','#800080'),
+('cf-001','Yellow','#FFFF00'),
+('cf-001','Red','#FF0000'),
+('cf-001','Blue','#0000FF'),
+('gb-001','White','#FFFFFF'),
+('lb-001','White','#FFFFFF'),
+('ll-001','White','#FFFFFF'),
+('tb-001','White','#FFFFFF'),
+('tb-001','Pink','#FFC0CB'),
+('tb-001','Purple','#800080'),
+('tb-001','Yellow','#FFFF00'),
+('tb-001','Red','#FF0000'),
+('tb-001','Blue','#0000FF'),
+('vt-001','White','#FFFFFF'),
+('vt-001','Pink','#FFC0CB'),
+('vt-001','Purple','#800080'),
+('vt-001','Yellow','#FFFF00'),
+('vt-001','Red','#FF0000'),
+('vt-001','Blue','#0000FF');
+
+-- Group: Fabric & Linens
+INSERT INTO rental_groups (group_key, group_name, description, cover_img)
+VALUES (
+  'fabric-linens',
+  'Fabric & Linens',
+  'High-quality fabrics and linens in various textures and colors, perfect for draping, table styling, and elegant event designs.',
+  'images/Catering/fabric and linens/velvet.jpg'
+)
+ON DUPLICATE KEY UPDATE
+  group_name=VALUES(group_name),
+  description=VALUES(description),
+  cover_img=VALUES(cover_img);
+
+SET @fabric_id = (SELECT id FROM rental_groups WHERE group_key='fabric-linens' LIMIT 1);
+
+INSERT INTO rental_items (id, group_id, item_category, name, price, img, stock, default_qty)
+VALUES
+('fl-001', @fabric_id, 'Fabric & Linens', 'Burlap', 50.00, 'images/Catering/fabric and linens/burlap.jpg', 150, 1),
+('fl-002', @fabric_id, 'Fabric & Linens', 'Chiffon', 20.00, 'images/Catering/fabric and linens/chiffon.jpg', 150, 1),
+('fl-003', @fabric_id, 'Fabric & Linens', 'Cotton', 20.00, 'images/Catering/fabric and linens/cotton.jpg', 150, 1),
+('fl-004', @fabric_id, 'Fabric & Linens', 'Linen', 20.00, 'images/Catering/fabric and linens/linen.jpg', 150, 1),
+('fl-005', @fabric_id, 'Fabric & Linens', 'Organza', 20.00, 'images/Catering/fabric and linens/organza.jpg', 150, 1),
+('fl-006', @fabric_id, 'Fabric & Linens', 'Polyester', 20.00, 'images/Catering/fabric and linens/polyester.jpg', 150, 1),
+('fl-007', @fabric_id, 'Fabric & Linens', 'Satin', 20.00, 'images/Catering/fabric and linens/satin.jpg', 150, 1),
+('fl-008', @fabric_id, 'Fabric & Linens', 'Taffeta', 20.00, 'images/Catering/fabric and linens/taffeta.jpg', 150, 1),
+('fl-009', @fabric_id, 'Fabric & Linens', 'Velvet', 20.00, 'images/Catering/fabric and linens/velvet.jpg', 150, 1)
+ON DUPLICATE KEY UPDATE
+  group_id=VALUES(group_id),
+  item_category=VALUES(item_category),
+  name=VALUES(name),
+  price=VALUES(price),
+  img=VALUES(img),
+  stock=VALUES(stock),
+  default_qty=VALUES(default_qty);
+
+DELETE FROM rental_item_colors WHERE item_id LIKE 'fl-%';
+INSERT INTO rental_item_colors (item_id, color_name, color_hex) VALUES
+('fl-001','White','#FFFFFF'),('fl-001','Beige','#F5F5DC'),('fl-001','Green','#008000'),('fl-001','Red','#FF0000'),('fl-001','Blue','#0000FF'),
+('fl-002','White','#FFFFFF'),('fl-002','Beige','#F5F5DC'),('fl-002','Green','#008000'),('fl-002','Red','#FF0000'),('fl-002','Blue','#0000FF'),
+('fl-003','White','#FFFFFF'),('fl-003','Beige','#F5F5DC'),('fl-003','Green','#008000'),('fl-003','Red','#FF0000'),('fl-003','Blue','#0000FF'),
+('fl-004','White','#FFFFFF'),('fl-004','Beige','#F5F5DC'),('fl-004','Green','#008000'),('fl-004','Red','#FF0000'),('fl-004','Blue','#0000FF'),
+('fl-005','White','#FFFFFF'),('fl-005','Beige','#F5F5DC'),('fl-005','Green','#008000'),('fl-005','Red','#FF0000'),('fl-005','Blue','#0000FF'),
+('fl-006','White','#FFFFFF'),('fl-006','Beige','#F5F5DC'),('fl-006','Green','#008000'),('fl-006','Red','#FF0000'),('fl-006','Blue','#0000FF'),
+('fl-007','Gold','#D4AF37'),
+('fl-008','White','#FFFFFF'),('fl-008','Beige','#F5F5DC'),('fl-008','Green','#008000'),('fl-008','Red','#FF0000'),('fl-008','Blue','#0000FF'),
+('fl-009','White','#FFFFFF'),('fl-009','Beige','#F5F5DC'),('fl-009','Green','#008000'),('fl-009','Red','#FF0000'),('fl-009','Blue','#0000FF');
+
+-- Group: Tables
+INSERT INTO rental_groups (group_key, group_name, description, cover_img)
+VALUES (
+  'tables',
+  'Tables',
+  'Sturdy and versatile tables in multiple shapes and finishes, suitable for dining setups, receptions, and special occasions.',
+  'images/Catering/table/rec2.jpg'
+)
+ON DUPLICATE KEY UPDATE
+  group_name=VALUES(group_name),
+  description=VALUES(description),
+  cover_img=VALUES(cover_img);
+
+SET @tables_id = (SELECT id FROM rental_groups WHERE group_key='tables' LIMIT 1);
+
+INSERT INTO rental_items (id, group_id, item_category, name, price, img, stock, default_qty)
+VALUES
+('tbl-001', @tables_id, 'Tables', 'Rectangle', 120.00, 'images/Catering/table/rec1.jpg', 50, 1),
+('tbl-002', @tables_id, 'Tables', 'Rectangle', 125.00, 'images/Catering/table/rec2.jpg', 50, 1),
+('tbl-003', @tables_id, 'Tables', 'Rounded', 130.00, 'images/Catering/table/rounded1.jpg', 50, 1),
+('tbl-004', @tables_id, 'Tables', 'Rounded', 135.00, 'images/Catering/table/rounded2.jpg', 50, 1),
+('tbl-005', @tables_id, 'Tables', 'Serpentine', 140.00, 'images/Catering/table/serp1.jpg', 50, 1),
+('tbl-006', @tables_id, 'Tables', 'Serpentine', 145.00, 'images/Catering/table/serp2.jpg', 50, 1),
+('tbl-007', @tables_id, 'Tables', 'Wood', 150.00, 'images/Catering/table/wood1.jpg', 50, 1)
+ON DUPLICATE KEY UPDATE
+  group_id=VALUES(group_id),
+  item_category=VALUES(item_category),
+  name=VALUES(name),
+  price=VALUES(price),
+  img=VALUES(img),
+  stock=VALUES(stock),
+  default_qty=VALUES(default_qty);
+
+DELETE FROM rental_item_colors WHERE item_id IN ('tbl-001','tbl-002','tbl-003','tbl-004','tbl-005','tbl-006','tbl-007');
+INSERT INTO rental_item_colors (item_id, color_name, color_hex) VALUES
+('tbl-001','White','#FFFFFF'),
+('tbl-002','Brown','#D43737'),
+('tbl-003','White','#FFFFFF'),
+('tbl-004','Brown','#D43737'),
+('tbl-005','Brown','#D43737'),
+('tbl-006','White','#FFFFFF'),
+('tbl-007','Brown','#D43737');
+
+-- Group: Tables and Chairs
+INSERT INTO rental_groups (group_key, group_name, description, cover_img)
+VALUES (
+  'tables-and-chairs',
+  'Tables and Chairs',
+  'Complete table and chair setup options with stylish covers, runners, and accessories to elevate your event presentation.',
+  'images/Catering/tables and chair setup/skirted table.jpg'
+)
+ON DUPLICATE KEY UPDATE
+  group_name=VALUES(group_name),
+  description=VALUES(description),
+  cover_img=VALUES(cover_img);
+
+SET @setup_id = (SELECT id FROM rental_groups WHERE group_key='tables-and-chairs' LIMIT 1);
+
+INSERT INTO rental_items (id, group_id, item_category, name, price, img, stock, default_qty)
+VALUES
+('tbl-01', @setup_id, 'Tables and Chairs', 'Table Runner', 120.00, 'images/Catering/tables and chair setup/table runner.jpg', 50, 1),
+('chr-02', @setup_id, 'Tables and Chairs', 'Chiavari Chair', 125.00, 'images/Catering/tables and chair setup/Chiavari Chair.jpg', 50, 1),
+('chr-03', @setup_id, 'Tables and Chairs', 'Floral Chair', 130.00, 'images/Catering/tables and chair setup/floral chair.jpg', 50, 1),
+('tbl-04', @setup_id, 'Tables and Chairs', 'Full Drop', 135.00, 'images/Catering/tables and chair setup/full drop.jpg', 50, 1),
+('tbl-05', @setup_id, 'Tables and Chairs', 'Half Length Drop', 140.00, 'images/Catering/tables and chair setup/half length drop.jpg', 50, 1),
+('tbl-06', @setup_id, 'Tables and Chairs', 'Overlay', 145.00, 'images/Catering/tables and chair setup/overlay.jpg', 50, 1),
+('tbl-07', @setup_id, 'Tables and Chairs', 'Puddle Drop', 150.00, 'images/Catering/tables and chair setup/puddle drop.jpg', 50, 1),
+('chr-08', @setup_id, 'Tables and Chairs', 'Ribbon', 155.00, 'images/Catering/tables and chair setup/ribbon.jpg', 50, 1),
+('tbl-09', @setup_id, 'Tables and Chairs', 'Serpentine Table', 160.00, 'images/Catering/tables and chair setup/Serpentine Table.jpg', 50, 1),
+('tbl-010', @setup_id, 'Tables and Chairs', 'Skirted Table', 165.00, 'images/Catering/tables and chair setup/skirted table.jpg', 50, 1),
+('ctc-01', @setup_id, 'Chair & Table Covers', 'Chair Cap with Sash', 50.00, 'images/Catering/tables and chair setup/chair cap with sash.jpg', 100, 1),
+('ctc-02', @setup_id, 'Chair & Table Covers', 'Chair Cover', 45.00, 'images/Catering/tables and chair setup/chair cover.jpg', 100, 1),
+('ctc-03', @setup_id, 'Chair & Table Covers', 'Chair Drape', 55.00, 'images/Catering/tables and chair setup/chair drape.jpg', 100, 1),
+('ctc-04', @setup_id, 'Chair & Table Covers', 'Bare Table with Runner', 60.00, 'images/Catering/tables and chair setup/bare table with runner.jpg', 50, 1)
+ON DUPLICATE KEY UPDATE
+  group_id=VALUES(group_id),
+  item_category=VALUES(item_category),
+  name=VALUES(name),
+  price=VALUES(price),
+  img=VALUES(img),
+  stock=VALUES(stock),
+  default_qty=VALUES(default_qty);
+
+DELETE FROM rental_item_colors WHERE item_id IN ('tbl-01','chr-02','chr-03','tbl-04','tbl-05','tbl-06','tbl-07','chr-08','tbl-09','tbl-010','ctc-01','ctc-02','ctc-03','ctc-04');
+INSERT INTO rental_item_colors (item_id, color_name, color_hex) VALUES
+('tbl-01','White','#FFFFFF'),('tbl-01','Brown','#D43737'),('tbl-01','Beige','#F5F5DC'),
+('chr-02','White','#FFFFFF'),('chr-02','Brown','#D43737'),('chr-02','Beige','#F5F5DC'),
+('chr-03','White','#FFFFFF'),('chr-03','Brown','#D43737'),('chr-03','Beige','#F5F5DC'),
+('tbl-04','White','#FFFFFF'),('tbl-04','Brown','#D43737'),('tbl-04','Beige','#F5F5DC'),
+('tbl-05','White','#FFFFFF'),('tbl-05','Brown','#D43737'),('tbl-05','Beige','#F5F5DC'),
+('tbl-06','White','#FFFFFF'),('tbl-06','Brown','#D43737'),('tbl-06','Beige','#F5F5DC'),
+('tbl-07','White','#FFFFFF'),('tbl-07','Brown','#D43737'),('tbl-07','Beige','#F5F5DC'),
+('chr-08','White','#FFFFFF'),('chr-08','Brown','#D43737'),('chr-08','Beige','#F5F5DC'),
+('tbl-09','White','#FFFFFF'),('tbl-09','Brown','#D43737'),('tbl-09','Beige','#F5F5DC'),
+('tbl-010','White','#FFFFFF'),('tbl-010','Brown','#D43737'),('tbl-010','Beige','#F5F5DC'),
+('ctc-01','White','#FFFFFF'),('ctc-01','Brown','#D43737'),('ctc-01','Beige','#F5F5DC'),
+('ctc-02','White','#FFFFFF'),('ctc-02','Brown','#D43737'),('ctc-02','Beige','#F5F5DC'),
+('ctc-03','White','#FFFFFF'),('ctc-03','Brown','#D43737'),('ctc-03','Beige','#F5F5DC'),
+('ctc-04','White','#FFFFFF'),('ctc-04','Brown','#D43737'),('ctc-04','Beige','#F5F5DC');
+
+-- Group: Tableware & Utensils
+INSERT INTO rental_groups (group_key, group_name, description, cover_img)
+VALUES (
+  'tableware-utensils',
+  'Tableware & Utensils',
+  'Essential dining pieces including plates, cutlery, glasses, and serving dishes to complete your table setup.',
+  'images/Catering/tableware & Utensils/fork and spoon.jpg'
+)
+ON DUPLICATE KEY UPDATE
+  group_name=VALUES(group_name),
+  description=VALUES(description),
+  cover_img=VALUES(cover_img);
+
+SET @tableware_id = (SELECT id FROM rental_groups WHERE group_key='tableware-utensils' LIMIT 1);
+
+INSERT INTO rental_items (id, group_id, item_category, name, price, img, stock, default_qty)
+VALUES
+('tw-001', @tableware_id, 'Tableware & Utensils', 'Fork and Spoon', 5.00, 'images/Catering/tableware & Utensils/fork and spoon.jpg', 200, 1),
+('tw-002', @tableware_id, 'Tableware & Utensils', 'Glass Cup', 3.50, 'images/Catering/tableware & Utensils/glass cup.jpg', 200, 1),
+('tw-003', @tableware_id, 'Tableware & Utensils', 'Plate', 4.00, 'images/Catering/tableware & Utensils/plate.jpg', 200, 1),
+('tw-004', @tableware_id, 'Tableware & Utensils', 'Rectangle Chafing Dish', 25.00, 'images/Catering/tableware & Utensils/rectangle chafing dish.jpg', 50, 1),
+('tw-005', @tableware_id, 'Tableware & Utensils', 'Rounded Chafing Dish', 27.00, 'images/Catering/tableware & Utensils/rounded chafing dish.jpg', 50, 1),
+('tw-006', @tableware_id, 'Tableware & Utensils', 'Serving Spoons', 6.00, 'images/Catering/tableware & Utensils/serving spoons.jpg', 100, 1),
+('tw-007', @tableware_id, 'Tableware & Utensils', 'Square Plate', 4.50, 'images/Catering/tableware & Utensils/square plate.jpg', 200, 1),
+('tw-008', @tableware_id, 'Tableware & Utensils', 'Wine Glass', 5.50, 'images/Catering/tableware & Utensils/wine glass.jpg', 200, 1)
+ON DUPLICATE KEY UPDATE
+  group_id=VALUES(group_id),
+  item_category=VALUES(item_category),
+  name=VALUES(name),
+  price=VALUES(price),
+  img=VALUES(img),
+  stock=VALUES(stock),
+  default_qty=VALUES(default_qty);
+
+DELETE FROM rental_item_colors WHERE item_id IN ('tw-001','tw-002','tw-003','tw-004','tw-005','tw-006','tw-007','tw-008');
+INSERT INTO rental_item_colors (item_id, color_name, color_hex) VALUES
+('tw-001','Silver','#C0C0C0'),('tw-001','Gold','#D4AF37'),
+('tw-002','Transparent','#FFFFFF'),
+('tw-003','White','#FFFFFF'),('tw-003','Gold','#D4AF37'),
+('tw-004','Silver','#C0C0C0'),('tw-004','Gold','#D4AF37'),
+('tw-005','Silver','#C0C0C0'),('tw-005','Gold','#D4AF37'),
+('tw-006','Silver','#C0C0C0'),('tw-006','Gold','#D4AF37'),
+('tw-007','White','#FFFFFF'),('tw-007','Gold','#D4AF37'),
+('tw-008','Transparent','#FFFFFF');
+
+-- Group: Tent
+INSERT INTO rental_groups (group_key, group_name, description, cover_img)
+VALUES (
+  'tent',
+  'Tent',
+  'Sturdy and weather-resistant tents perfect for outdoor events, providing reliable shade and comfortable coverage for your guests.',
+  'images/Catering/Tent/tent5.jpg'
+)
+ON DUPLICATE KEY UPDATE
+  group_name=VALUES(group_name),
+  description=VALUES(description),
+  cover_img=VALUES(cover_img);
+
+SET @tent_id = (SELECT id FROM rental_groups WHERE group_key='tent' LIMIT 1);
+
+INSERT INTO rental_items (id, group_id, item_category, name, price, img, stock, default_qty)
+VALUES
+('tent-001', @tent_id, 'Tent', 'Tent 5', 500.00, 'images/Catering/Tent/tent5.jpg', 10, 1),
+('tent-002', @tent_id, 'Tent', 'Tent 1', 450.00, 'images/Catering/Tent/tent1.jpg', 10, 1),
+('tent-003', @tent_id, 'Tent', 'Tent 2', 460.00, 'images/Catering/Tent/tent2.jpg', 10, 1),
+('tent-004', @tent_id, 'Tent', 'Tent 3', 470.00, 'images/Catering/Tent/tent3.jpg', 10, 1),
+('tent-005', @tent_id, 'Tent', 'Tent 4', 480.00, 'images/Catering/Tent/tent4.jpg', 10, 1)
+ON DUPLICATE KEY UPDATE
+  group_id=VALUES(group_id),
+  item_category=VALUES(item_category),
+  name=VALUES(name),
+  price=VALUES(price),
+  img=VALUES(img),
+  stock=VALUES(stock),
+  default_qty=VALUES(default_qty);
+
+DELETE FROM rental_item_colors WHERE item_id LIKE 'tent-%';
+INSERT INTO rental_item_colors (item_id, color_name, color_hex) VALUES
+('tent-001','White','#FFFFFF'),
+('tent-002','White','#FFFFFF'),
+('tent-003','White','#FFFFFF'),
+('tent-004','White','#FFFFFF'),
+('tent-005','White','#FFFFFF');

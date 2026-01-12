@@ -36,7 +36,9 @@ body {
 /* ============================= */
 .card-admin {
     width: 100%;
-    max-width: 1000px;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
     background: rgba(255, 255, 255, 0.25); /* more visible than 0.15 */
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
@@ -71,6 +73,7 @@ body {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
+    table-layout: auto;
 }
 
 .table th {
@@ -84,11 +87,17 @@ body {
     vertical-align: middle;
     border-color: rgba(255, 255, 255, 0.25);
     text-align: center;
+    word-break: normal;
+    overflow-wrap: break-word;
 }
 
 .table-hover tbody tr:hover {
     background: rgba(255, 255, 255, 0.1);
     transition: background 0.2s;
+}
+
+.table-responsive {
+    overflow-x: visible;
 }
 
 /* ============================= */
@@ -138,6 +147,13 @@ body {
 /* ============================= */
 /* Responsive adjustments */
 /* ============================= */
+@media (max-width: 992px) {
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
 @media (max-width: 768px) {
     .card-admin {
         padding: 1.5rem;
