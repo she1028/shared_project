@@ -43,13 +43,13 @@
 </style>
 
 <!--modal-->
-<div class="modal fade" tabindex="-1" id="cardModal">
+<div class="modal fade" tabindex="-1" id="foodModal">
     <div class="modal-dialog modal-dialog-centered modal-lg custom-modal">
         <div class="modal-content p-3" style="background-color: #ede3d4;">
             <div class="modal-body">
                 <div class="row align-items-center justify-content-center">
                     <div class="col-lg-5 col-12 align-items-center">
-                        <img src="images/Catering/table/rec1.jpg" class="img-fluid">
+                        <img id="modalFoodImage" class="img-fluid">
                     </div>
                     <!-- Back button -->
                     <div class="col-lg-7 col-12 p-2 mt-2">
@@ -61,28 +61,32 @@
                         </div>
                         <!-- Category -->
                         <div class="d-flex align-items-center justify-content-center m-2">
-                            <span class="rounded-5 text-center py-1 px-3" style="background-color: #c6c6c6cc; justify-content: center; font-size: 13px;">Tables</span>
+                            <span id="modalFoodCategory"
+                                class="rounded-5 text-center py-1 px-3"
+                                style="background-color: #c6c6c6cc; font-size: 13px;">
+                            </span>
                         </div>
                         <div class="row mt-2">
                             <!-- Title -->
-                            <div class="h3 fw-bold" style="text-align:jjustify;">Foundry Cocktail Table - Black</div>
+                            <div id="modalFoodName" class="h3 fw-bold"></div>
                             <!-- details -->
                             <div class="details mt-2">
                                 <h5>Details:</h5>
-                                <p class="mb-0">28" W x 42" H</p>
-                                <p class="mb-0">123 Qwerty IU/UX design iw</p>
+                                <p id="modalFoodServing" class="mb-0"></p>
+                                <p id="modalFoodExtra" class="mb-0"></p>
+
                             </div>
                             <!-- description -->
                             <div class="description mt-3">
                                 <h5>Description:</h5>
-                                <p style="text-align: justify;">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sint dolorum facilis sit assumenda maxime pariatur molestias, officiis, at suscipit laboriosam eligendi accusantium delectus. Accusantium inventore dolorum provident ut non cum.</p>
+                                <p id="modalFoodDescription" style="text-align: justify;"></p>
                             </div>
                         </div>
                         <hr class="my-2">
                         <div class="row align-items-center">
                             <!-- price -->
                             <div class="col-lg-6 col-12">
-                                <h4 class="fw-semibold">Price: $</h4>
+                                <h4 class="fw-semibold">Price: <span id="modalFoodPrice"></span></h4>
                             </div>
                             <!-- availabile colors -->
                             <div class="col-lg-6 col-12">
@@ -101,7 +105,7 @@
                             </div>
                             <!-- add to cart -->
                             <div class="d-flex align-items-center">
-                                <span class="btn rounded-2 text-center py-1 px-2 ms-5" style="background-color: #c6c6c6cc; justify-content: center;">add to cart</span>
+                                <span id="addToCartBtn" class="btn rounded-2 text-center py-1 px-2 ms-5" style="background-color: #c6c6c6cc; justify-content: center;">add to cart</span>
                             </div>
                         </div>
                     </div>
@@ -112,9 +116,80 @@
 </div>
 
 <script>
-    window.openModal = function() {
-        const modalEl = document.getElementById('cardModal');
-        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+    function openFoodModal(item) {
+        document.getElementById("modalFoodImage").src = item.image;
+        document.getElementById("modalFoodName").innerText = item.name;
+        document.getElementById("modalFoodDescription").innerText = item.description || "";
+        document.getElementById("modalFoodPrice").innerText = "$ " + item.price.toFixed(2);
+        document.getElementById("modalFoodServing").innerText = item.serving || "";
+        document.getElementById("modalFoodCategory").innerText = item.category || "";
+
+        const modal = new bootstrap.Modal(document.getElementById("foodModal"));
         modal.show();
     }
+
+
+    let currentFood = null; // currently selected food item
+    let currentQty = 1;
+
+    function openFoodModal(item) {
+        currentFood = item; // store current item
+        currentQty = 1; // reset quantity
+
+        document.getElementById("modalFoodImage").src = item.image;
+        document.getElementById("modalFoodName").innerText = item.name;
+        document.getElementById("modalFoodDescription").innerText = item.description || "";
+        document.getElementById("modalFoodPrice").innerText = "$ " + item.price.toFixed(2);
+        document.getElementById("modalFoodServing").innerText = item.serving || "";
+        document.getElementById("modalFoodCategory").innerText = item.category || "";
+
+        document.querySelector("#foodModal .qty-box span").innerText = currentQty;
+
+        const modal = new bootstrap.Modal(document.getElementById("foodModal"));
+        modal.show();
+    }
+
+    // Quantity buttons
+    document.getElementById("qty-minus").addEventListener("click", () => {
+        if (currentQty > 1) currentQty--;
+        document.querySelector("#foodModal .qty-box span").innerText = currentQty;
+    });
+
+    document.getElementById("qty-plus").addEventListener("click", () => {
+        currentQty++;
+        document.querySelector("#foodModal .qty-box span").innerText = currentQty;
+    });
+
+   // Add to Cart button
+document.querySelector("#foodModal .btn").addEventListener("click", () => {
+    if (!currentFood) return;
+
+    const postData = {
+        food_id: currentFood.food_id,
+        name: currentFood.name,
+        price: Number(currentFood.price),
+        qty: Number(currentQty),
+        image: currentFood.image,
+        category: currentFood.category,
+        serving: currentFood.serving || ''
+    };
+
+    fetch('add_to_cart.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(postData)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message); // ✅ user feedback
+            updateCartCount();   // dynamically update cart icon/count
+            const modalEl = document.getElementById("foodModal");
+            bootstrap.Modal.getInstance(modalEl).hide();
+        } else {
+            alert("Error adding to cart");
+        }
+    });
+});
+
 </script>

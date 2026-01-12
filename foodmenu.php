@@ -60,136 +60,122 @@
     <!-- Footer -->
     <?php include("footer.php"); ?>
 
-    <script src="food.js"></script>
     <script>
-        var content = document.getElementById("content");
-        var searchInput = document.getElementById("searchInput");
-        var searchBtn = document.getElementById("searchBtn");
-        var introSection = document.querySelector(".container.text-center.my-5"); // intro section
-        var clearBtn = document.getElementById("clearBtn");
+        let content = document.getElementById("content");
+        let searchInput = document.getElementById("searchInput");
+        let searchBtn = document.getElementById("searchBtn");
+        let clearBtn = document.getElementById("clearBtn");
+        let introSection = document.querySelector(".container.text-center.my-5");
 
-        // Flatten all items for search
-        var allItems = [];
-        var menuSections = [{
-                title: "Appetizers",
-                description: menu.appetizersDescription,
-                items: menu.appetizers
-            },
-            {
-                title: "Main Courses",
-                description: menu.mainCoursesDescription,
-                items: menu.mainCourses
-            },
-            {
-                title: "Desserts",
-                description: menu.dessertsDescription,
-                items: menu.desserts
-            }
-        ];
+        let menuSections = [];
+        let allItems = [];
 
-        menuSections.forEach(function(section) {
-            section.items.forEach(function(item) {
-                // Attach the section title so you know category if needed
-                item.category = section.title;
-                allItems.push(item);
+        // Fetch menu from backend
+        fetch("api/get_food_menu.php")
+            .then(res => res.json())
+            .then(data => {
+                menuSections = data;
+
+                // flatten items for search
+                allItems = [];
+                data.forEach(section => {
+                    section.items.forEach(item => {
+                        item.category = section.title;
+                        allItems.push(item);
+                    });
+                });
+
+                renderFullCategories();
             });
-        });
 
-        // Render full menu with categories
         function renderFullCategories() {
             content.innerHTML = "";
-            introSection.style.display = "block"; // show intro
+            introSection.style.display = "block";
 
-            menuSections.forEach(function(section) {
-                var sectionId = section.title.replace(/\s+/g, "");
+            menuSections.forEach(section => {
+                let sectionId = section.title.replace(/\s+/g, "");
                 content.innerHTML += `
-                <hr class="m-5">
-                <h2 class="fw-bold m-3 mb-3">${section.title}</h2>
-                <div class="mt-1">${section.description}</div>
-                <div class="row row-cols-1 row-cols-md-4 g-4 mt-2" id="${sectionId}"></div>
-            `;
-                var row = document.getElementById(sectionId);
+            <hr class="m-5">
+            <h2 class="fw-bold m-3">${section.title}</h2>
+            <div class="mt-1">${section.description ?? ""}</div>
+            <div class="row row-cols-1 row-cols-md-4 g-4 mt-2" id="${sectionId}"></div>
+        `;
 
-                section.items.forEach(function(item) {
+                let row = document.getElementById(sectionId);
+
+                section.items.forEach(item => {
                     row.innerHTML += `
-                    <div class="col">
-                        <div class="card border-dark shadow" onclick="openModal()" style="background-color: #E2D4D4;">
-                            <img src="${item.image}" class="card-img-top" style="height:200px; width:100%; object-fit: cover; object-position:center; background-color: #f8f9fa;">
-                            <div class="card-body text-start">
-                                <h5 class="card-title">${item.name}</h5>
-                                <p class="card-text">$ ${item.price.toFixed(2)}</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
+        <div class="col">
+            <div class="card border-dark shadow" style="background-color:#E2D4D4; cursor:pointer;"
+                 onclick='openFoodModal(${JSON.stringify(item)})'>
+                <img src="${item.image}" class="card-img-top" style="height:200px; object-fit:cover;">
+                <div class="card-body text-start">
+                    <h5 class="card-title">${item.name}</h5>
+                    <p class="card-text">$ ${item.price.toFixed(2)}</p>
+                </div>
+            </div>
+        </div>
+    `;
                 });
+
             });
         }
 
-        // Render search results in flat grid
         function renderSearchResults(items) {
             content.innerHTML = "";
-            introSection.style.display = "none"; // hide intro during search
+            introSection.style.display = "none";
 
             if (items.length === 0) {
                 content.innerHTML = `<p class="text-center fw-bold fs-5 my-5">No results found.</p>`;
                 return;
             }
 
-            var row = document.createElement("div");
+            let row = document.createElement("div");
             row.className = "row row-cols-1 row-cols-md-4 g-4";
             content.appendChild(row);
 
-            items.forEach(function(item) {
-                var col = document.createElement("div");
-                col.className = "col";
-                col.innerHTML = `
-                <div class="card border-dark shadow" onclick="openModal()">
-                    <img src="${item.image}" class="card-img-top" style="height:200px; width:100%; object-fit: cover; object-position:center; background-color: #f8f9fa;">
-                    <div class="card-body text-start">
-                        <h5 class="card-title">${item.name}</h5>
-                        <p class="card-text">$ ${item.price.toFixed(2)}</p>
-                    </div>
+            items.forEach(item => {
+                row.innerHTML += `
+        <div class="col">
+            <div class="card border-dark shadow" style="cursor:pointer;"
+                 onclick='openFoodModal(${JSON.stringify(item)})'>
+                <img src="${item.image}" class="card-img-top" style="height:200px; object-fit:cover;">
+                <div class="card-body text-start">
+                    <h5 class="card-title">${item.name}</h5>
+                    <p class="card-text">$ ${item.price.toFixed(2)}</p>
                 </div>
-            `;
-                row.appendChild(col);
+            </div>
+        </div>
+    `;
             });
+
         }
 
-        // Search function
         function searchItems() {
-            var query = searchInput.value.trim().toLowerCase();
-
+            let query = searchInput.value.trim().toLowerCase();
             clearBtn.style.display = query ? "block" : "none";
 
             if (!query) {
-                renderFullCategories(); // restore full menu
+                renderFullCategories();
                 return;
             }
 
-            var filtered = allItems.filter(function(item) {
-                return item.name.toLowerCase().includes(query);
-            });
+            let filtered = allItems.filter(item =>
+                item.name.toLowerCase().includes(query)
+            );
 
             renderSearchResults(filtered);
         }
 
-        // Initial render
-        renderFullCategories();
-
-        // Event listeners
         searchInput.addEventListener("input", searchItems);
         searchBtn.addEventListener("click", searchItems);
-        searchInput.addEventListener("keydown", function(e) {
-            if (e.key === "Enter") searchItems();
-        });
-
-        clearBtn.addEventListener("click", function() {
+        clearBtn.addEventListener("click", () => {
             searchInput.value = "";
             clearBtn.style.display = "none";
-            renderFullCategories(); // restore intro + content
+            renderFullCategories();
         });
     </script>
+
 
 
 

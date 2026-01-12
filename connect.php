@@ -3,7 +3,7 @@ $dbhost = "localhost";
 $dbuser = "root";
 $dbpass = "";      // set to your MySQL root password if it has one
 $dbname = "ymzm";
-$port   = 3307;
+$port   = 3306;
 
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 

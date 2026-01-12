@@ -1,8 +1,16 @@
 <?php
 session_start();
 $cart = $_SESSION['cart'] ?? [];
-?>
+$shipping = 120;
+$subtotal = 0;
 
+// Calculate subtotal
+foreach ($cart as $item) {
+    $subtotal += $item['price'] * $item['qty'];
+}
+
+$total = $subtotal + $shipping;
+?>
 
 <!doctype html>
 <html lang="en">
@@ -31,27 +39,24 @@ $cart = $_SESSION['cart'] ?? [];
     <div id="cartList" class="cart-card shadow-sm p-3">
       <h6 class="fw-bold mb-3">CART ITEMS</h6>
 
-      <?php
-      $subtotal = 0;
-      foreach ($cart as $index => $item):
-        $subtotal += $item['price'];
-      ?>
-        <div class="d-flex mb-3 align-items-center">
-          <div class="item-number"><?= $index + 1 ?></div>
-          <div class="flex-grow-1 ms-2">
-            <div class="fw-semibold"><?= $item['name'] ?></div>
-            <small class="text-muted"><?= $item['qty'] ?></small>
+      <?php if (!empty($cart)): ?>
+        <?php foreach ($cart as $index => $item): 
+            $itemTotal = $item['price'] * $item['qty'];
+        ?>
+          <div class="d-flex mb-3 align-items-center">
+            <div class="item-number"><?= $index + 1 ?></div>
+            <div class="flex-grow-1 ms-2">
+              <div class="fw-semibold"><?= htmlspecialchars($item['name']) ?></div>
+              <small class="text-muted">Qty: <?= $item['qty'] ?></small>
+            </div>
+            <div>₱<?= number_format($itemTotal, 2) ?></div>
           </div>
-          <div>₱<?= number_format($item['price'], 2) ?></div>
-        </div>
-      <?php endforeach; ?>
+        <?php endforeach; ?>
+      <?php else: ?>
+        <p class="text-center text-muted">Your cart is empty.</p>
+      <?php endif; ?>
 
       <hr>
-
-      <?php
-      $shipping = 120; // example shipping
-      $total = $subtotal + $shipping;
-      ?>
 
       <div class="d-flex justify-content-between">
         <span>Subtotal</span>
@@ -71,7 +76,6 @@ $cart = $_SESSION['cart'] ?? [];
     </div>
 
     <div class="card p-3 mt-3 shadow-sm" style="max-width: 350px; margin-left: auto;">
-
       <div class="mb-2">
         <label class="form-label">Delivery Method</label>
         <select class="form-select">
@@ -80,7 +84,6 @@ $cart = $_SESSION['cart'] ?? [];
         </select>
       </div>
 
-
       <div class="mb-2">
         <label class="form-label">Select Date & Time</label>
         <input type="datetime-local" class="form-control">
@@ -88,7 +91,7 @@ $cart = $_SESSION['cart'] ?? [];
 
       <div class="d-flex justify-content-between mt-3" style="font-size: 3.0rem; font-weight: bold;">
         <span>Total:</span>
-        <span id="totalPrice">$0.00</span>
+        <span>₱<?= number_format($total, 2) ?></span>
       </div>
 
       <p class="text-muted small mb-2">Taxes and shipping calculated at checkout</p>
@@ -96,10 +99,8 @@ $cart = $_SESSION['cart'] ?? [];
       <form action="checkout.php" method="get">
         <button type="submit" class="btn btn-dark w-100">Check Out</button>
       </form>
-
     </div>
   </div>
-
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
