@@ -37,7 +37,7 @@
 
    <?php
 $heroTitle = "Debut Catering Packages";
-$heroImage = "images/packages/debut_header.jpg";
+$heroImage = "images/packages/debut/debut_header.jpg";
 
 $heroBreadcrumb = '
     <a href="index.php#home" class="text-white text-decoration-none">Home</a>

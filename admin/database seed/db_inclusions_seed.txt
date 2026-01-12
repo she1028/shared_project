@@ -1,0 +1,442 @@
+-- Inclusions seed script (from inclusion.js)
+-- Paste into phpMyAdmin -> SQL tab and run
+
+SET NAMES utf8mb4;
+
+CREATE DATABASE IF NOT EXISTS ymzm
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+
+USE ymzm;
+
+-- Stores the per-package inclusion “header” data you have in inclusion.js
+-- (offer/title/price/note/image). This does NOT change your existing packages table.
+CREATE TABLE IF NOT EXISTS package_details (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  category ENUM('wedding','children','debut','corporate') NOT NULL,
+  slug VARCHAR(80) NOT NULL,
+  offer VARCHAR(50) NOT NULL,
+  title VARCHAR(150) NOT NULL,
+  price_label VARCHAR(50) NOT NULL,
+  note TEXT NULL,
+  image_path VARCHAR(255) NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_package_details_category_slug (category, slug)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Stores the lists (menu/rentals/decorations/services)
+CREATE TABLE IF NOT EXISTS package_inclusion_items (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  package_detail_id INT UNSIGNED NOT NULL,
+  inclusion_type ENUM('menu','rentals','decorations','services') NOT NULL,
+  item_text VARCHAR(255) NOT NULL,
+  sort_order INT UNSIGNED NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_inclusion_lookup (package_detail_id, inclusion_type, sort_order),
+  CONSTRAINT fk_package_inclusions_detail
+    FOREIGN KEY (package_detail_id) REFERENCES package_details(id)
+    ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Optional: clear and re-seed (uncomment if needed)
+-- DELETE FROM package_inclusion_items;
+-- DELETE FROM package_details;
+
+-- =====================
+-- WEDDING
+-- =====================
+INSERT INTO package_details (category, slug, offer, title, price_label, note, image_path)
+VALUES
+('wedding','standard','CLASSIC OFFER','Standard Package','700 per guest','Price may vary depending on menu selection, number of guests, service preferences, and location.','images/packages/wedding/standard.jpg'),
+('wedding','premium','SIGNATURE OFFER','Premium Package','1,200 per guest','Premium inclusions with upgraded styling and menu options.','images/packages/wedding/premium.jpg'),
+('wedding','deluxe','PRESTIGE OFFER','Deluxe Package','1,800 per guest','Deluxe inclusions with premium styling and menu options.','images/packages/wedding/deluxe.jpg')
+ON DUPLICATE KEY UPDATE
+  offer=VALUES(offer),
+  title=VALUES(title),
+  price_label=VALUES(price_label),
+  note=VALUES(note),
+  image_path=VALUES(image_path);
+
+-- Wedding / Standard
+INSERT INTO package_inclusion_items (package_detail_id, inclusion_type, item_text, sort_order) VALUES
+((SELECT id FROM package_details WHERE category='wedding' AND slug='standard'),'menu','1 appetizer',1),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='standard'),'menu','2 main courses',2),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='standard'),'menu','1 desserts',3),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='standard'),'menu','Steamed rice',4),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='standard'),'menu','Iced tea',5),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='standard'),'menu','Purified water',6),
+
+((SELECT id FROM package_details WHERE category='wedding' AND slug='standard'),'rentals','Chafing dishes',1),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='standard'),'rentals','Serving utensils',2),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='standard'),'rentals','Tables with basic skirting',3),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='standard'),'rentals','Dining tables and chairs',4),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='standard'),'rentals','Basic tablecloths and napkins',5),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='standard'),'rentals','Plates, cutlery, and glasses',6),
+
+((SELECT id FROM package_details WHERE category='wedding' AND slug='standard'),'decorations','Simple table styling',1),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='standard'),'decorations','Basic floral arrangement (artificial or minimal fresh flowers)',2),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='standard'),'decorations','Menu labels and table numbers',3),
+
+((SELECT id FROM package_details WHERE category='wedding' AND slug='standard'),'services','Uniformed service staff',1),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='standard'),'services','Setup and clean-up',2),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='standard'),'services','Food safety and sanitation compliance',3);
+
+-- Wedding / Premium
+INSERT INTO package_inclusion_items (package_detail_id, inclusion_type, item_text, sort_order) VALUES
+((SELECT id FROM package_details WHERE category='wedding' AND slug='premium'),'menu','2 Appetizers',1),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='premium'),'menu','3 Main dishes',2),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='premium'),'menu','2 Desserts',3),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='premium'),'menu','Steamed rice',4),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='premium'),'menu','3 types of beverages',5),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='premium'),'menu','Purified Water',6),
+
+((SELECT id FROM package_details WHERE category='wedding' AND slug='premium'),'rentals','Chafing dishes',1),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='premium'),'rentals','Serving utensils',2),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='premium'),'rentals','Menu labels and table numbers',3),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='premium'),'rentals','Themed buffet tables with elegant skirting',4),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='premium'),'rentals','Round tables and banquet chairs',5),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='premium'),'rentals','Tablecloths, napkins, and chair covers with sashes',6),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='premium'),'rentals','Complete tableware set (plates, cutlery, glasses)',7),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='premium'),'rentals','Cake and gift tables',8),
+
+((SELECT id FROM package_details WHERE category='wedding' AND slug='premium'),'decorations','Themed dessert table styling',1),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='premium'),'decorations','Table centerpieces',2),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='premium'),'decorations','Welcome signage',3),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='premium'),'decorations','Basic stage or backdrop styling',4),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='premium'),'decorations','Accent lighting (fairy lights or uplights)',5),
+
+((SELECT id FROM package_details WHERE category='wedding' AND slug='premium'),'services','Trained and uniformed service staff',1),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='premium'),'services','Event coordinator (basic)',2),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='premium'),'services','Setup and dismantling',3),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='premium'),'services','Food sanitation and quality control',4);
+
+-- Wedding / Deluxe
+INSERT INTO package_inclusion_items (package_detail_id, inclusion_type, item_text, sort_order) VALUES
+((SELECT id FROM package_details WHERE category='wedding' AND slug='deluxe'),'menu','3 appetizer',1),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='deluxe'),'menu','5 main courses',2),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='deluxe'),'menu','4 desserts',3),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='deluxe'),'menu','Steamed rice',4),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='deluxe'),'menu','4 types of beverages',5),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='deluxe'),'menu','Purified water',6),
+
+((SELECT id FROM package_details WHERE category='wedding' AND slug='deluxe'),'rentals','Chafing dishes',1),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='deluxe'),'rentals','Serving ware',2),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='deluxe'),'rentals','Elegant round tables and premium chairs (Chiavari/Tiffany)',3),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='deluxe'),'rentals','Luxury tablecloths, napkins, chargers',4),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='deluxe'),'rentals','Chair covers with customized sashes',5),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='deluxe'),'rentals','Complete premium tableware set',6),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='deluxe'),'rentals','Cake table, gift table, and registration table',7),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='deluxe'),'rentals','Stage and aisle setup',8),
+
+((SELECT id FROM package_details WHERE category='wedding' AND slug='deluxe'),'decorations','Themed food and dessert table styling',1),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='deluxe'),'decorations','Table centerpieces',2),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='deluxe'),'decorations','Welcome signage',3),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='deluxe'),'decorations','Elegant stage or backdrop styling',4),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='deluxe'),'decorations','Accent lighting (fairy lights or uplights)',5),
+
+((SELECT id FROM package_details WHERE category='wedding' AND slug='deluxe'),'services','Trained and uniformed service staff',1),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='deluxe'),'services','Event coordinator (dedicated)',2),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='deluxe'),'services','Setup and dismantling',3),
+((SELECT id FROM package_details WHERE category='wedding' AND slug='deluxe'),'services','Food sanitation and quality control',4);
+
+-- =====================
+-- CHILDREN
+-- =====================
+INSERT INTO package_details (category, slug, offer, title, price_label, note, image_path)
+VALUES
+('children','little-star','CLASSIC OFFER','Little Star Package','500 per guest','Perfect for small children’s parties. Price may vary depending on menu selection, number of guests, and decorations.','images/packages/children/little-star.jpg'),
+('children','super-star','SIGNATURE OFFER','Super Star Package','750 per guest','Ideal for medium-sized children’s parties with added decorations and activities.','images/packages/children/super-star.jpg'),
+('children','mega-star','PRESTIGE OFFER','Mega Star Package','850 per guest','Best for large and grand children’s parties with full decorations and entertainment.','images/packages/children/mega-star.jpg')
+ON DUPLICATE KEY UPDATE
+  offer=VALUES(offer),
+  title=VALUES(title),
+  price_label=VALUES(price_label),
+  note=VALUES(note),
+  image_path=VALUES(image_path);
+
+-- Children / Little Star
+INSERT INTO package_inclusion_items (package_detail_id, inclusion_type, item_text, sort_order) VALUES
+((SELECT id FROM package_details WHERE category='children' AND slug='little-star'),'menu','2 Appetizers',1),
+((SELECT id FROM package_details WHERE category='children' AND slug='little-star'),'menu','3 Main courses',2),
+((SELECT id FROM package_details WHERE category='children' AND slug='little-star'),'menu','1 Desserts',3),
+((SELECT id FROM package_details WHERE category='children' AND slug='little-star'),'menu','Steamed rice or pasta',4),
+((SELECT id FROM package_details WHERE category='children' AND slug='little-star'),'menu','Juice',5),
+((SELECT id FROM package_details WHERE category='children' AND slug='little-star'),'menu','Purified water',6),
+
+((SELECT id FROM package_details WHERE category='children' AND slug='little-star'),'rentals','Children’s tables and chairs',1),
+((SELECT id FROM package_details WHERE category='children' AND slug='little-star'),'rentals','Colorful tablecloths and napkins',2),
+((SELECT id FROM package_details WHERE category='children' AND slug='little-star'),'rentals','Kid-friendly plates, cups, and cutlery',3),
+((SELECT id FROM package_details WHERE category='children' AND slug='little-star'),'rentals','Serving utensils',4),
+((SELECT id FROM package_details WHERE category='children' AND slug='little-star'),'rentals','Chafing dishes',5),
+
+((SELECT id FROM package_details WHERE category='children' AND slug='little-star'),'decorations','Simple balloon decorations',1),
+((SELECT id FROM package_details WHERE category='children' AND slug='little-star'),'decorations','Themed table centerpieces',2),
+((SELECT id FROM package_details WHERE category='children' AND slug='little-star'),'decorations','Party banners',3),
+((SELECT id FROM package_details WHERE category='children' AND slug='little-star'),'decorations','Food labels',4),
+
+((SELECT id FROM package_details WHERE category='children' AND slug='little-star'),'services','Uniformed service staff',1),
+((SELECT id FROM package_details WHERE category='children' AND slug='little-star'),'services','Setup and cleanup',2),
+((SELECT id FROM package_details WHERE category='children' AND slug='little-star'),'services','Food safety and sanitation',3);
+
+-- Children / Super Star
+INSERT INTO package_inclusion_items (package_detail_id, inclusion_type, item_text, sort_order) VALUES
+((SELECT id FROM package_details WHERE category='children' AND slug='super-star'),'menu','3 Appetizers',1),
+((SELECT id FROM package_details WHERE category='children' AND slug='super-star'),'menu','4 Main courses',2),
+((SELECT id FROM package_details WHERE category='children' AND slug='super-star'),'menu','2 Desserts',3),
+((SELECT id FROM package_details WHERE category='children' AND slug='super-star'),'menu','Steamed rice or pasta',4),
+((SELECT id FROM package_details WHERE category='children' AND slug='super-star'),'menu','Juice and soft drinks',5),
+((SELECT id FROM package_details WHERE category='children' AND slug='super-star'),'menu','Purified water',6),
+
+((SELECT id FROM package_details WHERE category='children' AND slug='super-star'),'rentals','Children’s tables and chairs',1),
+((SELECT id FROM package_details WHERE category='children' AND slug='super-star'),'rentals','Premium tablecloths and napkins',2),
+((SELECT id FROM package_details WHERE category='children' AND slug='super-star'),'rentals','Complete dining ware',3),
+((SELECT id FROM package_details WHERE category='children' AND slug='super-star'),'rentals','Serving utensils',4),
+((SELECT id FROM package_details WHERE category='children' AND slug='super-star'),'rentals','Chafing dishes',5),
+((SELECT id FROM package_details WHERE category='children' AND slug='super-star'),'rentals','Cake table and gift table',6),
+
+((SELECT id FROM package_details WHERE category='children' AND slug='super-star'),'decorations','Balloon arch',1),
+((SELECT id FROM package_details WHERE category='children' AND slug='super-star'),'decorations','Themed backdrop',2),
+((SELECT id FROM package_details WHERE category='children' AND slug='super-star'),'decorations','Table centerpieces',3),
+((SELECT id FROM package_details WHERE category='children' AND slug='super-star'),'decorations','Welcome signage',4),
+((SELECT id FROM package_details WHERE category='children' AND slug='super-star'),'decorations','Party props',5),
+((SELECT id FROM package_details WHERE category='children' AND slug='super-star'),'decorations','Food labels',6),
+((SELECT id FROM package_details WHERE category='children' AND slug='super-star'),'decorations','Cake table styling',7),
+
+((SELECT id FROM package_details WHERE category='children' AND slug='super-star'),'services','Party host (basic)',1),
+((SELECT id FROM package_details WHERE category='children' AND slug='super-star'),'services','Simple party games',2),
+((SELECT id FROM package_details WHERE category='children' AND slug='super-star'),'services','Uniformed service staff',3),
+((SELECT id FROM package_details WHERE category='children' AND slug='super-star'),'services','Setup and cleanup',4),
+((SELECT id FROM package_details WHERE category='children' AND slug='super-star'),'services','Basic party host',5);
+
+-- Children / Mega Star
+INSERT INTO package_inclusion_items (package_detail_id, inclusion_type, item_text, sort_order) VALUES
+((SELECT id FROM package_details WHERE category='children' AND slug='mega-star'),'menu','4 Appetizers',1),
+((SELECT id FROM package_details WHERE category='children' AND slug='mega-star'),'menu','5 Main courses',2),
+((SELECT id FROM package_details WHERE category='children' AND slug='mega-star'),'menu','4 Desserts',3),
+((SELECT id FROM package_details WHERE category='children' AND slug='mega-star'),'menu','Steamed rice or pasta',4),
+((SELECT id FROM package_details WHERE category='children' AND slug='mega-star'),'menu','Juice, soft drinks, and Lemonade',5),
+((SELECT id FROM package_details WHERE category='children' AND slug='mega-star'),'menu','Purified water',6),
+
+((SELECT id FROM package_details WHERE category='children' AND slug='mega-star'),'rentals','Children’s tables and chairs',1),
+((SELECT id FROM package_details WHERE category='children' AND slug='mega-star'),'rentals','Tablecloths, chair covers, and runners',2),
+((SELECT id FROM package_details WHERE category='children' AND slug='mega-star'),'rentals','Premium table setup',3),
+((SELECT id FROM package_details WHERE category='children' AND slug='mega-star'),'rentals','Complete dining ware',4),
+((SELECT id FROM package_details WHERE category='children' AND slug='mega-star'),'rentals','Cake, gift, and activity tables',5),
+((SELECT id FROM package_details WHERE category='children' AND slug='mega-star'),'rentals','Stage or activity area setup',6),
+((SELECT id FROM package_details WHERE category='children' AND slug='mega-star'),'rentals','Serving utensils',7),
+((SELECT id FROM package_details WHERE category='children' AND slug='mega-star'),'rentals','Chafing dishes',8),
+
+((SELECT id FROM package_details WHERE category='children' AND slug='mega-star'),'decorations','Grand themed balloon setup',1),
+((SELECT id FROM package_details WHERE category='children' AND slug='mega-star'),'decorations','Themed backdrop with name and age celebrant',2),
+((SELECT id FROM package_details WHERE category='children' AND slug='mega-star'),'decorations','Ceiling balloons or streamers',3),
+((SELECT id FROM package_details WHERE category='children' AND slug='mega-star'),'decorations','Table centerpieces',4),
+((SELECT id FROM package_details WHERE category='children' AND slug='mega-star'),'decorations','Entrance decor',5),
+((SELECT id FROM package_details WHERE category='children' AND slug='mega-star'),'decorations','Party props',6),
+((SELECT id FROM package_details WHERE category='children' AND slug='mega-star'),'decorations','Food labels',7),
+((SELECT id FROM package_details WHERE category='children' AND slug='mega-star'),'decorations','Cake table styling',8),
+
+((SELECT id FROM package_details WHERE category='children' AND slug='mega-star'),'services','Full catering and event team',1),
+((SELECT id FROM package_details WHERE category='children' AND slug='mega-star'),'services','Party coordinator',2),
+((SELECT id FROM package_details WHERE category='children' AND slug='mega-star'),'services','Setup, styling, and dismantling',3),
+((SELECT id FROM package_details WHERE category='children' AND slug='mega-star'),'services','Strict food safety and sanitation',4);
+
+-- =====================
+-- CORPORATE
+-- =====================
+INSERT INTO package_details (category, slug, offer, title, price_label, note, image_path)
+VALUES
+('corporate','essential','CLASSIC OFFER','Essential Package','600 per guest','Perfect for small corporate gatherings. Price may vary depending on menu selection, number of attendees, and styling.','images/packages/corporate/essential.jpg'),
+('corporate','professional','SIGNATURE OFFER','Professional Package','800 per guest','Ideal for medium-sized corporate events with enhanced styling and catering options.','images/packages/corporate/professional.jpg'),
+('corporate','executive','PRESTIGE OFFER','Executive Package','1,200 per guest','Best for large corporate events with full-service catering, premium styling, and executive-level support.','images/packages/corporate/executive.jpg')
+ON DUPLICATE KEY UPDATE
+  offer=VALUES(offer),
+  title=VALUES(title),
+  price_label=VALUES(price_label),
+  note=VALUES(note),
+  image_path=VALUES(image_path);
+
+-- Corporate / Essential
+INSERT INTO package_inclusion_items (package_detail_id, inclusion_type, item_text, sort_order) VALUES
+((SELECT id FROM package_details WHERE category='corporate' AND slug='essential'),'menu','1 Appetizer',1),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='essential'),'menu','2 Main courses',2),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='essential'),'menu','2 Dessert',3),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='essential'),'menu','Steamed rice or pasta',4),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='essential'),'menu','1 type of beverage',5),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='essential'),'menu','Purified water',6),
+
+((SELECT id FROM package_details WHERE category='corporate' AND slug='essential'),'rentals','Tables and chairs for attendees',1),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='essential'),'rentals','Basic tablecloths and napkins',2),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='essential'),'rentals','Serving utensils',3),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='essential'),'rentals','Chafing dishes',4),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='essential'),'rentals','Plates, cutlery, and glasses',5),
+
+((SELECT id FROM package_details WHERE category='corporate' AND slug='essential'),'decorations','Minimalist table styling',1),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='essential'),'decorations','Minimal floral arrangements',2),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='essential'),'decorations','Menu labels and table numbers',3),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='essential'),'decorations','Corporate signage',4),
+
+((SELECT id FROM package_details WHERE category='corporate' AND slug='essential'),'services','Uniformed service staff',1),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='essential'),'services','Setup and cleanup',2),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='essential'),'services','Food safety and sanitation',3);
+
+-- Corporate / Professional
+INSERT INTO package_inclusion_items (package_detail_id, inclusion_type, item_text, sort_order) VALUES
+((SELECT id FROM package_details WHERE category='corporate' AND slug='professional'),'menu','2 Appetizers',1),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='professional'),'menu','3 Main courses',2),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='professional'),'menu','3 Desserts',3),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='professional'),'menu','Steamed rice or pasta',4),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='professional'),'menu','2 types of beverages',5),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='professional'),'menu','Purified water',6),
+
+((SELECT id FROM package_details WHERE category='corporate' AND slug='professional'),'rentals','Tables and chairs for attendees',1),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='professional'),'rentals','Premium tablecloths and napkins',2),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='professional'),'rentals','Serving utensils',3),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='professional'),'rentals','Chafing dishes',4),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='professional'),'rentals','Complete dining ware',5),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='professional'),'rentals','Dessert table styling',6),
+
+((SELECT id FROM package_details WHERE category='corporate' AND slug='professional'),'decorations','Table centerpieces',1),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='professional'),'decorations','Themed signage or branding',2),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='professional'),'decorations','Menu labels',3),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='professional'),'decorations','Stage or podium setup',4),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='professional'),'decorations','Lighting accents',5),
+
+((SELECT id FROM package_details WHERE category='corporate' AND slug='professional'),'services','Professional service staff',1),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='professional'),'services','Event coordinator (basic)',2),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='professional'),'services','Setup and dismantling',3),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='professional'),'services','Food safety and sanitation',4);
+
+-- Corporate / Executive
+INSERT INTO package_inclusion_items (package_detail_id, inclusion_type, item_text, sort_order) VALUES
+((SELECT id FROM package_details WHERE category='corporate' AND slug='executive'),'menu','4 Appetizers',1),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='executive'),'menu','5 Main courses',2),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='executive'),'menu','4 Desserts',3),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='executive'),'menu','Steamed rice or pasta',4),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='executive'),'menu','4 types of beverages',5),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='executive'),'menu','Purified water',6),
+
+((SELECT id FROM package_details WHERE category='corporate' AND slug='executive'),'rentals','Premium tables and chairs',1),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='executive'),'rentals','Luxury tablecloths, napkins, and runners',2),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='executive'),'rentals','Serving utensils',3),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='executive'),'rentals','Chafing dishes',4),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='executive'),'rentals','Complete premium dining ware',5),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='executive'),'rentals','Presentation tables',6),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='executive'),'rentals','Podium or stage setup',7),
+
+((SELECT id FROM package_details WHERE category='corporate' AND slug='executive'),'decorations','Elegant table styling',1),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='executive'),'decorations','Corporate branding/signage',2),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='executive'),'decorations','Centerpieces and floral accents',3),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='executive'),'decorations','Stage, podium, or presentation area',4),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='executive'),'decorations','Lighting accents for the venue',5),
+
+((SELECT id FROM package_details WHERE category='corporate' AND slug='executive'),'services','Full catering and service team',1),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='executive'),'services','Event coordinator (dedicated)',2),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='executive'),'services','Setup, styling, and dismantling',3),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='executive'),'services','Professional service staff',4),
+((SELECT id FROM package_details WHERE category='corporate' AND slug='executive'),'services','Food safety and sanitation',5);
+
+-- =====================
+-- DEBUT
+-- NOTE: inclusion.js uses id "Grace" (capital G). This seed stores slug as lowercase "grace".
+-- =====================
+INSERT INTO package_details (category, slug, offer, title, price_label, note, image_path)
+VALUES
+('debut','grace','CLASSIC OFFER','Grace Package','700 per guest','Perfect for intimate 18th birthday celebrations of 30–40 guests. Price may vary depending on menu selection, number of attendees, and styling preferences.','images/packages/debut/grace.jpg'),
+('debut','elegance','SIGNATURE OFFER','Elegance Package','900 per guest','Ideal for medium-sized debut celebrations of 50–70 guests with enhanced styling, curated menus, and coordinated event setup.','images/packages/debut/elegance.jpg'),
+('debut','radiance','SIGNATURE OFFER','Radiance Package','1100 per guest','Best for grand debut celebrations of 80–120 guests with full-service catering, premium styling, entertainment, and dedicated staff.','images/packages/debut/radiance.jpg')
+ON DUPLICATE KEY UPDATE
+  offer=VALUES(offer),
+  title=VALUES(title),
+  price_label=VALUES(price_label),
+  note=VALUES(note),
+  image_path=VALUES(image_path);
+
+-- Debut / Grace
+INSERT INTO package_inclusion_items (package_detail_id, inclusion_type, item_text, sort_order) VALUES
+((SELECT id FROM package_details WHERE category='debut' AND slug='grace'),'menu','1 Appetizer',1),
+((SELECT id FROM package_details WHERE category='debut' AND slug='grace'),'menu','2 Main courses',2),
+((SELECT id FROM package_details WHERE category='debut' AND slug='grace'),'menu','2 Dessert',3),
+((SELECT id FROM package_details WHERE category='debut' AND slug='grace'),'menu','Steamed rice or pasta',4),
+((SELECT id FROM package_details WHERE category='debut' AND slug='grace'),'menu','1 type of beverage',5),
+((SELECT id FROM package_details WHERE category='debut' AND slug='grace'),'menu','Purified water',6),
+
+((SELECT id FROM package_details WHERE category='debut' AND slug='grace'),'rentals','Tables and chairs for attendees',1),
+((SELECT id FROM package_details WHERE category='debut' AND slug='grace'),'rentals','Basic tablecloths and napkins',2),
+((SELECT id FROM package_details WHERE category='debut' AND slug='grace'),'rentals','Serving utensils',3),
+((SELECT id FROM package_details WHERE category='debut' AND slug='grace'),'rentals','Chafing dishes',4),
+((SELECT id FROM package_details WHERE category='debut' AND slug='grace'),'rentals','Plates, cutlery, and glasses',5),
+
+((SELECT id FROM package_details WHERE category='debut' AND slug='grace'),'decorations','Minimalist table styling',1),
+((SELECT id FROM package_details WHERE category='debut' AND slug='grace'),'decorations','Simple floral arrangements',2),
+((SELECT id FROM package_details WHERE category='debut' AND slug='grace'),'decorations','Menu labels',3),
+((SELECT id FROM package_details WHERE category='debut' AND slug='grace'),'decorations','Cake table styling',4),
+((SELECT id FROM package_details WHERE category='debut' AND slug='grace'),'decorations','Welcome signage',5),
+((SELECT id FROM package_details WHERE category='debut' AND slug='grace'),'decorations','Birthday signage or banners',6),
+
+((SELECT id FROM package_details WHERE category='debut' AND slug='grace'),'services','Uniformed service staff',1),
+((SELECT id FROM package_details WHERE category='debut' AND slug='grace'),'services','Setup and cleanup',2),
+((SELECT id FROM package_details WHERE category='debut' AND slug='grace'),'services','Food safety and sanitation',3);
+
+-- Debut / Elegance
+INSERT INTO package_inclusion_items (package_detail_id, inclusion_type, item_text, sort_order) VALUES
+((SELECT id FROM package_details WHERE category='debut' AND slug='elegance'),'menu','2 Appetizers',1),
+((SELECT id FROM package_details WHERE category='debut' AND slug='elegance'),'menu','3 Main courses',2),
+((SELECT id FROM package_details WHERE category='debut' AND slug='elegance'),'menu','2 Desserts',3),
+((SELECT id FROM package_details WHERE category='debut' AND slug='elegance'),'menu','Steamed rice or pasta',4),
+((SELECT id FROM package_details WHERE category='debut' AND slug='elegance'),'menu','2 types of beverages',5),
+((SELECT id FROM package_details WHERE category='debut' AND slug='elegance'),'menu','Purified water',6),
+
+((SELECT id FROM package_details WHERE category='debut' AND slug='elegance'),'rentals','Tables and chairs for attendees',1),
+((SELECT id FROM package_details WHERE category='debut' AND slug='elegance'),'rentals','Premium tablecloths, napkins, and runners',2),
+((SELECT id FROM package_details WHERE category='debut' AND slug='elegance'),'rentals','Serving utensils',3),
+((SELECT id FROM package_details WHERE category='debut' AND slug='elegance'),'rentals','Chafing dishes',4),
+((SELECT id FROM package_details WHERE category='debut' AND slug='elegance'),'rentals','Complete dining ware',5),
+((SELECT id FROM package_details WHERE category='debut' AND slug='elegance'),'rentals','Dessert table setup',6),
+((SELECT id FROM package_details WHERE category='debut' AND slug='elegance'),'rentals','Cake and gift tables',7),
+((SELECT id FROM package_details WHERE category='debut' AND slug='elegance'),'rentals','Menu labels and table numbers',8),
+
+((SELECT id FROM package_details WHERE category='debut' AND slug='elegance'),'decorations','Elegant table styling',1),
+((SELECT id FROM package_details WHERE category='debut' AND slug='elegance'),'decorations','Themed birthday signage',2),
+((SELECT id FROM package_details WHERE category='debut' AND slug='elegance'),'decorations','Table centerpieces',3),
+((SELECT id FROM package_details WHERE category='debut' AND slug='elegance'),'decorations','Backdrop or stage styling',4),
+((SELECT id FROM package_details WHERE category='debut' AND slug='elegance'),'decorations','Lighting accents',5),
+
+((SELECT id FROM package_details WHERE category='debut' AND slug='elegance'),'services','Professional service staff',1),
+((SELECT id FROM package_details WHERE category='debut' AND slug='elegance'),'services','Event coordinator (basic)',2),
+((SELECT id FROM package_details WHERE category='debut' AND slug='elegance'),'services','Setup and dismantling',3),
+((SELECT id FROM package_details WHERE category='debut' AND slug='elegance'),'services','Food safety and sanitation',4);
+
+-- Debut / Radiance
+INSERT INTO package_inclusion_items (package_detail_id, inclusion_type, item_text, sort_order) VALUES
+((SELECT id FROM package_details WHERE category='debut' AND slug='radiance'),'menu','3 Appetizers',1),
+((SELECT id FROM package_details WHERE category='debut' AND slug='radiance'),'menu','5 Main courses',2),
+((SELECT id FROM package_details WHERE category='debut' AND slug='radiance'),'menu','4 Desserts',3),
+((SELECT id FROM package_details WHERE category='debut' AND slug='radiance'),'menu','Steamed rice or pasta',4),
+((SELECT id FROM package_details WHERE category='debut' AND slug='radiance'),'menu','4 types of beverages',5),
+((SELECT id FROM package_details WHERE category='debut' AND slug='radiance'),'menu','Purified water',6),
+
+((SELECT id FROM package_details WHERE category='debut' AND slug='radiance'),'rentals','Premium tables and chairs',1),
+((SELECT id FROM package_details WHERE category='debut' AND slug='radiance'),'rentals','Chair covers with customized sashes',2),
+((SELECT id FROM package_details WHERE category='debut' AND slug='radiance'),'rentals','Luxury tablecloths, napkins, and runners',3),
+((SELECT id FROM package_details WHERE category='debut' AND slug='radiance'),'rentals','Serving utensils',4),
+((SELECT id FROM package_details WHERE category='debut' AND slug='radiance'),'rentals','Chafing dishes',5),
+((SELECT id FROM package_details WHERE category='debut' AND slug='radiance'),'rentals','Complete premium dining ware',6),
+((SELECT id FROM package_details WHERE category='debut' AND slug='radiance'),'rentals','Presentation tables, cake and gift tables',7),
+((SELECT id FROM package_details WHERE category='debut' AND slug='radiance'),'rentals','Stage and walkway setup',8),
+
+((SELECT id FROM package_details WHERE category='debut' AND slug='radiance'),'decorations','Elegant table styling',1),
+((SELECT id FROM package_details WHERE category='debut' AND slug='radiance'),'decorations','Birthday signage and themed decor',2),
+((SELECT id FROM package_details WHERE category='debut' AND slug='radiance'),'decorations','Table centerpieces',3),
+((SELECT id FROM package_details WHERE category='debut' AND slug='radiance'),'decorations','Fresh floral arrangements',4),
+((SELECT id FROM package_details WHERE category='debut' AND slug='radiance'),'decorations','Stage or backdrop styling',5),
+((SELECT id FROM package_details WHERE category='debut' AND slug='radiance'),'decorations','Ceiling or wall draping',6),
+((SELECT id FROM package_details WHERE category='debut' AND slug='radiance'),'decorations','Professional lighting setup',7),
+((SELECT id FROM package_details WHERE category='debut' AND slug='radiance'),'decorations','Entrance decorations',8),
+
+((SELECT id FROM package_details WHERE category='debut' AND slug='radiance'),'services','Full catering and service team',1),
+((SELECT id FROM package_details WHERE category='debut' AND slug='radiance'),'services','Dedicated event coordinator',2),
+((SELECT id FROM package_details WHERE category='debut' AND slug='radiance'),'services','Setup, styling, and dismantling',3),
+((SELECT id FROM package_details WHERE category='debut' AND slug='radiance'),'services','Professional service staff',4),
+((SELECT id FROM package_details WHERE category='debut' AND slug='radiance'),'services','Entertainment coordination',5),
+((SELECT id FROM package_details WHERE category='debut' AND slug='radiance'),'services','Food safety and sanitation',6);

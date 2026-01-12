@@ -39,7 +39,7 @@
     <!-- Hero Section -->
     <?php
 $heroTitle = "Children's Party Catering Packages";
-$heroImage = "images/packages/children_header.jpg";
+$heroImage = "images/packages/children/children_header.jpg";
 
 $heroBreadcrumb = '
     <a href="index.php#home" class="text-white text-decoration-none">Home</a>

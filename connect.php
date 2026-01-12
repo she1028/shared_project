@@ -1,19 +1,20 @@
 <?php
-  $dbhost = "localhost";
-	$dbuser = "root";
-	$dbpass = "";
-	$db = "ymzm"
-    ;
-	$conn = new mysqli($dbhost, $dbuser, $dbpass,$db) or die("Connect failed: %s\n". $conn -> error);
+$dbhost = "localhost";
+$dbuser = "root";
+$dbpass = "";      // set to your MySQL root password if it has one
+$dbname = "ymzm";
+$port   = 3307;
 
-	if(!$conn)
-	{
-		die("Connection Failed. ". mysqli_connect_error());
-		echo "can't connect to database";
-	}
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
-  function executeQuery($query){
-    $conn = $GLOBALS['conn'];
-    return mysqli_query($conn, $query);
-  }
+try {
+  $conn = new mysqli($dbhost, $dbuser, $dbpass, $dbname, $port);
+  $conn->set_charset("utf8mb4");
+} catch (mysqli_sql_exception $e) {
+  die("Database connection failed: " . $e->getMessage());
+}
+
+function executeQuery($query) {
+  return mysqli_query($GLOBALS['conn'], $query);
+}
 ?>

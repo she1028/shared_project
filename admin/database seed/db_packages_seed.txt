@@ -1,0 +1,56 @@
+-- Packages seed script (from packages.js)
+-- How to use: open phpMyAdmin -> select your server -> SQL tab -> paste this whole file -> Go
+
+SET NAMES utf8mb4;
+
+CREATE DATABASE IF NOT EXISTS ymzm
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+
+USE ymzm;
+
+CREATE TABLE IF NOT EXISTS packages (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  category ENUM('wedding','children','debut','corporate') NOT NULL,
+  slug VARCHAR(80) NOT NULL,
+  package_title VARCHAR(100) NOT NULL,
+  package_name VARCHAR(150) NOT NULL,
+  description TEXT NOT NULL,
+  note TEXT NULL,
+  starts_at DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  image_path VARCHAR(255) NULL,
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_packages_category_slug (category, slug)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Optional: clear existing rows (uncomment if you want a clean re-seed)
+-- TRUNCATE TABLE packages;
+
+INSERT INTO packages
+(category, slug, package_title, package_name, description, note, starts_at, image_path, is_active)
+VALUES
+('wedding','standard','CLASSIC OFFER','Standard Package','The Standard Package is ideal for intimate gatherings of 30–40 guests, offering full-service catering with reception setup and basic styling. It includes essential tables, chairs, dining ware, and serving utensils, along with a curated buffet menu featuring appetizers, main courses, and dessert—perfect for simple yet memorable celebrations.','Price may vary depending on menu selection, number of guests, service preferences, and location.',700,'images/packages/standard.jpg',1),
+('wedding','premium','SIGNATURE OFFER','Premium Package','The Premium Package is perfect for medium-sized gatherings of 50–70 guests. It includes premium full-service catering, reception styling, and additional menu options, with elegant table settings and upgraded service staff.','Price may vary depending on menu selection, number of guests, service preferences, and location.',1200,'images/packages/premium.jpg',1),
+('wedding','deluxe','PRESTIGE OFFER','Deluxe Package','The Deluxe Package is designed for large gatherings of 80–120 guests, featuring full-service catering, luxurious reception styling, and a wide selection of gourmet dishes. Includes top-quality tables, chairs, dining ware, and staff to ensure a memorable event.','Price may vary depending on menu selection, number of guests, service preferences, and location.',1800,'images/packages/deluxe.jpg',1),
+
+('children','little-star','CLASSIC OFFER','Little Star Package','The Little Star Package is perfect for small children’s parties of 20–30 kids. It includes fun-themed setup, kid-friendly tables and chairs, complete dining ware, and a colorful buffet featuring favorite party snacks and meals—ideal for birthdays and playdates.','Price may vary depending on menu selection, number of kids, theme customization, and location.',500,'images/packages/little-star.jpg',1),
+('children','super-star','SIGNATURE OFFER','Super Star Package','The Super Star Package is designed for medium-sized children’s parties of 30–50 kids. It includes upgraded themed styling, interactive food stations, party favors, and a wider selection of kid-approved dishes—perfect for school celebrations and milestone birthdays.','Price may vary depending on menu selection, number of kids, theme customization, and location.',750,'images/packages/super-star.jpg',1),
+('children','mega-star','PRESTIGE OFFER','Mega Star Package','The Mega Star Package is ideal for large children’s parties of 50–80 kids. It features full themed venue styling, premium kids’ buffet selections, dessert stations, party games setup, and dedicated service staff to ensure a fun-filled and stress-free celebration.','Price may vary depending on menu selection, number of kids, theme customization, and location.',850,'images/packages/mega-star.jpg',1),
+
+('debut','Grace','CLASSIC OFFER','Grace Package','The Grace Package is perfect for intimate 18th birthday celebrations with 30–40 guests. It includes elegant venue setup, basic styling, complete tables and chairs, dining ware, and a curated buffet menu—ideal for a simple yet meaningful debut celebration.','Price may vary depending on menu selection, number of guests, styling preferences, and location.',700,'images/packages/grace.jpg',1),
+('debut','elegance','SIGNATURE OFFER','Elegance Package','The Elegance Package is designed for medium-sized debut celebrations of 50–70 guests. It features enhanced venue styling, elegant table settings, themed décor, and an upgraded buffet selection—perfect for a stylish and memorable 18th birthday.','Price may vary depending on menu selection, number of guests, styling theme, and location.',900,'images/packages/elegance.jpg',1),
+('debut','radiance','PRESTIGE OFFER','Radiance Package','The Radiance Package is ideal for grand debut celebrations with 80–120 guests. It includes luxurious venue styling, premium buffet selections, dessert stations, coordinated program setup, and dedicated service staff to ensure a flawless and elegant debut event.','Price may vary depending on menu selection, number of guests, styling theme, and location.',1100,'images/packages/radiance.jpg',1),
+
+('corporate','essential','CLASSIC OFFER','Essential Package','The Essential Package is perfect for small corporate gatherings of 20–40 attendees. It includes professional venue setup, basic styling, tables and chairs, complete dining ware, and a curated buffet menu—ideal for meetings, team lunches, or small company events.','Price may vary depending on menu selection, number of attendees, styling preferences, and location.',600,'images/packages/essential.jpg',1),
+('corporate','professional','SIGNATURE OFFER','Professional Package','The Professional Package is designed for medium-sized corporate events of 50–80 attendees. It features enhanced venue styling, elegant table arrangements, corporate branding décor, and an upgraded buffet selection—perfect for company celebrations, seminars, or client meetings.','Price may vary depending on menu selection, number of attendees, styling theme, and location.',800,'images/packages/professional.jpg',1),
+('corporate','executive','PRESTIGE OFFER','Executive Package','The Executive Package is ideal for large corporate events of 100–150 attendees. It includes premium venue styling, top-tier buffet selections, dessert stations, AV setup, and dedicated service staff to ensure a professional and seamless corporate experience.','Price may vary depending on menu selection, number of attendees, styling theme, and location.',1200,'images/packages/executive.jpg',1)
+ON DUPLICATE KEY UPDATE
+  package_title = VALUES(package_title),
+  package_name = VALUES(package_name),
+  description = VALUES(description),
+  note = VALUES(note),
+  starts_at = VALUES(starts_at),
+  image_path = VALUES(image_path),
+  is_active = VALUES(is_active);

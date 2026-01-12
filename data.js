@@ -39,22 +39,22 @@ const packages ={
     pkgCategories: [
         {
             title: "WEDDING",
-            img: "images/packages/wedding-img-pkg.jpg",
+            img: "images/packages/wedding/wedding-img-pkg.jpg",
             desc: "Celebrate your dream day with elegance and style. Our wedding package handles every detail so you can enjoy every moment."
         },
         {
             title: "DEBUT",
-            img: "images/packages/debut-pkg.jpg",
+            img: "images/packages/debut/debut-pkg.jpg",
             desc: "Make your milestone 18th birthday unforgettable. Our debut package provides delicious food and stylish setups to celebrate in style."
         },
         {
             title: "KIDS PARTY",
-            img: "images/packages/kids party-pkg.jpg",
+            img: "images/packages/children/kids party-pkg.jpg",
             desc: "Turn your child’s special day into a fun-filled celebration. Our kids party package offers tasty treats and playful catering that everyone will enjoy."
         },
         {
             title: "CORPORATE EVENTS",
-            img: "images/packages/corporate-party-pkg.jpg",
+            img: "images/packages/corporate/corporate-party-pkg.jpg",
             desc: "Impress your guests with a professional and delicious spread. Our corporate events package ensures seamless catering for meetings, conferences, and office celebrations."
         }
     ]

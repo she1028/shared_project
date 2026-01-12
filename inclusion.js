@@ -6,7 +6,7 @@ const weddingInclusions = [
         title: "Standard Package",
         price: "700 per guest",
         note: "Price may vary depending on menu selection, number of guests, service preferences, and location.",
-        image: "images/packages/standard.jpg",
+        image: "images/packages/wedding/standard.jpg",
         menu: [
             "1 appetizer",
             "2 main courses",
@@ -40,7 +40,7 @@ const weddingInclusions = [
         title: "Premium Package",
         price: "1,200 per guest",
         note: "Premium inclusions with upgraded styling and menu options.",
-        image: "images/packages/premium.jpg",
+        image: "images/packages/wedding/premium.jpg",
         menu: [
             "2 Appetizers",
             "3 Main dishes",
@@ -79,7 +79,7 @@ const weddingInclusions = [
         title: "Deluxe Package",
         price: "1,800 per guest",
         note: "Deluxe inclusions with premium styling and menu options.",
-        image: "images/packages/deluxe.jpg",
+        image: "images/packages/wedding/deluxe.jpg",
         menu: [
             "3 appetizer",
             "5 main courses",
@@ -122,7 +122,7 @@ const childrensPartyInclusions = [
     title: "Little Star Package",
     price: "500 per guest",
     note: "Perfect for small children’s parties. Price may vary depending on menu selection, number of guests, and decorations.",
-    image: "images/packages/little-star.jpg",
+    image: "images/packages/children/little-star.jpg",
     menu: [
       "2 Appetizers",
       "3 Main courses",
@@ -156,7 +156,7 @@ const childrensPartyInclusions = [
     title: "Super Star Package",
     price: "750 per guest",
     note: "Ideal for medium-sized children’s parties with added decorations and activities.",
-    image: "images/packages/super-star.jpg",
+    image: "images/packages/children/super-star.jpg",
     menu: [
       "3 Appetizers",
       "4 Main courses",
@@ -196,7 +196,7 @@ const childrensPartyInclusions = [
     title: "Mega Star Package",
     price: "850 per guest",
     note: "Best for large and grand children’s parties with full decorations and entertainment.",
-    image: "images/packages/mega-star.jpg",
+    image: "images/packages/children/mega-star.jpg",
     menu: [
       "4 Appetizers",
       "5 Main courses",
@@ -242,7 +242,7 @@ const corporateInclusions = [
     title: "Essential Package",
     price: "600 per guest",
     note: "Perfect for small corporate gatherings. Price may vary depending on menu selection, number of attendees, and styling.",
-    image: "images/packages/essential.jpg",
+    image: "images/packages/corporate/essential.jpg",
     menu: [
       "1 Appetizer",
       "2 Main courses",
@@ -276,7 +276,7 @@ const corporateInclusions = [
     title: "Professional Package",
     price: "800 per guest",
     note: "Ideal for medium-sized corporate events with enhanced styling and catering options.",
-    image: "images/packages/professional.jpg",
+    image: "images/packages/corporate/professional.jpg",
     menu: [
       "2 Appetizers",
       "3 Main courses",
@@ -313,7 +313,7 @@ const corporateInclusions = [
     title: "Executive Package",
     price: "1,200 per guest",
     note: "Best for large corporate events with full-service catering, premium styling, and executive-level support.",
-    image: "images/packages/executive.jpg",
+    image: "images/packages/corporate/executive.jpg",
     menu: [
       "4 Appetizers",
       "5 Main courses",
@@ -356,7 +356,7 @@ const debutInclusions = [
     title: "Grace Package",
     price: "700 per guest",
     note: "Perfect for intimate 18th birthday celebrations of 30–40 guests. Price may vary depending on menu selection, number of attendees, and styling preferences.",
-    image: "images/packages/grace.jpg",
+    image: "images/packages/debut/grace.jpg",
     menu: [
       "1 Appetizer",
       "2 Main courses",
@@ -392,7 +392,7 @@ const debutInclusions = [
     title: "Elegance Package",
     price: "900 per guest",
     note: "Ideal for medium-sized debut celebrations of 50–70 guests with enhanced styling, curated menus, and coordinated event setup.",
-    image: "images/packages/elegance.jpg",
+    image: "images/packages/debut/elegance.jpg",
     menu: [
       "2 Appetizers",
       "3 Main courses",
@@ -431,7 +431,7 @@ const debutInclusions = [
     title: "Radiance Package",
     price: "1100 per guest",
     note: "Best for grand debut celebrations of 80–120 guests with full-service catering, premium styling, entertainment, and dedicated staff.",
-    image: "images/packages/radiance.jpg",
+    image: "images/packages/debut/radiance.jpg",
     menu: [
       "3 Appetizers",
       "5 Main courses",

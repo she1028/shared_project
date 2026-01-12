@@ -14,6 +14,22 @@ $total_users = $conn->query("SELECT COUNT(*) AS cnt FROM users")->fetch_assoc()[
 $total_food_categories = $conn->query("SELECT COUNT(*) AS cnt FROM food_categories")->fetch_assoc()['cnt'];
 $total_foods = $conn->query("SELECT COUNT(*) AS cnt FROM foods")->fetch_assoc()['cnt'];
 
+// Packages count (optional)
+$total_packages = 0;
+try {
+    $total_packages = $conn->query("SELECT COUNT(*) AS cnt FROM packages")->fetch_assoc()['cnt'];
+} catch (mysqli_sql_exception $e) {
+    $total_packages = 0;
+}
+
+// Package details / inclusions count (optional)
+$total_package_details = 0;
+try {
+    $total_package_details = $conn->query("SELECT COUNT(*) AS cnt FROM package_details")->fetch_assoc()['cnt'];
+} catch (mysqli_sql_exception $e) {
+    $total_package_details = 0;
+}
+
 
 ?>
 
@@ -105,6 +121,24 @@ $total_foods = $conn->query("SELECT COUNT(*) AS cnt FROM foods")->fetch_assoc()[
                         <h5 class="mb-2">Total Foods</h5>
                         <h2 class="mb-3"><?php echo $total_foods; ?></h2>
                         <a href="food.php" class="btn btn-primary btn-sm">Manage Foods</a>
+                    </div>
+                </div>
+
+                <!-- Total Packages Card -->
+                <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
+                    <div class="card card-admin shadow text-center w-100 m-3" style="max-width: 300px;">
+                        <h5 class="mb-2">Total Packages</h5>
+                        <h2 class="mb-3"><?php echo $total_packages; ?></h2>
+                        <a href="packages.php" class="btn btn-primary btn-sm">Manage Packages</a>
+                    </div>
+                </div>
+
+                <!-- Package Details / Inclusions Card -->
+                <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
+                    <div class="card card-admin shadow text-center w-100 m-3" style="max-width: 300px;">
+                        <h5 class="mb-2">Package Details</h5>
+                        <h2 class="mb-3"><?php echo $total_package_details; ?></h2>
+                        <a href="package_details.php" class="btn btn-primary btn-sm">Manage Inclusions</a>
                     </div>
                 </div>
 
