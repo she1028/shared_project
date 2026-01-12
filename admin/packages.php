@@ -283,7 +283,7 @@ try {
     <div class="container py-4">
         <div class="row justify-content-center">
             <div class="col-12">
-                <div class="card-admin">
+                <div class="card-admin w-100" style="max-width: 1200px;">
                     <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
                         <h2 class="mb-2">Packages Management</h2>
                         <div class="d-flex gap-2">

@@ -29,6 +29,33 @@ function normalizeSlug($value)
     $value = strtolower($value);
     return $value;
 }
+
+// Ensure manual item order column exists and is populated
+function ensurePackageItemOrderColumn($conn)
+{
+    try {
+        $res = $conn->query("SHOW COLUMNS FROM package_inclusion_items LIKE 'item_order'");
+        $hasItemOrder = $res && $res->num_rows > 0;
+        if ($res) {
+            $res->close();
+        }
+
+        if (!$hasItemOrder) {
+            $conn->query("ALTER TABLE package_inclusion_items ADD COLUMN item_order INT NOT NULL DEFAULT 0");
+
+            // Migrate existing sort_order values if that column exists
+            $res2 = $conn->query("SHOW COLUMNS FROM package_inclusion_items LIKE 'sort_order'");
+            if ($res2 && $res2->num_rows > 0) {
+                $conn->query("UPDATE package_inclusion_items SET item_order = sort_order");
+                $res2->close();
+            }
+        }
+    } catch (mysqli_sql_exception $e) {
+        // Schema change failed; continue so the page can still render, but ordering may not work
+    }
+}
+
+ensurePackageItemOrderColumn($conn);
 function getPackagesCategoryDir($category)
 {
     $safe = preg_replace('/[^a-z]/', '', strtolower($category));
@@ -219,7 +246,7 @@ if (empty($error_message) && isset($_POST['action'])) {
         $package_detail_id = intval($_POST['package_detail_id'] ?? 0);
         $inclusion_type = $_POST['inclusion_type'] ?? '';
         $item_text = trim($_POST['item_text'] ?? '');
-        $sort_order = isset($_POST['sort_order']) ? intval($_POST['sort_order']) : 0;
+        $item_order = isset($_POST['item_order']) ? intval($_POST['item_order']) : 0;
 
         if ($package_detail_id <= 0) {
             $error_message = "Invalid package detail.";
@@ -227,16 +254,45 @@ if (empty($error_message) && isset($_POST['action'])) {
             $error_message = "Invalid inclusion type.";
         } elseif ($item_text === '') {
             $error_message = "Item text is required.";
+        } elseif (!is_numeric($_POST['item_order'] ?? '')) {
+            $error_message = "Item order must be a number.";
         } else {
             try {
-                $stmt = $conn->prepare("INSERT INTO package_inclusion_items (package_detail_id, inclusion_type, item_text, sort_order) VALUES (?, ?, ?, ?)");
-                $stmt->bind_param("issi", $package_detail_id, $inclusion_type, $item_text, $sort_order);
+                $stmt = $conn->prepare("INSERT INTO package_inclusion_items (package_detail_id, inclusion_type, item_text, item_order) VALUES (?, ?, ?, ?)");
+                $stmt->bind_param("issi", $package_detail_id, $inclusion_type, $item_text, $item_order);
                 $stmt->execute();
                 $stmt->close();
                 header("Location: package_details.php?detail_id=" . $package_detail_id);
                 exit();
             } catch (mysqli_sql_exception $e) {
                 $error_message = "Add item failed: " . $e->getMessage();
+            }
+        }
+    }
+
+    // ------- Update inclusion item -------
+    if ($action === 'update_item') {
+        $item_id = intval($_POST['item_id'] ?? 0);
+        $package_detail_id = intval($_POST['package_detail_id'] ?? 0);
+        $item_text = trim($_POST['item_text'] ?? '');
+        $item_order = isset($_POST['item_order']) ? intval($_POST['item_order']) : 0;
+
+        if ($item_id <= 0 || $package_detail_id <= 0) {
+            $error_message = "Invalid item.";
+        } elseif ($item_text === '') {
+            $error_message = "Item text is required.";
+        } elseif (!is_numeric($_POST['item_order'] ?? '')) {
+            $error_message = "Item order must be a number.";
+        } else {
+            try {
+                $stmt = $conn->prepare("UPDATE package_inclusion_items SET item_text=?, item_order=? WHERE id=? AND package_detail_id=?");
+                $stmt->bind_param("siii", $item_text, $item_order, $item_id, $package_detail_id);
+                $stmt->execute();
+                $stmt->close();
+                header("Location: package_details.php?detail_id=" . $package_detail_id);
+                exit();
+            } catch (mysqli_sql_exception $e) {
+                $error_message = "Update item failed: " . $e->getMessage();
             }
         }
     }
@@ -310,7 +366,7 @@ if (empty($error_message)) {
             $stmt->close();
 
             if ($selectedDetail) {
-                $stmt = $conn->prepare("SELECT * FROM package_inclusion_items WHERE package_detail_id=? ORDER BY inclusion_type ASC, sort_order ASC, id ASC");
+                $stmt = $conn->prepare("SELECT * FROM package_inclusion_items WHERE package_detail_id=? ORDER BY inclusion_type ASC, item_order ASC, id ASC");
                 $stmt->bind_param("i", $detailId);
                 $stmt->execute();
                 $res = $stmt->get_result();
@@ -458,8 +514,8 @@ if (empty($error_message)) {
                                                 <input type="text" name="item_text" class="form-control" placeholder="e.g. 3 Main courses" required>
                                             </div>
                                             <div class="col-6 col-md-2">
-                                                <label class="form-label">Order</label>
-                                                <input type="number" name="sort_order" class="form-control" value="0" min="0">
+                                                <label class="form-label">Item Number</label>
+                                                <input type="number" name="item_order" class="form-control" value="1" min="0" required>
                                             </div>
                                             <div class="col-6 col-md-2">
                                                 <button type="submit" class="btn btn-primary w-100">Add</button>
@@ -481,9 +537,16 @@ if (empty($error_message)) {
                                                     <tbody>
                                                         <?php foreach ($itemsByType[$typeKey] as $it): ?>
                                                             <tr>
-                                                                <td><?php echo intval($it['sort_order']); ?></td>
+                                                                <td><?php echo intval($it['item_order']); ?></td>
                                                                 <td class="text-start"><?php echo htmlspecialchars($it['item_text']); ?></td>
-                                                                <td>
+                                                                <td class="d-flex flex-column gap-1 align-items-stretch">
+                                                                    <button type="button" class="btn btn-warning btn-sm edit-inclusion-btn" data-bs-toggle="modal" data-bs-target="#editInclusionItemModal"
+                                                                        data-item-id="<?php echo intval($it['id']); ?>"
+                                                                        data-item-text="<?php echo htmlspecialchars($it['item_text'], ENT_QUOTES); ?>"
+                                                                        data-item-order="<?php echo intval($it['item_order']); ?>"
+                                                                        data-package-id="<?php echo intval($detailId); ?>">
+                                                                        <i class="bi bi-pencil"></i> Edit
+                                                                    </button>
                                                                     <form method="POST" class="m-0" onsubmit="return confirm('Delete this item?');">
                                                                         <input type="hidden" name="action" value="delete_item">
                                                                         <input type="hidden" name="item_id" value="<?php echo intval($it['id']); ?>">
@@ -592,6 +655,37 @@ if (empty($error_message)) {
 
             <?php endif; ?>
 
+        </div>
+    </div>
+
+    <!-- Edit Inclusion Item Modal -->
+    <div class="modal fade" id="editInclusionItemModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered">
+            <div class="modal-content custom-modal">
+                <form method="POST">
+                    <input type="hidden" name="action" value="update_item">
+                    <input type="hidden" name="item_id" id="edit-inclusion-item-id">
+                    <input type="hidden" name="package_detail_id" value="<?php echo intval($detailId); ?>">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Item</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Item Number</label>
+                            <input type="number" name="item_order" id="edit-inclusion-item-order" class="form-control" min="0" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Item Name</label>
+                            <input type="text" name="item_text" id="edit-inclusion-item-text" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -794,6 +888,16 @@ if (empty($error_message)) {
                 document.getElementById('edit_image').value = btn.dataset.image;
             });
         });
+
+        const editInclusionModal = document.getElementById('editInclusionItemModal');
+        if (editInclusionModal) {
+            editInclusionModal.addEventListener('show.bs.modal', event => {
+                const btn = event.relatedTarget;
+                document.getElementById('edit-inclusion-item-id').value = btn.getAttribute('data-item-id');
+                document.getElementById('edit-inclusion-item-order').value = btn.getAttribute('data-item-order');
+                document.getElementById('edit-inclusion-item-text').value = btn.getAttribute('data-item-text');
+            });
+        }
 
         // Auto-submit category filter on list view
         (() => {
