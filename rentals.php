@@ -76,6 +76,7 @@
             const card = document.createElement('div');
             card.className = 'card border-dark shadow rental-card';
             card.style.backgroundColor = '#E2D4D4';
+<<<<<<< HEAD
             card.style.height = '100%';
             card.dataset.item = encodeURIComponent(JSON.stringify(item));
 
@@ -88,15 +89,23 @@
                 }).join('')
                 : '<span class="text-muted small">No colors available</span>';
 
+=======
+            card.dataset.item = encodeURIComponent(JSON.stringify(item));
+
+>>>>>>> fcd4e3900e327b45543148467294fa2baf378665
             card.innerHTML = `
                 <img src="${item.image}" class="card-img-top" style="height:200px; width:100%; object-fit: cover; object-position:center; background-color: #f8f9fa;">
                 <div class="card-body text-start">
                     <h5 class="card-title">${item.name}</h5>
+<<<<<<< HEAD
                     <p class="card-text mb-2">₱ ${Number(item.price).toFixed(2)}</p>
                     <div class="d-flex flex-wrap align-items-center gap-1" style="min-height:30px;">
                         <span class="small fw-semibold me-1">Available:</span>
                         ${colorsHtml}
                     </div>
+=======
+                    <p class="card-text">₱ ${Number(item.price).toFixed(2)}</p>
+>>>>>>> fcd4e3900e327b45543148467294fa2baf378665
                 </div>
             `;
 
