@@ -39,6 +39,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'add') {
     $food_price = $_POST['food_price'];
     $food_serving_size = $_POST['food_serving_size'];
     $food_is_available = isset($_POST['food_is_available']) ? 1 : 0;
+    $category_short_description = trim($_POST['category_short_description'] ?? '');
 
     $food_image = '';
 
@@ -77,6 +78,14 @@ if (isset($_POST['action']) && $_POST['action'] === 'add') {
     );
 
     $stmt->execute();
+
+    if ($category_short_description !== '') {
+        $upd = $conn->prepare("UPDATE food_categories SET food_category_description=? WHERE food_category_id=?");
+        $upd->bind_param("ss", $category_short_description, $food_category_id);
+        $upd->execute();
+        $upd->close();
+    }
+
     header("Location: food.php");
     exit();
 }
@@ -90,6 +99,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'edit') {
     $food_price = $_POST['food_price'];
     $food_serving_size = $_POST['food_serving_size'];
     $food_is_available = isset($_POST['food_is_available']) ? 1 : 0;
+    $category_short_description = trim($_POST['category_short_description'] ?? '');
 
     // Get current image
     $current = $conn->query("SELECT food_image FROM foods WHERE food_id='$food_id'")->fetch_assoc();
@@ -130,6 +140,14 @@ if (isset($_POST['action']) && $_POST['action'] === 'edit') {
     );
 
     $stmt->execute();
+
+    if ($category_short_description !== '') {
+        $upd = $conn->prepare("UPDATE food_categories SET food_category_description=? WHERE food_category_id=?");
+        $upd->bind_param("ss", $category_short_description, $food_category_id);
+        $upd->execute();
+        $upd->close();
+    }
+
     header("Location: food.php");
     exit();
 }
@@ -162,7 +180,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete') {
     <div class="container mt-4">
         <a href="dashboard.php" class="btn btn-secondary">Back</a>
     </div>
-    <div class="container py-4">
+    <div class="container-fluid py-4">
         <div class="row justify-content-center">
             <div class="col-12">
                 <div class="card card-admin shadow w-100" style="max-width: 1200px; padding: 3rem;">
@@ -259,6 +277,14 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete') {
             </div>
         </div>
 
+
+
+
+
+
+
+
+        
         <!-- Add Modal -->
         <div class="modal fade" id="addFoodModal" tabindex="-1">
             <div class="modal-dialog">
@@ -280,12 +306,17 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete') {
                             </div>
                             <div class="mb-3">
                                 <label>Category</label>
-                                <select name="food_category_id" class="form-control" required>
+                                <select name="food_category_id" id="add-category" class="form-control" required>
                                     <option value="">Select Category</option>
                                     <?php foreach ($categoriesArray as $cat): ?>
                                         <option value="<?= $cat['food_category_id'] ?>"><?= htmlspecialchars($cat['food_category_name']) ?></option>
                                     <?php endforeach; ?>
                                 </select>
+                            </div>
+                            <div class="mb-3">
+                                <label>Category Short Description</label>
+                                <textarea name="category_short_description" id="add-category-description" class="form-control" rows="2" placeholder="Short blurb shown under this category"></textarea>
+                                <small class="text-muted">Saved to the selected category.</small>
                             </div>
                             <div class="mb-3">
                                 <label>Description</label>
@@ -340,6 +371,11 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete') {
                                         <option value="<?= $cat['food_category_id'] ?>"><?= htmlspecialchars($cat['food_category_name']) ?></option>
                                     <?php endforeach; ?>
                                 </select>
+                            </div>
+                            <div class="mb-3">
+                                <label>Category Short Description</label>
+                                <textarea name="category_short_description" id="edit-category-description" class="form-control" rows="2" placeholder="Short blurb shown under this category"></textarea>
+                                <small class="text-muted">Saved to the selected category.</small>
                             </div>
                             <div class="mb-3">
                                 <label>Description</label>
@@ -397,10 +433,29 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete') {
 
         <!-- Edit & Delete modals  -->
         <script>
+            const categoryMeta = <?php echo json_encode(array_column($categoriesArray, null, 'food_category_id')); ?>;
+
             document.addEventListener('DOMContentLoaded', function() {
                 var editModal = document.getElementById('editFoodModal');
                 var editImageInput = editModal.querySelector('input[name="food_image"]');
                 var editImagePreview = document.getElementById('edit-image-preview');
+                var addCategorySelect = document.getElementById('add-category');
+                var addCategoryDesc = document.getElementById('add-category-description');
+                var editCategorySelect = document.getElementById('edit-category');
+                var editCategoryDesc = document.getElementById('edit-category-description');
+
+                function syncCategoryDescription(selectEl, textareaEl) {
+                    if (!selectEl || !textareaEl) return;
+                    var meta = categoryMeta[selectEl.value];
+                    textareaEl.value = meta && meta.food_category_description ? meta.food_category_description : '';
+                }
+
+                if (addCategorySelect && addCategoryDesc) {
+                    addCategorySelect.addEventListener('change', function() {
+                        syncCategoryDescription(addCategorySelect, addCategoryDesc);
+                    });
+                    syncCategoryDescription(addCategorySelect, addCategoryDesc);
+                }
 
                 editModal.addEventListener('show.bs.modal', function(event) {
                     var button = event.relatedTarget;
@@ -412,7 +467,15 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete') {
                     document.getElementById('edit-serving').value = button.getAttribute('data-serving');
                     document.getElementById('edit-available').checked = button.getAttribute('data-available') == "1";
                     editImagePreview.src = "../" + button.getAttribute('data-image');
+
+                    syncCategoryDescription(editCategorySelect, editCategoryDesc);
                 });
+
+                if (editCategorySelect && editCategoryDesc) {
+                    editCategorySelect.addEventListener('change', function() {
+                        syncCategoryDescription(editCategorySelect, editCategoryDesc);
+                    });
+                }
 
                 // Update preview when a new file is selected
                 editImageInput.addEventListener('change', function(event) {

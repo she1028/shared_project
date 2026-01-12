@@ -42,7 +42,7 @@
     }
 </style>
 
-<!--modal-->
+<!-- Food detail modal -->
 <div class="modal fade" tabindex="-1" id="foodModal">
     <div class="modal-dialog modal-dialog-centered modal-lg custom-modal">
         <div class="modal-content p-3" style="background-color: #ede3d4;">
@@ -89,12 +89,12 @@
                                 <h4 class="fw-semibold">Price: <span id="modalFoodPrice"></span></h4>
                             </div>
                             <!-- availabile colors -->
-                            <div class="col-lg-6 col-12">
+                            <!-- <div class="col-lg-6 col-12">
                                 <span class="fs-6">Available In: </span>
                                 <span class="color-dot bg-danger"></span>
                                 <span class="color-dot bg-primary"></span>
                                 <span class="color-dot bg-dark"></span>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="d-flex justify-content-between align-items-center mt-3">
                             <!-- quantity  -->
@@ -116,80 +116,74 @@
 </div>
 
 <script>
-    function openFoodModal(item) {
-        document.getElementById("modalFoodImage").src = item.image;
-        document.getElementById("modalFoodName").innerText = item.name;
-        document.getElementById("modalFoodDescription").innerText = item.description || "";
-        document.getElementById("modalFoodPrice").innerText = "$ " + item.price.toFixed(2);
-        document.getElementById("modalFoodServing").innerText = item.serving || "";
-        document.getElementById("modalFoodCategory").innerText = item.category || "";
+    (() => {
+        let currentFood = null;
+        let currentQty = 1;
+        const qtyDisplay = document.querySelector('#foodModal .qty-box span');
 
-        const modal = new bootstrap.Modal(document.getElementById("foodModal"));
-        modal.show();
-    }
+        window.openFoodModal = function (item) {
+            currentFood = item || null;
+            currentQty = 1;
 
+            document.getElementById('modalFoodImage').src = item.image || '';
+            document.getElementById('modalFoodName').innerText = item.name || '';
+            document.getElementById('modalFoodDescription').innerText = item.description || '';
+            document.getElementById('modalFoodPrice').innerText = '₱ ' + Number(item.price || 0).toFixed(2);
+            document.getElementById('modalFoodServing').innerText = item.serving || '';
+            document.getElementById('modalFoodCategory').innerText = item.category || '';
 
-    let currentFood = null; // currently selected food item
-    let currentQty = 1;
+            if (qtyDisplay) qtyDisplay.innerText = currentQty;
 
-    function openFoodModal(item) {
-        currentFood = item; // store current item
-        currentQty = 1; // reset quantity
+            const modal = new bootstrap.Modal(document.getElementById('foodModal'));
+            modal.show();
+        };
 
-        document.getElementById("modalFoodImage").src = item.image;
-        document.getElementById("modalFoodName").innerText = item.name;
-        document.getElementById("modalFoodDescription").innerText = item.description || "";
-        document.getElementById("modalFoodPrice").innerText = "$ " + item.price.toFixed(2);
-        document.getElementById("modalFoodServing").innerText = item.serving || "";
-        document.getElementById("modalFoodCategory").innerText = item.category || "";
+        document.getElementById('qty-minus').addEventListener('click', () => {
+            if (currentQty > 1) currentQty--;
+            if (qtyDisplay) qtyDisplay.innerText = currentQty;
+        });
 
-        document.querySelector("#foodModal .qty-box span").innerText = currentQty;
+        document.getElementById('qty-plus').addEventListener('click', () => {
+            currentQty++;
+            if (qtyDisplay) qtyDisplay.innerText = currentQty;
+        });
 
-        const modal = new bootstrap.Modal(document.getElementById("foodModal"));
-        modal.show();
-    }
+        document.getElementById('addToCartBtn').addEventListener('click', () => {
+            if (!currentFood) return;
 
-    // Quantity buttons
-    document.getElementById("qty-minus").addEventListener("click", () => {
-        if (currentQty > 1) currentQty--;
-        document.querySelector("#foodModal .qty-box span").innerText = currentQty;
-    });
+            const postData = {
+                food_id: currentFood.food_id || currentFood.id,
+                id: currentFood.id,
+                name: currentFood.name,
+                price: Number(currentFood.price),
+                qty: Number(currentQty),
+                image: currentFood.image,
+                category: currentFood.category,
+                serving: currentFood.serving || '',
+                type: 'food'
+            };
 
-    document.getElementById("qty-plus").addEventListener("click", () => {
-        currentQty++;
-        document.querySelector("#foodModal .qty-box span").innerText = currentQty;
-    });
-
-   // Add to Cart button
-document.querySelector("#foodModal .btn").addEventListener("click", () => {
-    if (!currentFood) return;
-
-    const postData = {
-        food_id: currentFood.food_id,
-        name: currentFood.name,
-        price: Number(currentFood.price),
-        qty: Number(currentQty),
-        image: currentFood.image,
-        category: currentFood.category,
-        serving: currentFood.serving || ''
-    };
-
-    fetch('add_to_cart.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(postData)
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            alert(data.message); // ✅ user feedback
-            updateCartCount();   // dynamically update cart icon/count
-            const modalEl = document.getElementById("foodModal");
-            bootstrap.Modal.getInstance(modalEl).hide();
-        } else {
-            alert("Error adding to cart");
-        }
-    });
-});
-
+            fetch('add_to_cart.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(postData)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+                        if (typeof updateCartCount === 'function') {
+                            updateCartCount();
+                        }
+                        const modalEl = document.getElementById('foodModal');
+                        const instance = bootstrap.Modal.getInstance(modalEl);
+                        if (instance) instance.hide();
+                    } else {
+                        alert('Error adding to cart');
+                    }
+                })
+                .catch(() => alert('Error adding to cart'));
+        });
+    })();
+</script>
 </script>

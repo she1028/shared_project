@@ -59,111 +59,140 @@
     <!-- Footer -->
     <?php include("footer.php"); ?>
 
-    <script src="items.js"></script>
     <script>
-        var content = document.getElementById("content");
-        var searchInput = document.getElementById("searchInput");
-        var searchBtn = document.getElementById("searchBtn");
-        var introSection = document.querySelector(".container.text-center.my-5"); // intro section
-        var clearBtn = document.getElementById("clearBtn");
+        const content = document.getElementById('content');
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const introSection = document.querySelector('.container.text-center.my-5');
+        const clearBtn = document.getElementById('clearBtn');
 
-        // Flatten all items for search purposes
-        var allItems = [];
-        rentals.rntCategories.forEach(function(category) {
-            category.items.forEach(function(item) {
-                allItems.push(item);
-            });
-        });
+        let rentalsData = [];
+        let allItems = [];
 
-        // Function to render full category layout (with hr, description, etc.)
-        function renderFullCategories() {
-            content.innerHTML = "";
-            introSection.style.display = "block"; // show intro
-            rentals.rntCategories.forEach(function(category) {
-                var sectionId = category.category.replace(/\s+/g, "");
-                content.innerHTML += `
-                <hr class="m-5">
-                <h2 class="fw-bold m-3 mb-3">${category.category}</h2>
-                <div class="mt-1">${category.description}</div>
-                <div class="row row-cols-1 row-cols-md-4 g-4 mt-2" id="${sectionId}"></div>
-            `;
-                var row = document.getElementById(sectionId);
-                category.items.forEach(function(item) {
-                    row.innerHTML += `
-                    <div class="col">
-                        <div class="card border-dark shadow" onclick="openModal()">
-                            <img src="${item.img}" class="card-img-top" style="height:200px; width:100%; object-fit: cover; object-position:center; background-color: #f8f9fa;">
-                            <div class="card-body text-start">
-                                <h5 class="card-title">${item.name}</h5>
-                                <p class="card-text">$ ${item.price.toFixed(2)}</p>
-                            </div>
-                        </div>
+        function buildCard(item) {
+            const col = document.createElement('div');
+            col.className = 'col';
+
+            const card = document.createElement('div');
+            card.className = 'card border-dark shadow rental-card';
+            card.style.backgroundColor = '#E2D4D4';
+            card.style.height = '100%';
+            card.dataset.item = encodeURIComponent(JSON.stringify(item));
+
+            const colors = Array.isArray(item.colors) ? item.colors : [];
+            const colorsHtml = colors.length
+                ? colors.map(c => {
+                    const name = c.color_name || c.name || 'Color';
+                    const stock = typeof c.color_stock === 'number' ? c.color_stock : 0;
+                    return `<span class="badge bg-secondary text-dark me-1">${name} (${stock})</span>`;
+                }).join('')
+                : '<span class="text-muted small">No colors available</span>';
+
+            card.innerHTML = `
+                <img src="${item.image}" class="card-img-top" style="height:200px; width:100%; object-fit: cover; object-position:center; background-color: #f8f9fa;">
+                <div class="card-body text-start">
+                    <h5 class="card-title">${item.name}</h5>
+                    <p class="card-text mb-2">₱ ${Number(item.price).toFixed(2)}</p>
+                    <div class="d-flex flex-wrap align-items-center gap-1" style="min-height:30px;">
+                        <span class="small fw-semibold me-1">Available:</span>
+                        ${colorsHtml}
                     </div>
+                </div>
+            `;
+
+            card.addEventListener('click', () => {
+                const raw = card.dataset.item;
+                if (!raw) return;
+                try {
+                    const parsed = JSON.parse(decodeURIComponent(raw));
+                    window.openRentalModal(parsed);
+                } catch (e) {}
+            });
+
+            col.appendChild(card);
+            return col;
+        }
+
+        function renderFullCategories() {
+            content.innerHTML = '';
+            if (introSection) introSection.style.display = 'block';
+
+            rentalsData.forEach(category => {
+                const sectionId = (category.group_key || category.group_name).replace(/\s+/g, '');
+                const block = document.createElement('div');
+                block.innerHTML = `
+                    <hr class="m-5">
+                    <h2 class="fw-bold m-3 mb-3">${category.group_name}</h2>
+                    <div class="mt-1">${category.description || ''}</div>
+                    <div class="row row-cols-1 row-cols-md-4 g-4 mt-2" id="${sectionId}"></div>
                 `;
+                content.appendChild(block);
+
+                const row = block.querySelector(`#${sectionId}`);
+                (category.items || []).forEach(item => {
+                    row.appendChild(buildCard(item));
                 });
             });
         }
 
-        // Function to render search results in a flat grid
         function renderSearchResults(items) {
-            content.innerHTML = "";
-            introSection.style.display = "none"; // hide intro during search
+            content.innerHTML = '';
+            if (introSection) introSection.style.display = 'none';
 
             if (items.length === 0) {
-                content.innerHTML = `<p class="text-center fw-bold fs-5 my-5">No results found.</p>`;
+                content.innerHTML = '<p class="text-center fw-bold fs-5 my-5">No results found.</p>';
                 return;
             }
 
-            var row = document.createElement("div");
-            row.className = "row row-cols-1 row-cols-md-4 g-4";
+            const row = document.createElement('div');
+            row.className = 'row row-cols-1 row-cols-md-4 g-4';
             content.appendChild(row);
 
-            items.forEach(function(item) {
-                var col = document.createElement("div");
-                col.className = "col";
-                col.innerHTML = `
-                <div class="card border-dark shadow" onclick="openModal()" style="background-color: #E2D4D4;">
-                    <img src="${item.img}" class="card-img-top" style="height:200px; width:100%; object-fit: cover; object-position:center; background-color: #f8f9fa;">
-                    <div class="card-body text-start">
-                        <h5 class="card-title">${item.name}</h5>
-                        <p class="card-text">$ ${item.price.toFixed(2)}</p>
-                    </div>
-                </div>
-            `;
-                row.appendChild(col);
-            });
+            items.forEach(item => row.appendChild(buildCard(item)));
         }
 
-        // Function to handle search
         function searchItems() {
-            var query = searchInput.value.trim().toLowerCase();
+            const query = searchInput.value.trim().toLowerCase();
+            clearBtn.style.display = query ? 'block' : 'none';
 
-            clearBtn.style.display = query ? "block" : "none";
-
-            if (query === "") {
-                renderFullCategories(); // render original category layout
+            if (!query) {
+                renderFullCategories();
                 return;
             }
-            var filtered = allItems.filter(function(item) {
-                return item.name.toLowerCase().includes(query);
-            });
+
+            const filtered = allItems.filter(item => item.name.toLowerCase().includes(query));
             renderSearchResults(filtered);
         }
 
-        // Initial render
-        renderFullCategories();
+        function hydrateFlatList() {
+            allItems = [];
+            rentalsData.forEach(cat => {
+                (cat.items || []).forEach(it => allItems.push(it));
+            });
+        }
 
-        // Event listeners
-        searchInput.addEventListener("input", searchItems);
-        searchBtn.addEventListener("click", searchItems);
-        searchInput.addEventListener("keydown", function(e) {
-            if (e.key === "Enter") searchItems();
+        // Fetch rentals from API and render
+        fetch('api/get_rentals.php')
+            .then(res => res.json())
+            .then(data => {
+                rentalsData = Array.isArray(data) ? data : [];
+                hydrateFlatList();
+                renderFullCategories();
+            })
+            .catch(() => {
+                content.innerHTML = '<p class="text-danger">Failed to load rentals.</p>';
+            });
+
+        searchInput.addEventListener('input', searchItems);
+        searchBtn.addEventListener('click', searchItems);
+        searchInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') searchItems();
         });
 
-        clearBtn.addEventListener("click", function() {
-            searchInput.value = "";
-            clearBtn.style.display = "none";
-            renderFullCategories(); // restore intro + content
+        clearBtn.addEventListener('click', function () {
+            searchInput.value = '';
+            clearBtn.style.display = 'none';
+            renderFullCategories();
         });
     </script>
 
@@ -174,7 +203,7 @@
         crossorigin="anonymous">
     </script>
 
-    <?php include 'cardmodal.php' ?>
+    <?php include 'rentalmodal.php' ?>
 
 </body>
 

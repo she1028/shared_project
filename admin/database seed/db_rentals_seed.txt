@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS rental_item_colors (
   item_id VARCHAR(40) NOT NULL,
   color_name VARCHAR(60) NOT NULL,
   color_hex VARCHAR(20) NOT NULL,
+  color_stock INT NOT NULL DEFAULT 0,
   CONSTRAINT fk_rental_item_colors_item
     FOREIGN KEY (item_id) REFERENCES rental_items(id)
     ON DELETE CASCADE ON UPDATE CASCADE
@@ -84,12 +85,12 @@ ON DUPLICATE KEY UPDATE
   default_qty=VALUES(default_qty);
 
 DELETE FROM rental_item_colors WHERE item_id IN ('chr-001','chr-002','chr-003','chr-004','chr-005');
-INSERT INTO rental_item_colors (item_id, color_name, color_hex) VALUES
-('chr-001','White','#FFFFFF'),
-('chr-002','White','#FFFFFF'),
-('chr-003','Gray','#838282ff'),
-('chr-004','Gold','#D4AF37'),
-('chr-005','Black','#000000');
+INSERT INTO rental_item_colors (item_id, color_name, color_hex, color_stock) VALUES
+('chr-001','White','#FFFFFF',50),
+('chr-002','White','#FFFFFF',80),
+('chr-003','Gray','#838282ff',65),
+('chr-004','Gold','#D4AF37',40),
+('chr-005','Black','#000000',70);
 
 -- Group: Containers
 INSERT INTO rental_groups (group_key, group_name, description, cover_img)
@@ -120,9 +121,9 @@ ON DUPLICATE KEY UPDATE
   default_qty=VALUES(default_qty);
 
 DELETE FROM rental_item_colors WHERE item_id IN ('styro-001','wj-001');
-INSERT INTO rental_item_colors (item_id, color_name, color_hex) VALUES
-('styro-001','White','#FFFFFF'),
-('wj-001','White','#FFFFFF');
+INSERT INTO rental_item_colors (item_id, color_name, color_hex, color_stock) VALUES
+('styro-001','White','#FFFFFF',90),
+('wj-001','White','#FFFFFF',60);
 
 -- Group: Decorations
 INSERT INTO rental_groups (group_key, group_name, description, cover_img)
@@ -157,28 +158,28 @@ ON DUPLICATE KEY UPDATE
   default_qty=VALUES(default_qty);
 
 DELETE FROM rental_item_colors WHERE item_id IN ('cf-001','gb-001','lb-001','ll-001','tb-001','vt-001');
-INSERT INTO rental_item_colors (item_id, color_name, color_hex) VALUES
-('cf-001','White','#FFFFFF'),
-('cf-001','Pink','#FFC0CB'),
-('cf-001','Purple','#800080'),
-('cf-001','Yellow','#FFFF00'),
-('cf-001','Red','#FF0000'),
-('cf-001','Blue','#0000FF'),
-('gb-001','White','#FFFFFF'),
-('lb-001','White','#FFFFFF'),
-('ll-001','White','#FFFFFF'),
-('tb-001','White','#FFFFFF'),
-('tb-001','Pink','#FFC0CB'),
-('tb-001','Purple','#800080'),
-('tb-001','Yellow','#FFFF00'),
-('tb-001','Red','#FF0000'),
-('tb-001','Blue','#0000FF'),
-('vt-001','White','#FFFFFF'),
-('vt-001','Pink','#FFC0CB'),
-('vt-001','Purple','#800080'),
-('vt-001','Yellow','#FFFF00'),
-('vt-001','Red','#FF0000'),
-('vt-001','Blue','#0000FF');
+INSERT INTO rental_item_colors (item_id, color_name, color_hex, color_stock) VALUES
+('cf-001','White','#FFFFFF',80),
+('cf-001','Pink','#FFC0CB',55),
+('cf-001','Purple','#800080',45),
+('cf-001','Yellow','#FFFF00',70),
+('cf-001','Red','#FF0000',65),
+('cf-001','Blue','#0000FF',60),
+('gb-001','White','#FFFFFF',50),
+('lb-001','White','#FFFFFF',50),
+('ll-001','White','#FFFFFF',50),
+('tb-001','White','#FFFFFF',85),
+('tb-001','Pink','#FFC0CB',40),
+('tb-001','Purple','#800080',35),
+('tb-001','Yellow','#FFFF00',75),
+('tb-001','Red','#FF0000',60),
+('tb-001','Blue','#0000FF',55),
+('vt-001','White','#FFFFFF',90),
+('vt-001','Pink','#FFC0CB',70),
+('vt-001','Purple','#800080',45),
+('vt-001','Yellow','#FFFF00',60),
+('vt-001','Red','#FF0000',50),
+('vt-001','Blue','#0000FF',40);
 
 -- Group: Fabric & Linens
 INSERT INTO rental_groups (group_key, group_name, description, cover_img)
@@ -216,16 +217,16 @@ ON DUPLICATE KEY UPDATE
   default_qty=VALUES(default_qty);
 
 DELETE FROM rental_item_colors WHERE item_id LIKE 'fl-%';
-INSERT INTO rental_item_colors (item_id, color_name, color_hex) VALUES
-('fl-001','White','#FFFFFF'),('fl-001','Beige','#F5F5DC'),('fl-001','Green','#008000'),('fl-001','Red','#FF0000'),('fl-001','Blue','#0000FF'),
-('fl-002','White','#FFFFFF'),('fl-002','Beige','#F5F5DC'),('fl-002','Green','#008000'),('fl-002','Red','#FF0000'),('fl-002','Blue','#0000FF'),
-('fl-003','White','#FFFFFF'),('fl-003','Beige','#F5F5DC'),('fl-003','Green','#008000'),('fl-003','Red','#FF0000'),('fl-003','Blue','#0000FF'),
-('fl-004','White','#FFFFFF'),('fl-004','Beige','#F5F5DC'),('fl-004','Green','#008000'),('fl-004','Red','#FF0000'),('fl-004','Blue','#0000FF'),
-('fl-005','White','#FFFFFF'),('fl-005','Beige','#F5F5DC'),('fl-005','Green','#008000'),('fl-005','Red','#FF0000'),('fl-005','Blue','#0000FF'),
-('fl-006','White','#FFFFFF'),('fl-006','Beige','#F5F5DC'),('fl-006','Green','#008000'),('fl-006','Red','#FF0000'),('fl-006','Blue','#0000FF'),
-('fl-007','Gold','#D4AF37'),
-('fl-008','White','#FFFFFF'),('fl-008','Beige','#F5F5DC'),('fl-008','Green','#008000'),('fl-008','Red','#FF0000'),('fl-008','Blue','#0000FF'),
-('fl-009','White','#FFFFFF'),('fl-009','Beige','#F5F5DC'),('fl-009','Green','#008000'),('fl-009','Red','#FF0000'),('fl-009','Blue','#0000FF');
+INSERT INTO rental_item_colors (item_id, color_name, color_hex, color_stock) VALUES
+('fl-001','White','#FFFFFF',85),('fl-001','Beige','#F5F5DC',60),('fl-001','Green','#008000',45),('fl-001','Red','#FF0000',70),('fl-001','Blue','#0000FF',65),
+('fl-002','White','#FFFFFF',80),('fl-002','Beige','#F5F5DC',55),('fl-002','Green','#008000',40),('fl-002','Red','#FF0000',60),('fl-002','Blue','#0000FF',75),
+('fl-003','White','#FFFFFF',75),('fl-003','Beige','#F5F5DC',50),('fl-003','Green','#008000',35),('fl-003','Red','#FF0000',55),('fl-003','Blue','#0000FF',70),
+('fl-004','White','#FFFFFF',70),('fl-004','Beige','#F5F5DC',45),('fl-004','Green','#008000',30),('fl-004','Red','#FF0000',50),('fl-004','Blue','#0000FF',65),
+('fl-005','White','#FFFFFF',90),('fl-005','Beige','#F5F5DC',70),('fl-005','Green','#008000',55),('fl-005','Red','#FF0000',65),('fl-005','Blue','#0000FF',60),
+('fl-006','White','#FFFFFF',85),('fl-006','Beige','#F5F5DC',60),('fl-006','Green','#008000',45),('fl-006','Red','#FF0000',55),('fl-006','Blue','#0000FF',50),
+('fl-007','Gold','#D4AF37',40),
+('fl-008','White','#FFFFFF',95),('fl-008','Beige','#F5F5DC',80),('fl-008','Green','#008000',60),('fl-008','Red','#FF0000',70),('fl-008','Blue','#0000FF',65),
+('fl-009','White','#FFFFFF',100),('fl-009','Beige','#F5F5DC',85),('fl-009','Green','#008000',70),('fl-009','Red','#FF0000',90),('fl-009','Blue','#0000FF',75);
 
 -- Group: Tables
 INSERT INTO rental_groups (group_key, group_name, description, cover_img)
@@ -261,14 +262,14 @@ ON DUPLICATE KEY UPDATE
   default_qty=VALUES(default_qty);
 
 DELETE FROM rental_item_colors WHERE item_id IN ('tbl-001','tbl-002','tbl-003','tbl-004','tbl-005','tbl-006','tbl-007');
-INSERT INTO rental_item_colors (item_id, color_name, color_hex) VALUES
-('tbl-001','White','#FFFFFF'),
-('tbl-002','Brown','#D43737'),
-('tbl-003','White','#FFFFFF'),
-('tbl-004','Brown','#D43737'),
-('tbl-005','Brown','#D43737'),
-('tbl-006','White','#FFFFFF'),
-('tbl-007','Brown','#D43737');
+INSERT INTO rental_item_colors (item_id, color_name, color_hex, color_stock) VALUES
+('tbl-001','White','#FFFFFF',55),
+('tbl-002','Brown','#D43737',45),
+('tbl-003','White','#FFFFFF',60),
+('tbl-004','Brown','#D43737',40),
+('tbl-005','Brown','#D43737',35),
+('tbl-006','White','#FFFFFF',50),
+('tbl-007','Brown','#D43737',65);
 
 -- Group: Tables and Chairs
 INSERT INTO rental_groups (group_key, group_name, description, cover_img)
@@ -311,21 +312,21 @@ ON DUPLICATE KEY UPDATE
   default_qty=VALUES(default_qty);
 
 DELETE FROM rental_item_colors WHERE item_id IN ('tbl-01','chr-02','chr-03','tbl-04','tbl-05','tbl-06','tbl-07','chr-08','tbl-09','tbl-010','ctc-01','ctc-02','ctc-03','ctc-04');
-INSERT INTO rental_item_colors (item_id, color_name, color_hex) VALUES
-('tbl-01','White','#FFFFFF'),('tbl-01','Brown','#D43737'),('tbl-01','Beige','#F5F5DC'),
-('chr-02','White','#FFFFFF'),('chr-02','Brown','#D43737'),('chr-02','Beige','#F5F5DC'),
-('chr-03','White','#FFFFFF'),('chr-03','Brown','#D43737'),('chr-03','Beige','#F5F5DC'),
-('tbl-04','White','#FFFFFF'),('tbl-04','Brown','#D43737'),('tbl-04','Beige','#F5F5DC'),
-('tbl-05','White','#FFFFFF'),('tbl-05','Brown','#D43737'),('tbl-05','Beige','#F5F5DC'),
-('tbl-06','White','#FFFFFF'),('tbl-06','Brown','#D43737'),('tbl-06','Beige','#F5F5DC'),
-('tbl-07','White','#FFFFFF'),('tbl-07','Brown','#D43737'),('tbl-07','Beige','#F5F5DC'),
-('chr-08','White','#FFFFFF'),('chr-08','Brown','#D43737'),('chr-08','Beige','#F5F5DC'),
-('tbl-09','White','#FFFFFF'),('tbl-09','Brown','#D43737'),('tbl-09','Beige','#F5F5DC'),
-('tbl-010','White','#FFFFFF'),('tbl-010','Brown','#D43737'),('tbl-010','Beige','#F5F5DC'),
-('ctc-01','White','#FFFFFF'),('ctc-01','Brown','#D43737'),('ctc-01','Beige','#F5F5DC'),
-('ctc-02','White','#FFFFFF'),('ctc-02','Brown','#D43737'),('ctc-02','Beige','#F5F5DC'),
-('ctc-03','White','#FFFFFF'),('ctc-03','Brown','#D43737'),('ctc-03','Beige','#F5F5DC'),
-('ctc-04','White','#FFFFFF'),('ctc-04','Brown','#D43737'),('ctc-04','Beige','#F5F5DC');
+INSERT INTO rental_item_colors (item_id, color_name, color_hex, color_stock) VALUES
+('tbl-01','White','#FFFFFF',60),('tbl-01','Brown','#D43737',45),('tbl-01','Beige','#F5F5DC',55),
+('chr-02','White','#FFFFFF',70),('chr-02','Brown','#D43737',50),('chr-02','Beige','#F5F5DC',60),
+('chr-03','White','#FFFFFF',65),('chr-03','Brown','#D43737',55),('chr-03','Beige','#F5F5DC',50),
+('tbl-04','White','#FFFFFF',75),('tbl-04','Brown','#D43737',55),('tbl-04','Beige','#F5F5DC',65),
+('tbl-05','White','#FFFFFF',70),('tbl-05','Brown','#D43737',50),('tbl-05','Beige','#F5F5DC',60),
+('tbl-06','White','#FFFFFF',65),('tbl-06','Brown','#D43737',45),('tbl-06','Beige','#F5F5DC',55),
+('tbl-07','White','#FFFFFF',80),('tbl-07','Brown','#D43737',60),('tbl-07','Beige','#F5F5DC',70),
+('chr-08','White','#FFFFFF',55),('chr-08','Brown','#D43737',40),('chr-08','Beige','#F5F5DC',45),
+('tbl-09','White','#FFFFFF',85),('tbl-09','Brown','#D43737',65),('tbl-09','Beige','#F5F5DC',75),
+('tbl-010','White','#FFFFFF',90),('tbl-010','Brown','#D43737',70),('tbl-010','Beige','#F5F5DC',80),
+('ctc-01','White','#FFFFFF',95),('ctc-01','Brown','#D43737',85),('ctc-01','Beige','#F5F5DC',90),
+('ctc-02','White','#FFFFFF',80),('ctc-02','Brown','#D43737',60),('ctc-02','Beige','#F5F5DC',70),
+('ctc-03','White','#FFFFFF',75),('ctc-03','Brown','#D43737',55),('ctc-03','Beige','#F5F5DC',65),
+('ctc-04','White','#FFFFFF',70),('ctc-04','Brown','#D43737',50),('ctc-04','Beige','#F5F5DC',60);
 
 -- Group: Tableware & Utensils
 INSERT INTO rental_groups (group_key, group_name, description, cover_img)
@@ -362,15 +363,15 @@ ON DUPLICATE KEY UPDATE
   default_qty=VALUES(default_qty);
 
 DELETE FROM rental_item_colors WHERE item_id IN ('tw-001','tw-002','tw-003','tw-004','tw-005','tw-006','tw-007','tw-008');
-INSERT INTO rental_item_colors (item_id, color_name, color_hex) VALUES
-('tw-001','Silver','#C0C0C0'),('tw-001','Gold','#D4AF37'),
-('tw-002','Transparent','#FFFFFF'),
-('tw-003','White','#FFFFFF'),('tw-003','Gold','#D4AF37'),
-('tw-004','Silver','#C0C0C0'),('tw-004','Gold','#D4AF37'),
-('tw-005','Silver','#C0C0C0'),('tw-005','Gold','#D4AF37'),
-('tw-006','Silver','#C0C0C0'),('tw-006','Gold','#D4AF37'),
-('tw-007','White','#FFFFFF'),('tw-007','Gold','#D4AF37'),
-('tw-008','Transparent','#FFFFFF');
+INSERT INTO rental_item_colors (item_id, color_name, color_hex, color_stock) VALUES
+('tw-001','Silver','#C0C0C0',90),('tw-001','Gold','#D4AF37',70),
+('tw-002','Transparent','#FFFFFF',80),
+('tw-003','White','#FFFFFF',85),('tw-003','Gold','#D4AF37',65),
+('tw-004','Silver','#C0C0C0',60),('tw-004','Gold','#D4AF37',55),
+('tw-005','Silver','#C0C0C0',65),('tw-005','Gold','#D4AF37',60),
+('tw-006','Silver','#C0C0C0',70),('tw-006','Gold','#D4AF37',50),
+('tw-007','White','#FFFFFF',75),('tw-007','Gold','#D4AF37',55),
+('tw-008','Transparent','#FFFFFF',90);
 
 -- Group: Tent
 INSERT INTO rental_groups (group_key, group_name, description, cover_img)
@@ -404,9 +405,9 @@ ON DUPLICATE KEY UPDATE
   default_qty=VALUES(default_qty);
 
 DELETE FROM rental_item_colors WHERE item_id LIKE 'tent-%';
-INSERT INTO rental_item_colors (item_id, color_name, color_hex) VALUES
-('tent-001','White','#FFFFFF'),
-('tent-002','White','#FFFFFF'),
-('tent-003','White','#FFFFFF'),
-('tent-004','White','#FFFFFF'),
-('tent-005','White','#FFFFFF');
+INSERT INTO rental_item_colors (item_id, color_name, color_hex, color_stock) VALUES
+('tent-001','White','#FFFFFF',30),
+('tent-002','White','#FFFFFF',35),
+('tent-003','White','#FFFFFF',40),
+('tent-004','White','#FFFFFF',45),
+('tent-005','White','#FFFFFF',50);

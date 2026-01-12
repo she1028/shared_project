@@ -106,8 +106,8 @@
                 section.items.forEach(item => {
                     row.innerHTML += `
         <div class="col">
-            <div class="card border-dark shadow" style="background-color:#E2D4D4; cursor:pointer;"
-                 onclick='openFoodModal(${JSON.stringify(item)})'>
+              <div class="card border-dark shadow" style="background-color:#E2D4D4; cursor:pointer;"
+                  onclick='openFoodModal(${JSON.stringify(item)})'>
                 <img src="${item.image}" class="card-img-top" style="height:200px; object-fit:cover;">
                 <div class="card-body text-start">
                     <h5 class="card-title">${item.name}</h5>
@@ -137,8 +137,8 @@
             items.forEach(item => {
                 row.innerHTML += `
         <div class="col">
-            <div class="card border-dark shadow" style="cursor:pointer;"
-                 onclick='openFoodModal(${JSON.stringify(item)})'>
+              <div class="card border-dark shadow" style="cursor:pointer;"
+                  onclick='openFoodModal(${JSON.stringify(item)})'>
                 <img src="${item.image}" class="card-img-top" style="height:200px; object-fit:cover;">
                 <div class="card-body text-start">
                     <h5 class="card-title">${item.name}</h5>
