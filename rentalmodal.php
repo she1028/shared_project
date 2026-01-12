@@ -42,14 +42,14 @@
     }
 </style>
 
-<!-- Food detail modal -->
-<div class="modal fade" tabindex="-1" id="foodModal">
+<!-- Rental detail modal -->
+<div class="modal fade" tabindex="-1" id="rentalModal">
     <div class="modal-dialog modal-dialog-centered modal-lg custom-modal">
         <div class="modal-content p-3" style="background-color: #ede3d4;">
             <div class="modal-body">
                 <div class="row align-items-center justify-content-center">
                     <div class="col-lg-5 col-12 align-items-center">
-                        <img id="modalFoodImage" class="img-fluid">
+                        <img id="modalRentalImage" class="img-fluid">
                     </div>
                     <!-- Back button -->
                     <div class="col-lg-7 col-12 p-2 mt-2">
@@ -61,40 +61,38 @@
                         </div>
                         <!-- Category -->
                         <div class="d-flex align-items-center justify-content-center m-2">
-                            <span id="modalFoodCategory"
+                            <span id="modalRentalCategory"
                                 class="rounded-5 text-center py-1 px-3"
                                 style="background-color: #c6c6c6cc; font-size: 13px;">
                             </span>
                         </div>
                         <div class="row mt-2">
                             <!-- Title -->
-                            <div id="modalFoodName" class="h3 fw-bold"></div>
+                            <div id="modalRentalName" class="h3 fw-bold"></div>
                             <!-- details -->
                             <div class="details mt-2">
                                 <h5>Details:</h5>
-                                <p id="modalFoodServing" class="mb-0"></p>
-                                <p id="modalFoodExtra" class="mb-0"></p>
+                                <p id="modalRentalServing" class="mb-0"></p>
+                                <p id="modalRentalExtra" class="mb-0"></p>
 
                             </div>
                             <!-- description -->
                             <div class="description mt-3">
                                 <h5>Description:</h5>
-                                <p id="modalFoodDescription" style="text-align: justify;"></p>
+                                <p id="modalRentalDescription" style="text-align: justify;"></p>
                             </div>
                         </div>
                         <hr class="my-2">
                         <div class="row align-items-center">
                             <!-- price -->
                             <div class="col-lg-6 col-12">
-                                <h4 class="fw-semibold">Price: <span id="modalFoodPrice"></span></h4>
+                                <h4 class="fw-semibold">Price: <span id="modalRentalPrice"></span></h4>
                             </div>
                             <!-- availabile colors -->
-                            <!-- <div class="col-lg-6 col-12">
+                            <div class="col-lg-6 col-12">
                                 <span class="fs-6">Available In: </span>
-                                <span class="color-dot bg-danger"></span>
-                                <span class="color-dot bg-primary"></span>
-                                <span class="color-dot bg-dark"></span>
-                            </div> -->
+                                <span id="modalRentalColors" class="d-inline-flex gap-1 align-items-center"></span>
+                            </div>
                         </div>
                         <div class="d-flex justify-content-between align-items-center mt-3">
                             <!-- quantity  -->
@@ -117,24 +115,44 @@
 
 <script>
     (() => {
-        let currentFood = null;
+        let currentItem = null;
         let currentQty = 1;
-        const qtyDisplay = document.querySelector('#foodModal .qty-box span');
 
-        window.openFoodModal = function (item) {
-            currentFood = item || null;
+        const qtyDisplay = document.querySelector('#rentalModal .qty-box span');
+        const colorsContainer = document.getElementById('modalRentalColors');
+
+        window.openRentalModal = function (item) {
+            currentItem = item;
             currentQty = 1;
 
-            document.getElementById('modalFoodImage').src = item.image || '';
-            document.getElementById('modalFoodName').innerText = item.name || '';
-            document.getElementById('modalFoodDescription').innerText = item.description || '';
-            document.getElementById('modalFoodPrice').innerText = '₱ ' + Number(item.price || 0).toFixed(2);
-            document.getElementById('modalFoodServing').innerText = item.serving || '';
-            document.getElementById('modalFoodCategory').innerText = item.category || '';
+            document.getElementById('modalRentalImage').src = item.image || '';
+            document.getElementById('modalRentalName').innerText = item.name || '';
+            document.getElementById('modalRentalDescription').innerText = item.description || '';
+            document.getElementById('modalRentalPrice').innerText = '₱ ' + Number(item.price || 0).toFixed(2);
+            document.getElementById('modalRentalServing').innerText = item.serving || '';
+            document.getElementById('modalRentalCategory').innerText = item.category || '';
 
             if (qtyDisplay) qtyDisplay.innerText = currentQty;
 
-            const modal = new bootstrap.Modal(document.getElementById('foodModal'));
+            // Render colors
+            colorsContainer.innerHTML = '';
+            const colors = item.colors || [];
+            if (colors.length === 0) {
+                const none = document.createElement('span');
+                none.className = 'text-muted';
+                none.textContent = 'N/A';
+                colorsContainer.appendChild(none);
+            } else {
+                colors.forEach(c => {
+                    const dot = document.createElement('span');
+                    dot.className = 'badge bg-secondary text-dark';
+                    const stock = typeof c.color_stock !== 'undefined' ? ` (${c.color_stock})` : '';
+                    dot.textContent = (c.color_name || c.name || 'Color') + stock;
+                    colorsContainer.appendChild(dot);
+                });
+            }
+
+            const modal = new bootstrap.Modal(document.getElementById('rentalModal'));
             modal.show();
         };
 
@@ -149,18 +167,17 @@
         });
 
         document.getElementById('addToCartBtn').addEventListener('click', () => {
-            if (!currentFood) return;
+            if (!currentItem) return;
 
             const postData = {
-                food_id: currentFood.food_id || currentFood.id,
-                id: currentFood.id,
-                name: currentFood.name,
-                price: Number(currentFood.price),
+                item_id: currentItem.id || currentItem.item_id,
+                name: currentItem.name,
+                price: Number(currentItem.price),
                 qty: Number(currentQty),
-                image: currentFood.image,
-                category: currentFood.category,
-                serving: currentFood.serving || '',
-                type: 'food'
+                image: currentItem.image,
+                category: currentItem.category,
+                serving: currentItem.serving || '',
+                type: 'rental'
             };
 
             fetch('add_to_cart.php', {
@@ -175,7 +192,7 @@
                         if (typeof updateCartCount === 'function') {
                             updateCartCount();
                         }
-                        const modalEl = document.getElementById('foodModal');
+                        const modalEl = document.getElementById('rentalModal');
                         const instance = bootstrap.Modal.getInstance(modalEl);
                         if (instance) instance.hide();
                     } else {
@@ -185,5 +202,4 @@
                 .catch(() => alert('Error adding to cart'));
         });
     })();
-</script>
 </script>

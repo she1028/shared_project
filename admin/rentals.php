@@ -52,6 +52,9 @@ function ensureRentalColorSchema($conn)
         // Ensure color_name is present and text
         $conn->query("ALTER TABLE rental_item_colors MODIFY color_name VARCHAR(100) NOT NULL");
 
+        // Ensure color_stock column exists (idempotent)
+        $conn->query("ALTER TABLE rental_item_colors ADD COLUMN IF NOT EXISTS color_stock INT NOT NULL DEFAULT 0");
+
         // Migrate any hex stored in color_hex into color_name when color_name is empty
         $hasHex = $conn->query("SHOW COLUMNS FROM rental_item_colors LIKE 'color_hex'");
         $hexExists = $hasHex && $hasHex->num_rows > 0;
@@ -242,6 +245,7 @@ if (isset($_POST['action'])) {
     if ($action === 'add_color') {
         $item_id = trim($_POST['item_id'] ?? '');
         $color_name = trim($_POST['color_name'] ?? '');
+        $color_stock = max(0, intval($_POST['color_stock'] ?? 0));
         $group_id = intval($_POST['group_id'] ?? 0);
 
         if ($item_id === '' || $color_name === '') {
@@ -250,8 +254,8 @@ if (isset($_POST['action'])) {
             $error_message = "Color must be text only (letters, spaces, hyphens).";
         } else {
             try {
-                $stmt = $conn->prepare("INSERT INTO rental_item_colors (item_id, color_name) VALUES (?, ?)");
-                $stmt->bind_param("ss", $item_id, $color_name);
+                $stmt = $conn->prepare("INSERT INTO rental_item_colors (item_id, color_name, color_stock) VALUES (?, ?, ?)");
+                $stmt->bind_param("ssi", $item_id, $color_name, $color_stock);
                 $stmt->execute();
                 $stmt->close();
                 header("Location: rentals.php?group_id=" . $group_id);
@@ -323,7 +327,7 @@ if ($viewGroupId > 0) {
                 }, $items);
                 $placeholders = implode(',', array_fill(0, count($ids), '?'));
                 $types = str_repeat('s', count($ids));
-                $stmt = $conn->prepare("SELECT id, item_id, color_name FROM rental_item_colors WHERE item_id IN ($placeholders) ORDER BY id ASC");
+                $stmt = $conn->prepare("SELECT id, item_id, color_name, color_stock FROM rental_item_colors WHERE item_id IN ($placeholders) ORDER BY id ASC");
                 $stmt->bind_param($types, ...$ids);
                 $stmt->execute();
                 $res = $stmt->get_result();
@@ -445,7 +449,7 @@ if ($viewGroupId > 0) {
                                                 <?php else: ?>
                                                     <div class="d-flex flex-wrap gap-1">
                                                         <?php foreach ($colors as $c): ?>
-                                                            <span class="badge bg-secondary text-dark" style="background: rgba(255,255,255,0.85); color:#000;">&nbsp;<?php echo htmlspecialchars($c['color_name']); ?>&nbsp;</span>
+                                                            <span class="badge bg-secondary text-dark" style="background: rgba(255,255,255,0.85); color:#000;">&nbsp;<?php echo htmlspecialchars($c['color_name']); ?> (<?php echo intval($c['color_stock'] ?? 0); ?>)&nbsp;</span>
                                                         <?php endforeach; ?>
                                                     </div>
                                                 <?php endif; ?>
@@ -759,6 +763,7 @@ if ($viewGroupId > 0) {
                                 <label class="form-label">Add Color</label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="add-color-name" name="color_name" form="add-color-form" placeholder="Add new color" pattern="^[A-Za-z]+(?:[\s-][A-Za-z]+)*$" title="Letters, spaces, and hyphens only">
+                                    <input type="number" min="0" class="form-control" id="add-color-stock" name="color_stock" form="add-color-form" placeholder="Stock" style="max-width:120px;">
                                     <button class="btn btn-outline-primary" type="submit" form="add-color-form">Add Color</button>
                                 </div>
                             </div>
@@ -851,7 +856,7 @@ if ($viewGroupId > 0) {
 
                 // Populate color badges
                 const colorList = document.getElementById('edit-color-list');
-                const colorsJson = btn.getAttribute('data-colors') || '[]';
+                        const colorsJson = btn.getAttribute('data-colors') || '[]';
                 let colors;
                 try {
                     colors = JSON.parse(colorsJson);
@@ -859,7 +864,7 @@ if ($viewGroupId > 0) {
                     colors = [];
                 }
                 colorList.innerHTML = '';
-                if (colors.length === 0) {
+                        if (colors.length === 0) {
                     const span = document.createElement('span');
                     span.className = 'text-muted';
                     span.textContent = 'None';
@@ -873,7 +878,7 @@ if ($viewGroupId > 0) {
                         badge.className = 'badge bg-secondary text-dark';
                         badge.style.background = 'rgba(255,255,255,0.85)';
                         badge.style.color = '#000';
-                        badge.textContent = c.color_name;
+                                badge.textContent = `${c.color_name}${c.color_stock !== undefined ? ' (' + c.color_stock + ')' : ''}`;
 
                         const delBtn = document.createElement('button');
                         delBtn.type = 'button';

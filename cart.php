@@ -14,17 +14,14 @@ $total = $subtotal + $shipping;
 
 <!doctype html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Shopping Cart</title>
-
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="cart.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
-
 <body class="bg-light">
   <div class="container py-4">
     <div class="m-2">
@@ -50,6 +47,12 @@ $total = $subtotal + $shipping;
               <small class="text-muted">Qty: <?= $item['qty'] ?></small>
             </div>
             <div>₱<?= number_format($itemTotal, 2) ?></div>
+
+            <!-- REMOVE BUTTON -->
+            <form method="post" class="ms-2" action="removefromcart.php">
+              <input type="hidden" name="id" value="<?= $item['id'] ?>">
+              <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+            </form>
           </div>
         <?php endforeach; ?>
       <?php else: ?>
@@ -89,7 +92,7 @@ $total = $subtotal + $shipping;
         <input type="datetime-local" class="form-control">
       </div>
 
-      <div class="d-flex justify-content-between mt-3" style="font-size: 3.0rem; font-weight: bold;">
+      <div class="d-flex justify-content-between mt-3" style="font-size: 2rem; font-weight: bold;">
         <span>Total:</span>
         <span>₱<?= number_format($total, 2) ?></span>
       </div>
@@ -104,5 +107,4 @@ $total = $subtotal + $shipping;
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

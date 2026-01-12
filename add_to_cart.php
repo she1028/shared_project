@@ -1,12 +1,14 @@
 <?php
-session_start(); // ✅ Must be at the top
+session_start();
 
 header('Content-Type: application/json');
 
-// Get POST data (JSON)
 $data = json_decode(file_get_contents('php://input'), true);
 
-if (!$data || !isset($data['food_id'], $data['name'], $data['price'], $data['qty'])) {
+// Accept identifiers from food or rental payloads
+$incomingId = $data['food_id'] ?? $data['item_id'] ?? $data['rental_id'] ?? $data['id'] ?? null;
+
+if (!$data || !$incomingId || !isset($data['name'], $data['price'], $data['qty'])) {
     echo json_encode(['success' => false, 'message' => 'Invalid data']);
     exit;
 }
@@ -18,11 +20,25 @@ if (!isset($_SESSION['cart'])) {
 
 $cart = $_SESSION['cart'];
 
-// Check if item already exists in cart
+// Normalize payload to keep legacy compatibility
+$payload = [
+    'id'       => $incomingId,
+    'food_id'  => $incomingId, // keep key so existing views keep working
+    'name'     => $data['name'],
+    'price'    => (float) $data['price'],
+    'qty'      => (int) $data['qty'],
+    'image'    => $data['image'] ?? '',
+    'category' => $data['category'] ?? '',
+    'serving'  => $data['serving'] ?? '',
+    'type'     => $data['type'] ?? ($data['rental_id'] || $data['item_id'] ? 'rental' : 'food')
+];
+
+// Merge quantities if item already exists
 $found = false;
 foreach ($cart as &$item) {
-    if ($item['food_id'] === $data['food_id']) {
-        $item['qty'] += $data['qty']; // increase quantity
+    $existingId = $item['id'] ?? $item['food_id'] ?? null;
+    if ($existingId === $incomingId) {
+        $item['qty'] += $payload['qty'];
         $found = true;
         break;
     }
@@ -30,12 +46,12 @@ foreach ($cart as &$item) {
 unset($item);
 
 if (!$found) {
-    $cart[] = $data; // add new item
+    $cart[] = $payload;
 }
 
 $_SESSION['cart'] = $cart;
 
 echo json_encode([
     'success' => true,
-    'message' => "{$data['qty']} x {$data['name']} added to cart"
+    'message' => "{$payload['qty']} x {$payload['name']} added to cart"
 ]);
