@@ -116,31 +116,36 @@
 </div>
 
 <script>
-function openInclusionModal(packageId) {
+async function openInclusionModal(packageId) {
+  const category = typeof ACTIVE_PACKAGE_TYPE !== "undefined" ? ACTIVE_PACKAGE_TYPE : "";
+  const normalizedId = (packageId || "").toString().toLowerCase();
 
-    const dataSource = inclusionMap[ACTIVE_PACKAGE_TYPE];
-    if (!dataSource) return;
+  const dataSource = (typeof loadPackageInclusions === "function")
+    ? await loadPackageInclusions(category)
+    : (window.inclusionMap ? window.inclusionMap[category] : []);
 
-    const inclusion = dataSource.find(p => p.id === packageId);
-    if (!inclusion) return;
+  if (!Array.isArray(dataSource) || !dataSource.length) return;
 
-    offerLabel.textContent = inclusion.offer;
-    inclusionTitle.textContent = inclusion.title;
-    inclusionImage.src = inclusion.image;
-    inclusionPrice.textContent = inclusion.price;
-    inclusionNote.textContent = inclusion.note;
+  const inclusion = dataSource.find(p => (p.id || p.slug || "").toLowerCase() === normalizedId);
+  if (!inclusion) return;
 
-    const fill = (id, items) => {
-        const ul = document.getElementById(id);
-        ul.innerHTML = "";
-        items.forEach(item => ul.innerHTML += `<li>${item}</li>`);
-    };
+  offerLabel.textContent = inclusion.offer;
+  inclusionTitle.textContent = inclusion.title;
+  inclusionImage.src = inclusion.image;
+  inclusionPrice.textContent = inclusion.price;
+  inclusionNote.textContent = inclusion.note;
 
-    fill("menuList", inclusion.menu);
-    fill("rentalsList", inclusion.rentals);
-    fill("decorationsList", inclusion.decorations);
-    fill("servicesList", inclusion.services);
+  const fill = (id, items) => {
+    const ul = document.getElementById(id);
+    ul.innerHTML = "";
+    (items || []).forEach(item => ul.insertAdjacentHTML("beforeend", `<li>${item}</li>`));
+  };
 
-    new bootstrap.Modal(inclusionModal).show();
+  fill("menuList", inclusion.menu);
+  fill("rentalsList", inclusion.rentals);
+  fill("decorationsList", inclusion.decorations);
+  fill("servicesList", inclusion.services);
+
+  new bootstrap.Modal(inclusionModal).show();
 }
 </script>

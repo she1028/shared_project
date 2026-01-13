@@ -309,6 +309,24 @@
         </div>
     </section>
 
+    <!-- Notifications Widget -->
+    <div id="notifFab" class="notif-fab" title="Notifications">
+        <i class="bi bi-bell-fill fs-4"></i>
+        <span class="notif-badge" id="notifBadge"></span>
+    </div>
+    <div id="notifPanel" class="notif-panel">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 class="m-0">Order Notifications</h6>
+            <button type="button" class="btn btn-sm btn-outline-secondary" id="notifClose">Close</button>
+        </div>
+        <div class="mb-2 d-flex gap-2 flex-wrap">
+            <input type="email" class="form-control" id="notifEmail" placeholder="Enter your order email" style="flex:1 1 auto;">
+            <button class="btn btn-primary" id="notifSave">Save</button>
+            <button class="btn btn-outline-secondary" id="notifRefresh">Refresh</button>
+        </div>
+        <div id="notifList" class="d-flex flex-column gap-2" style="overflow-y:auto; max-height:50vh;"></div>
+    </div>
+
     <!-- Footer -->
     <?php include("footer.php"); ?>
 
@@ -409,6 +427,123 @@
         }
 
         populateImages();
+
+        // Notifications widget logic
+        const notifFab = document.getElementById('notifFab');
+        const notifPanel = document.getElementById('notifPanel');
+        const notifClose = document.getElementById('notifClose');
+        const notifEmailInput = document.getElementById('notifEmail');
+        const notifList = document.getElementById('notifList');
+        const notifSave = document.getElementById('notifSave');
+        const notifRefresh = document.getElementById('notifRefresh');
+        const notifBadge = document.getElementById('notifBadge');
+
+        const getStoredEmail = () => {
+            try { return localStorage.getItem('notifEmail') || ''; } catch (e) { return ''; }
+        };
+        const storeEmail = (email) => {
+            try { localStorage.setItem('notifEmail', email); } catch (e) {}
+        };
+
+        const statusClass = (s) => {
+            if (s === 'paid') return 'paid';
+            if (s === 'shipped') return 'shipped';
+            return 'pending';
+        };
+
+        const escapeHtml = (val) => {
+            if (!val) return '';
+            return val
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        };
+
+        const renderNotifications = (list) => {
+            notifList.innerHTML = '';
+            if (!list || list.length === 0) {
+                notifList.innerHTML = '<div class="notif-empty">No notifications yet. Save your order email to get updates.</div>';
+                notifBadge.style.display = 'none';
+                return;
+            }
+            let unread = 0;
+            list.forEach(n => {
+                if (!parseInt(n.is_read, 10)) unread++;
+                const wrap = document.createElement('div');
+                wrap.className = 'notif-item';
+                const dateStr = new Date(n.created_at).toLocaleString();
+                wrap.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-start">
+                        <span class="status-pill ${statusClass(n.status)}">${n.status.toUpperCase()}</span>
+                        <span class="notif-meta">${dateStr}</span>
+                    </div>
+                    <div class="mt-1">${escapeHtml(n.message || '')}</div>
+                    <div class="notif-meta">Order #${n.order_id}</div>
+                `;
+                notifList.appendChild(wrap);
+            });
+            if (unread > 0) {
+                notifBadge.textContent = unread;
+                notifBadge.style.display = 'flex';
+            } else {
+                notifBadge.style.display = 'none';
+            }
+        };
+
+        const fetchNotifications = async (email, markRead = true) => {
+            if (!email) {
+                notifList.innerHTML = '<div class="notif-empty">Enter your order email to see updates.</div>';
+                notifBadge.style.display = 'none';
+                return;
+            }
+            try {
+                const res = await fetch(`api/get_notifications.php?email=${encodeURIComponent(email)}`);
+                const data = await res.json();
+                if (!data.success) {
+                    notifList.innerHTML = '<div class="notif-empty">Unable to load notifications.</div>';
+                    return;
+                }
+                renderNotifications(data.notifications);
+                if (markRead && data.notifications && data.notifications.length) {
+                    const ids = data.notifications.map(n => n.id).join(',');
+                    fetch('api/mark_notifications_read.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: `email=${encodeURIComponent(email)}&ids=${encodeURIComponent(ids)}`
+                    });
+                }
+            } catch (err) {
+                notifList.innerHTML = '<div class="notif-empty">Unable to load notifications.</div>';
+            }
+        };
+
+        const togglePanel = () => {
+            notifPanel.classList.toggle('open');
+            if (notifPanel.classList.contains('open')) {
+                fetchNotifications(notifEmailInput.value || getStoredEmail());
+            }
+        };
+
+        notifFab.addEventListener('click', togglePanel);
+        notifClose.addEventListener('click', togglePanel);
+        notifSave.addEventListener('click', () => {
+            const email = notifEmailInput.value.trim();
+            if (!email) return;
+            storeEmail(email);
+            fetchNotifications(email);
+        });
+        notifRefresh.addEventListener('click', () => {
+            fetchNotifications(notifEmailInput.value.trim() || getStoredEmail(), false);
+        });
+
+        // Prefill email from storage
+        const savedEmail = getStoredEmail();
+        if (savedEmail) {
+            notifEmailInput.value = savedEmail;
+            fetchNotifications(savedEmail, false);
+        }
     </script>
 
 

@@ -183,3 +183,100 @@
     background-size: cover;
     object-position: center;
 }
+
+/* Notifications widget */
+.notif-fab {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: #3E2723;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    z-index: 1100;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.notif-fab:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+}
+
+.notif-fab .notif-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    background: #dc3545;
+    color: #fff;
+    font-size: 12px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+.notif-panel {
+    position: fixed;
+    bottom: 100px;
+    right: 24px;
+    width: min(360px, 90vw);
+    max-height: 70vh;
+    background: rgba(255, 255, 255, 0.97);
+    border: 1px solid rgba(0,0,0,0.08);
+    box-shadow: 0 14px 36px rgba(0,0,0,0.2);
+    border-radius: 14px;
+    padding: 14px;
+    z-index: 1099;
+    overflow: hidden;
+    display: none;
+}
+
+.notif-panel.open { display: block; }
+
+.notif-panel h6 {
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.notif-panel .notif-meta {
+    font-size: 12px;
+    color: #6c757d;
+}
+
+.notif-panel .notif-item {
+    border: 1px solid rgba(0,0,0,0.05);
+    border-radius: 10px;
+    padding: 10px;
+    background: #fff;
+}
+
+.notif-panel .notif-item + .notif-item { margin-top: 8px; }
+
+.notif-panel .status-pill {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.status-pill.pending { background: #ffc107; color: #000; }
+.status-pill.paid { background: #28a745; }
+.status-pill.shipped { background: #0dcaf0; color: #000; }
+
+.notif-empty {
+    text-align: center;
+    color: #6c757d;
+    padding: 20px 10px;
+}

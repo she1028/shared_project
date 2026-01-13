@@ -63,6 +63,7 @@ $cart = $_SESSION['cart'] ?? [];
                             <option value="" selected disabled>Payment Method</option>
                             <option value="full">Full Payment</option>
                             <option value="cash">Cash</option>
+                            <option value="paypal">PayPal</option>
                         </select>
                     </div>
 
@@ -143,15 +144,17 @@ $cart = $_SESSION['cart'] ?? [];
                     <?php
                     $subtotal = 0;
                     foreach ($cart as $index => $item):
-                        $subtotal += $item['price'];
+                        $qty = isset($item['qty']) ? (int)$item['qty'] : 1;
+                        $lineTotal = ((float)$item['price']) * $qty;
+                        $subtotal += $lineTotal;
                         ?>
                         <div class="d-flex mb-3 align-items-center">
                             <div class="item-number"><?= $index + 1 ?></div>
                             <div class="flex-grow-1 ms-2">
                                 <div class="fw-semibold"><?= $item['name'] ?></div>
-                                <small class="text-muted"><?= $item['qty'] ?></small>
+                                <small class="text-muted">Qty: <?= $qty ?></small>
                             </div>
-                            <div>₱<?= number_format($item['price'], 2) ?></div>
+                            <div>₱<?= number_format($lineTotal, 2) ?></div>
                         </div>
                     <?php endforeach; ?>
 
@@ -210,7 +213,7 @@ $cart = $_SESSION['cart'] ?? [];
             const shipFields = document.getElementById("shipFields");
             const pickupField = document.getElementById("pickupField");
 
-            deliverySelect.addEventListener("change", () => {
+            const toggleDeliveryFields = () => {
                 if (deliverySelect.value === "ship") {
                     shipFields.style.display = "block";
                     pickupField.style.display = "none";
@@ -218,7 +221,15 @@ $cart = $_SESSION['cart'] ?? [];
                     shipFields.style.display = "none";
                     pickupField.style.display = "block";
                 }
-            });
+            };
+
+            // Default to ship so required address fields are visible
+            if (!deliverySelect.value) {
+                deliverySelect.value = "ship";
+            }
+            toggleDeliveryFields();
+
+            deliverySelect.addEventListener("change", toggleDeliveryFields);
 
             // --- Helper to create message ---
             function createMsg(input) {
@@ -444,22 +455,65 @@ $cart = $_SESSION['cart'] ?? [];
                 }
             }
 
-            if (payment === "cash") {
-                const totalAmount = <?= $total ?>;
-                cashTotalSpan.textContent = totalAmount.toFixed(2);
+            const shipping = <?= $shipping ?>;
+            const totalAmount = <?= $total ?>;
 
-                const cashModal = new bootstrap.Modal(document.getElementById('cashModal'));
-                cashModal.show();
-                return;
-            }
+            // Remember email for notifications widget
+            try {
+                localStorage.setItem('notifEmail', email);
+            } catch (err) {}
 
-            if (payment === "full") {
-                const confirmPay = confirm("Are you sure you want to pay?");
-                if (confirmPay) {
-                    window.location.href = "payment.php";
+            // Persist order to backend
+            fetch("admin/processcheckout.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({
+                    name,
+                    contact,
+                    email,
+                    payment,
+                    delivery,
+                    street: document.querySelector('input[placeholder="Street Number / #"]').value,
+                    barangay: document.querySelector('input[placeholder="Barangay"]').value,
+                    city: document.querySelector('input[placeholder="City"]').value,
+                    province: "Batangas",
+                    postal: document.querySelector('input[placeholder="Postal Code"]').value,
+                    notes: document.querySelector('textarea').value,
+                    shipping: shipping,
+                    total: totalAmount
+                })
+            })
+            .then(res => res.text())
+            .then(data => {
+                const trimmed = (data || "").trim();
+                if (trimmed === "success") {
+                    if (payment === "cash") {
+                        cashTotalSpan.textContent = totalAmount.toFixed(2);
+                        const cashModal = new bootstrap.Modal(document.getElementById('cashModal'));
+                        cashModal.show();
+                    } else if (payment === "full") {
+                        const confirmPay = confirm("Are you sure you want to pay?");
+                        if (confirmPay) {
+                            window.location.href = "payment.php";
+                        }
+                    } else if (payment === "paypal") {
+                        alert("PayPal checkout coming soon. Order saved as pending.");
+                    }
+                } else {
+                    const friendly = trimmed === "error:empty_cart"
+                        ? "Your cart is empty. Please add items before checking out."
+                        : trimmed;
+
+                    checkoutError.textContent = friendly || "There was a problem processing your order. Please try again.";
+                    checkoutError.style.display = "block";
                 }
-            }
+            })
+            .catch(() => {
+                checkoutError.textContent = "Unable to submit order. Please check your connection.";
+                checkoutError.style.display = "block";
+            });
         });
+
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>

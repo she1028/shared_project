@@ -246,7 +246,7 @@ if (empty($error_message) && isset($_POST['action'])) {
         $package_detail_id = intval($_POST['package_detail_id'] ?? 0);
         $inclusion_type = $_POST['inclusion_type'] ?? '';
         $item_text = trim($_POST['item_text'] ?? '');
-        $item_order = isset($_POST['item_order']) ? intval($_POST['item_order']) : 0;
+        $item_order = isset($_POST['item_order']) ? intval($_POST['item_order']) : 0; // used as quantity
 
         if ($package_detail_id <= 0) {
             $error_message = "Invalid package detail.";
@@ -255,7 +255,7 @@ if (empty($error_message) && isset($_POST['action'])) {
         } elseif ($item_text === '') {
             $error_message = "Item text is required.";
         } elseif (!is_numeric($_POST['item_order'] ?? '')) {
-            $error_message = "Item order must be a number.";
+            $error_message = "Item quantity must be a number.";
         } else {
             try {
                 $stmt = $conn->prepare("INSERT INTO package_inclusion_items (package_detail_id, inclusion_type, item_text, item_order) VALUES (?, ?, ?, ?)");
@@ -275,14 +275,14 @@ if (empty($error_message) && isset($_POST['action'])) {
         $item_id = intval($_POST['item_id'] ?? 0);
         $package_detail_id = intval($_POST['package_detail_id'] ?? 0);
         $item_text = trim($_POST['item_text'] ?? '');
-        $item_order = isset($_POST['item_order']) ? intval($_POST['item_order']) : 0;
+        $item_order = isset($_POST['item_order']) ? intval($_POST['item_order']) : 0; // used as quantity
 
         if ($item_id <= 0 || $package_detail_id <= 0) {
             $error_message = "Invalid item.";
         } elseif ($item_text === '') {
             $error_message = "Item text is required.";
         } elseif (!is_numeric($_POST['item_order'] ?? '')) {
-            $error_message = "Item order must be a number.";
+            $error_message = "Item quantity must be a number.";
         } else {
             try {
                 $stmt = $conn->prepare("UPDATE package_inclusion_items SET item_text=?, item_order=? WHERE id=? AND package_detail_id=?");
@@ -514,7 +514,7 @@ if (empty($error_message)) {
                                                 <input type="text" name="item_text" class="form-control" placeholder="e.g. 3 Main courses" required>
                                             </div>
                                             <div class="col-6 col-md-2">
-                                                <label class="form-label">Item Number</label>
+                                                <label class="form-label">No. of items</label>
                                                 <input type="number" name="item_order" class="form-control" value="1" min="0" required>
                                             </div>
                                             <div class="col-6 col-md-2">
@@ -529,7 +529,7 @@ if (empty($error_message)) {
                                                 <table class="table table-sm table-bordered align-middle text-center mb-0">
                                                     <thead class="table-dark">
                                                         <tr>
-                                                            <th style="width:80px;">Order</th>
+                                                            <th style="width:100px;">No. of items</th>
                                                             <th>Item</th>
                                                             <th style="width:120px;">Actions</th>
                                                         </tr>
@@ -672,7 +672,7 @@ if (empty($error_message)) {
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label class="form-label">Item Number</label>
+                            <label class="form-label">No. of items</label>
                             <input type="number" name="item_order" id="edit-inclusion-item-order" class="form-control" min="0" required>
                         </div>
                         <div class="mb-3">

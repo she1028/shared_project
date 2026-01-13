@@ -45,6 +45,14 @@ try {
     $total_rental_items = 0;
 }
 
+// Orders count (from checkout flow)
+$total_orders = 0;
+try {
+    $total_orders = $conn->query("SELECT COUNT(*) AS cnt FROM orders")->fetch_assoc()['cnt'];
+} catch (mysqli_sql_exception $e) {
+    $total_orders = 0;
+}
+
 
 ?>
 
@@ -172,6 +180,15 @@ try {
                         <h5 class="mb-2">Rental Items</h5>
                         <h2 class="mb-3"><?php echo $total_rental_items; ?></h2>
                         <a href="rentals.php?group_id=8" class="btn btn-primary btn-sm">Manage Rentals</a>
+                    </div>
+                </div>
+
+                <!-- Orders Card -->
+                <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
+                    <div class="card card-admin shadow text-center w-100 m-3" style="max-width: 300px;">
+                        <h5 class="mb-2">Orders</h5>
+                        <h2 class="mb-3"><?php echo $total_orders; ?></h2>
+                        <a href="orders.php" class="btn btn-primary btn-sm">View Orders</a>
                     </div>
                 </div>
 

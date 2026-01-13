@@ -471,10 +471,99 @@ const debutInclusions = [
   }
 ];
 
-// Unified inclusionMap
-const inclusionMap = {
-    corporate: corporateInclusions,
-    wedding: weddingInclusions,
-    children: childrensPartyInclusions,
-    debut: debutInclusions
+// Build normalized fallbacks (ids to lowercase) so we can gracefully fall back if the API is unavailable
+const fallbackInclusionMap = {
+  corporate: corporateInclusions.map(p => ({ ...p, id: (p.id || "").toLowerCase() })),
+  wedding: weddingInclusions.map(p => ({ ...p, id: (p.id || "").toLowerCase() })),
+  children: childrensPartyInclusions.map(p => ({ ...p, id: (p.id || "").toLowerCase() })),
+  debut: debutInclusions.map(p => ({ ...p, id: (p.id || "").toLowerCase() }))
 };
+
+const inclusionMap = {};
+const inclusionFetches = {};
+
+function normalizeCategory(value) {
+  const normalized = (value || "").toString().trim().toLowerCase();
+  return ["wedding", "children", "debut", "corporate"].includes(normalized) ? normalized : "";
+}
+
+function normalizeItems(list) {
+  const arr = Array.isArray(list) ? list : [];
+  return arr.map(entry => {
+    if (typeof entry === "string") return entry;
+    if (entry && typeof entry === "object") {
+      const text = entry.text || entry.item_text || "";
+      const qtyRaw = entry.quantity ?? entry.qty ?? entry.item_order;
+      const qty = Number.isFinite(qtyRaw) ? qtyRaw : parseInt(qtyRaw, 10);
+      if (qty && text) return `${qty} x ${text}`;
+      return text || "";
+    }
+    return "";
+  }).filter(Boolean);
+}
+
+function normalizeInclusion(item) {
+  if (!item || typeof item !== "object") return null;
+
+  const normalizedId = (item.slug || item.id || "").toString().toLowerCase();
+
+  return {
+    id: normalizedId,
+    slug: normalizedId,
+    offer: item.offer || item.packageTitle || "",
+    title: item.title || item.packageName || "",
+    price: item.price || item.price_label || item.priceLabel || "",
+    note: item.note || "",
+    image: item.image || item.image_path || item.imagePath || "",
+    menu: normalizeItems(item.menu),
+    rentals: normalizeItems(item.rentals),
+    decorations: normalizeItems(item.decorations),
+    services: normalizeItems(item.services)
+  };
+}
+
+async function loadPackageInclusions(category) {
+  const cat = normalizeCategory(category);
+  if (!cat) return [];
+
+  if (Array.isArray(inclusionMap[cat]) && inclusionMap[cat].length) {
+    return inclusionMap[cat];
+  }
+
+  if (!inclusionFetches[cat]) {
+    inclusionFetches[cat] = fetch(`api/get_package_inclusions.php?category=${encodeURIComponent(cat)}`)
+      .then(async (res) => {
+        if (!res.ok) {
+          throw new Error(`Failed to load inclusions (${res.status})`);
+        }
+        const data = await res.json();
+        const normalized = Array.isArray(data)
+          ? data.map(normalizeInclusion).filter(Boolean)
+          : [];
+
+        inclusionMap[cat] = normalized.length ? normalized : (fallbackInclusionMap[cat] || []);
+        return inclusionMap[cat];
+      })
+      .catch((err) => {
+        console.error("Inclusions fetch failed, using fallback.", err);
+        inclusionMap[cat] = fallbackInclusionMap[cat] || [];
+        return inclusionMap[cat];
+      })
+      .finally(() => {
+        delete inclusionFetches[cat];
+      });
+  }
+
+  return inclusionFetches[cat];
+}
+
+// Expose helpers globally for modal.js usage
+window.loadPackageInclusions = loadPackageInclusions;
+window.normalizeInclusion = normalizeInclusion;
+window.normalizeCategory = normalizeCategory;
+window.inclusionMap = inclusionMap;
+
+// Kick off preload for the active page when available
+if (typeof ACTIVE_PACKAGE_TYPE !== "undefined") {
+  loadPackageInclusions(ACTIVE_PACKAGE_TYPE);
+}

@@ -54,11 +54,8 @@ $total = $subtotal + $shipping;
             <!-- REMOVE BUTTON -->
             <form method="post" class="ms-2" action="removefromcart.php">
               <input type="hidden" name="id" value="<?= $item['id'] ?>">
-<<<<<<< HEAD
               <input type="hidden" name="color_id" value="<?= isset($item['color_id']) ? htmlspecialchars($item['color_id']) : '' ?>">
               <input type="hidden" name="color_name" value="<?= isset($item['color_name']) ? htmlspecialchars($item['color_name']) : '' ?>">
-=======
->>>>>>> fcd4e3900e327b45543148467294fa2baf378665
               <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
             </form>
           </div>
