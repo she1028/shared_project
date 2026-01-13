@@ -1,17 +1,44 @@
 <?php
 include __DIR__ . '/../connect.php';
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Client-only: admins should not use client notifications
+if (!empty($_SESSION['role']) && $_SESSION['role'] === 'admin') {
+    http_response_code(403);
+    echo 'forbidden';
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo 'method_not_allowed';
     exit;
 }
 
-$email = isset($_POST['email']) ? trim($_POST['email']) : '';
 $idsRaw = isset($_POST['ids']) ? trim($_POST['ids']) : '';
+
+$email = trim($_SESSION['email'] ?? '');
 if ($email === '') {
-    http_response_code(400);
-    echo 'missing_email';
+    $userId = $_SESSION['userID'] ?? ($_SESSION['userId'] ?? ($_SESSION['user_id'] ?? null));
+    if ($userId) {
+        $stmtEmail = $conn->prepare('SELECT email FROM users WHERE userID = ? LIMIT 1');
+        $stmtEmail->bind_param('i', $userId);
+        $stmtEmail->execute();
+        $resEmail = $stmtEmail->get_result();
+        $rowEmail = $resEmail ? $resEmail->fetch_assoc() : null;
+        $stmtEmail->close();
+        if ($rowEmail && !empty($rowEmail['email'])) {
+            $email = trim($rowEmail['email']);
+        }
+    }
+}
+
+if ($email === '') {
+    http_response_code(401);
+    echo 'not_logged_in';
     exit;
 }
 

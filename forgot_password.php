@@ -60,8 +60,27 @@ if (!empty($_GET['email'])) {
       const form = document.getElementById('forgotForm');
       const submitBtn = document.getElementById('submitBtn');
 
+            // If PHP didn't prefill (cookie timing), prefill from browser cookie.
+            (function () {
+                const emailInput = document.getElementById('email');
+                if (!emailInput || emailInput.value) return;
+                const match = document.cookie.match(/(?:^|;\s*)last_auth_email=([^;]+)/);
+                if (match && match[1]) {
+                    try {
+                        emailInput.value = decodeURIComponent(match[1]);
+                    } catch (e) {
+                        // ignore
+                    }
+                }
+            })();
+
       // prevent double submit
       form.addEventListener('submit', function() {
+                const emailInput = document.getElementById('email');
+                if (emailInput && emailInput.value) {
+                    const maxAge = 60 * 60; // 1 hour
+                    document.cookie = 'last_auth_email=' + encodeURIComponent(emailInput.value.trim()) + '; path=/; max-age=' + maxAge + '; samesite=lax';
+                }
         submitBtn.disabled = true;
       });
     </script>

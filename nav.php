@@ -5,6 +5,12 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Prevent admin accounts from using client pages
+if (!empty($_SESSION['role']) && $_SESSION['role'] === 'admin') {
+    header('Location: admin/dashboard.php');
+    exit();
+}
+
 // Reliable logged-in detection: accept several session key names
 $isLoggedIn = !empty($_SESSION['userID']) || !empty($_SESSION['userId']) || !empty($_SESSION['user_id']);
 $userName = $_SESSION['name'] ?? ($_SESSION['username'] ?? '');

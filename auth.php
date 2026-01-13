@@ -165,12 +165,12 @@ if (isset($_POST['email'], $_POST['password']) && !isset($_POST['name'])) {
 
             <!-- sign in -->
             <form id="signInForm" class="auth-form" method="POST" action="">
-                <div class="mb-4"> <label class="form-label">Email</label> <input type="email" name="email" class="form-control border-dark rounded-3" placeholder="Enter email" required> </div>
+                <div class="mb-4"> <label class="form-label">Email</label> <input type="email" id="signInEmail" name="email" class="form-control border-dark rounded-3" placeholder="Enter email" required> </div>
                 <div class="mb-3">
                     <div class="position-relative"> <input type="password" id="signInPassword" class="form-control" placeholder="Enter password" name="password" required> <i class="bi bi-eye-slash password-toggle" data-target="signInPassword"></i> </div>
                 </div>
                 <div class="d-flex justify-content-between mb-4">
-                    <div class="form-check"> <input class="form-check-input border-dark" type="checkbox" id="rememberMe" name="rememberMe"> <label class="form-check-label" for="rememberMe">Remember me</label> </div> <a href="#" class="small">Forgot Password?</a>
+                    <div class="form-check"> <input class="form-check-input border-dark" type="checkbox" id="rememberMe" name="rememberMe"> <label class="form-check-label" for="rememberMe">Remember me</label> </div> <a id="forgotPasswordLink" href="forgot_password.php" class="small">Forgot Password?</a>
                 </div> <button type="submit" class="btn btn-dark w-100 py-2 mb-3">Sign In</button>
                 <div class="d-flex align-items-center my-3">
                     <hr class="flex-grow-1"> <span class="mx-2">Or</span>
@@ -313,6 +313,49 @@ if (isset($_POST['email'], $_POST['password']) && !isset($_POST['name'])) {
             passwordNotice.classList.toggle("text-success", isValid);
             passwordNotice.classList.toggle("text-warning", !isValid);
         });
+
+        // Persist the email typed on Sign In for the reset flow
+        const signInEmailInput = document.getElementById('signInEmail');
+        const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+
+        function setLastAuthEmailCookie(value) {
+            if (!value) return;
+            const maxAge = 60 * 60; // 1 hour
+            document.cookie = 'last_auth_email=' + encodeURIComponent(value) + '; path=/; max-age=' + maxAge + '; samesite=lax';
+        }
+
+        if (signInEmailInput) {
+            // Handle browser autofill (may not fire input event)
+            if (signInEmailInput.value && signInEmailInput.value.trim()) {
+                setLastAuthEmailCookie(signInEmailInput.value.trim());
+            } else {
+                let tries = 0;
+                const t = setInterval(function () {
+                    tries++;
+                    if (signInEmailInput.value && signInEmailInput.value.trim()) {
+                        setLastAuthEmailCookie(signInEmailInput.value.trim());
+                        clearInterval(t);
+                    }
+                    if (tries >= 20) clearInterval(t);
+                }, 100);
+            }
+
+            signInEmailInput.addEventListener('input', function () {
+                setLastAuthEmailCookie(signInEmailInput.value.trim());
+            });
+            signInEmailInput.addEventListener('change', function () {
+                setLastAuthEmailCookie(signInEmailInput.value.trim());
+            });
+            signInEmailInput.addEventListener('blur', function () {
+                setLastAuthEmailCookie(signInEmailInput.value.trim());
+            });
+        }
+
+        if (forgotPasswordLink && signInEmailInput) {
+            forgotPasswordLink.addEventListener('click', function () {
+                setLastAuthEmailCookie(signInEmailInput.value.trim());
+            });
+        }
 
         // Toggle password visibility
         document.querySelectorAll(".password-toggle").forEach(icon => {

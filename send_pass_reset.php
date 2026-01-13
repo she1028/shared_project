@@ -33,7 +33,37 @@ if (!$phpMailerLoaded) {
 // DB connection
 require_once __DIR__ . '/connect.php';
 
-$email = $_POST['email'] ?? '';
+$email = trim($_POST['email'] ?? '');
+
+if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    ?>
+    <!doctype html>
+    <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>Invalid email</title>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body class="bg-light d-flex align-items-center justify-content-center" style="height:100vh;">
+      <div class="modal fade show" tabindex="-1" style="display:block; background: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header"><h5 class="modal-title">Invalid Email</h5></div>
+            <div class="modal-body">
+              <p>Please enter a valid email address.</p>
+            </div>
+            <div class="modal-footer">
+              <a href="forgot_password.php" class="btn btn-primary">Back</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </body>
+    </html>
+    <?php
+    exit;
+}
 
 // Enforce that the email matches the one typed on this device's Sign In form
 $cookieEmail = $_COOKIE['last_auth_email'] ?? null;
@@ -68,7 +98,8 @@ if (!$cookieEmail) {
     exit;
 }
 
-if (urldecode($cookieEmail) !== $email) {
+$cookieEmailDecoded = trim(urldecode($cookieEmail));
+if (strtolower($cookieEmailDecoded) !== strtolower($email)) {
     // Cookie exists but does not match — show helpful modal pointing back to auth.php
     ?>
     <!doctype html>
@@ -99,20 +130,35 @@ if (urldecode($cookieEmail) !== $email) {
     exit;
 }
 
-// Token
-$token = bin2hex(random_bytes(16));
-$token_hash = hash('sha256', $token);
-$expiry = date('Y-m-d H:i:s', time() + 60 * 30);
+// Only create a reset token if the account exists (do not reveal existence to the user)
+$userExists = false;
+$checkUser = $conn->prepare('SELECT userID FROM users WHERE email = ? LIMIT 1');
+$checkUser->bind_param('s', $email);
+$checkUser->execute();
+$resUser = $checkUser->get_result();
+if ($resUser && $resUser->fetch_assoc()) {
+  $userExists = true;
+}
+$checkUser->close();
 
-// Save token (email matched cookie)
-$sql = "UPDATE users 
-        SET reset_token_hash = ?, 
-            reset_token_expires_at = ? 
-        WHERE email = ?";
+$token = null;
+$token_hash = null;
+$expiry = null;
 
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("sss", $token_hash, $expiry, $email);
-$stmt->execute();
+if ($userExists) {
+  $token = bin2hex(random_bytes(16));
+  $token_hash = hash('sha256', $token);
+  $expiry = date('Y-m-d H:i:s', time() + 60 * 30);
+
+  $sql = "UPDATE users
+      SET reset_token_hash = ?,
+        reset_token_expires_at = ?
+      WHERE email = ?";
+  $stmt = $conn->prepare($sql);
+  $stmt->bind_param('sss', $token_hash, $expiry, $email);
+  $stmt->execute();
+  $stmt->close();
+}
 
 // Build a reset link that is reachable from other devices on the LAN
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
@@ -138,7 +184,10 @@ if (preg_match('/^(localhost|127\.0\.0\.1|::1)$/i', preg_replace('/(:\d+)$/', ''
     }
 }
 $basePath = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
-$link = $protocol . '://' . $host . $basePath . '/reset.php?token=' . urlencode($token);
+$link = null;
+if ($userExists && $token) {
+  $link = $protocol . '://' . $host . $basePath . '/reset.php?token=' . urlencode($token);
+}
 
 // Send email (do not reveal account existence)
 $mail = new PHPMailer(true);
@@ -156,20 +205,22 @@ try {
     $mail->Port = 587;
 
     // Use a From address that matches the authenticated account (more reliable with Gmail SMTP)
-    $mail->setFrom('kristineannmaglinao@gmail.com', 'YMZM Support');
-    $mail->addAddress($email);
+    if ($userExists && $link) {
+      $mail->setFrom('kristineannmaglinao@gmail.com', 'YMZM Support');
+      $mail->addAddress($email);
 
-    $mail->isHTML(true);
-    $mail->Subject = 'Password Reset';
-    $mail->Body = "
+      $mail->isHTML(true);
+      $mail->Subject = 'Password Reset';
+      $mail->Body = "
         Click the link below to reset your password:<br><br>
         <a href='" . htmlspecialchars($link, ENT_QUOTES) . "'>
-            Reset Password
+          Reset Password
         </a>
-    ";
-    $mail->AltBody = "Reset your password: " . $link;
+      ";
+      $mail->AltBody = 'Reset your password: ' . $link;
 
-    $mail->send();
+      $mail->send();
+    }
 
 } catch (Exception $e) {
     // Log error (do not show to user)
