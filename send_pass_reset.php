@@ -5,50 +5,98 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-// Load PHPMailer (repo can store it in different folders)
-$phpMailerSrc = null;
-if (file_exists(__DIR__ . '/PHPMailer/src/PHPMailer.php')) {
-  $phpMailerSrc = __DIR__ . '/PHPMailer/src';
-} elseif (file_exists(__DIR__ . '/PHPMailer/PHPMailer/src/PHPMailer.php')) {
-  $phpMailerSrc = __DIR__ . '/PHPMailer/PHPMailer/src';
+// PHPMailer is vendored in this repo; load it from whichever layout exists.
+$phpMailerCandidates = [
+  __DIR__ . '/PHPMailer/src',
+  __DIR__ . '/PHPMailer/PHPMailer/src',
+];
+
+$phpMailerLoaded = false;
+foreach ($phpMailerCandidates as $srcDir) {
+  if (
+    is_file($srcDir . '/Exception.php') &&
+    is_file($srcDir . '/PHPMailer.php') &&
+    is_file($srcDir . '/SMTP.php')
+  ) {
+    require_once $srcDir . '/Exception.php';
+    require_once $srcDir . '/PHPMailer.php';
+    require_once $srcDir . '/SMTP.php';
+    $phpMailerLoaded = true;
+    break;
+  }
 }
 
-if (!$phpMailerSrc) {
-  http_response_code(500);
-  die('PHPMailer is missing.');
+if (!$phpMailerLoaded) {
+  die('Mailer library is missing. Please ensure PHPMailer exists in /PHPMailer/PHPMailer/src.');
 }
-
-require_once $phpMailerSrc . '/Exception.php';
-require_once $phpMailerSrc . '/PHPMailer.php';
-require_once $phpMailerSrc . '/SMTP.php';
 
 // DB connection
 require_once __DIR__ . '/connect.php';
 
-$email = trim((string)($_POST['email'] ?? ''));
-if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    header('Location: forgot_password.php');
+$email = $_POST['email'] ?? '';
+
+// Enforce that the email matches the one typed on this device's Sign In form
+$cookieEmail = $_COOKIE['last_auth_email'] ?? null;
+if (!$cookieEmail) {
+    // No cookie set — prompt user to go back to sign in (render modal page)
+    ?>
+    <!doctype html>
+    <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>Action required</title>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body class="bg-light d-flex align-items-center justify-content-center" style="height:100vh;">
+      <div class="modal fade show" id="infoModal" tabindex="-1" style="display:block; background: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header"><h5 class="modal-title">Please use Sign In first</h5></div>
+            <div class="modal-body">
+              <p>Please enter your email on the Sign In form first (on this device). Then use the same email here to request a password reset.</p>
+            </div>
+            <div class="modal-footer">
+              <a href="auth.php" class="btn btn-primary">Back to Sign In</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </body>
+    </html>
+    <?php
     exit;
 }
 
-$debugMode = isset($_GET['debug']) && $_GET['debug'] === '1';
-
-// Ensure reset columns exist on users table (safe no-op if already present)
-$needsHash = true;
-$needsExp = true;
-if ($res = $conn->query("SHOW COLUMNS FROM users LIKE 'reset_token_hash'")) {
-    $needsHash = ($res->num_rows === 0);
-    $res->free();
-}
-if ($res = $conn->query("SHOW COLUMNS FROM users LIKE 'reset_token_expires_at'")) {
-    $needsExp = ($res->num_rows === 0);
-    $res->free();
-}
-if ($needsHash) {
-    $conn->query("ALTER TABLE users ADD COLUMN reset_token_hash VARCHAR(64) NULL");
-}
-if ($needsExp) {
-    $conn->query("ALTER TABLE users ADD COLUMN reset_token_expires_at DATETIME NULL");
+if (urldecode($cookieEmail) !== $email) {
+    // Cookie exists but does not match — show helpful modal pointing back to auth.php
+    ?>
+    <!doctype html>
+    <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>Email mismatch</title>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body class="bg-light d-flex align-items-center justify-content-center" style="height:100vh;">
+      <div class="modal fade show" id="mismatchModal" tabindex="-1" style="display:block; background: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header"><h5 class="modal-title">Email does not match</h5></div>
+            <div class="modal-body">
+              <p>The email you entered here does not match the email you typed on the Sign In form on this device. Please use the same email to request a reset, or go back to Sign In.</p>
+            </div>
+            <div class="modal-footer">
+              <a href="auth.php" class="btn btn-primary">Back to Sign In</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </body>
+    </html>
+    <?php
+    exit;
 }
 
 // Token
@@ -56,32 +104,15 @@ $token = bin2hex(random_bytes(16));
 $token_hash = hash('sha256', $token);
 $expiry = date('Y-m-d H:i:s', time() + 60 * 30);
 
-// Check if user exists (don’t reveal result to the requester)
-$userId = null;
-$lookup = $conn->prepare("SELECT userID FROM users WHERE LOWER(email) = LOWER(?) LIMIT 1");
-$lookup->bind_param('s', $email);
-$lookup->execute();
-$lookupRes = $lookup->get_result();
-if ($lookupRes) {
-  $row = $lookupRes->fetch_assoc();
-  if ($row && isset($row['userID'])) {
-    $userId = (int)$row['userID'];
-  }
-}
-$lookup->close();
+// Save token (email matched cookie)
+$sql = "UPDATE users 
+        SET reset_token_hash = ?, 
+            reset_token_expires_at = ? 
+        WHERE email = ?";
 
-// Save token only if the account exists (UI response stays generic)
-$userExists = $userId !== null;
-if ($userExists) {
-  $sql = "UPDATE users 
-      SET reset_token_hash = ?, 
-        reset_token_expires_at = ? 
-      WHERE userID = ?";
-  $stmt = $conn->prepare($sql);
-  $stmt->bind_param("ssi", $token_hash, $expiry, $userId);
-  $stmt->execute();
-  $stmt->close();
-}
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("sss", $token_hash, $expiry, $email);
+$stmt->execute();
 
 // Build a reset link that is reachable from other devices on the LAN
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
@@ -112,16 +143,8 @@ $link = $protocol . '://' . $host . $basePath . '/reset.php?token=' . urlencode(
 // Send email (do not reveal account existence)
 $mail = new PHPMailer(true);
 
-$mailError = null;
-$smtpDebug = '';
-
 try {
-  if ($debugMode) {
-    $mail->SMTPDebug = SMTP::DEBUG_SERVER;
-    $mail->Debugoutput = function ($str, $level) use (&$smtpDebug) {
-      $smtpDebug .= '[' . $level . '] ' . $str . "\n";
-    };
-  }
+    // $mail->SMTPDebug = SMTP::DEBUG_SERVER;
 
     // Server settings and authentication
     $mail->isSMTP();
@@ -131,11 +154,9 @@ try {
     $mail->Password = 'lrny garh dydo qhvx';
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mail->Port = 587;
-    $mail->Timeout = 15;
-    $mail->CharSet = 'UTF-8';
 
-    // Gmail commonly requires the From address to match the authenticated account
-    $mail->setFrom($mail->Username, 'YMZM Support');
+    // Use a From address that matches the authenticated account (more reliable with Gmail SMTP)
+    $mail->setFrom('kristineannmaglinao@gmail.com', 'YMZM Support');
     $mail->addAddress($email);
 
     $mail->isHTML(true);
@@ -148,18 +169,12 @@ try {
     ";
     $mail->AltBody = "Reset your password: " . $link;
 
-    if ($userExists) {
-      $mail->send();
-    }
+    $mail->send();
 
 } catch (Exception $e) {
-  // Log error (do not show to user in production)
-  $mailError = $mail->ErrorInfo ?: $e->getMessage();
-  error_log($mailError);
+    // Log error (do not show to user)
+    error_log($mail->ErrorInfo);
 }
-
-$hostHeaderUi = $_SERVER['HTTP_HOST'] ?? '';
-$isLocalUi = (stripos($hostHeaderUi, 'localhost') !== false) || (stripos($hostHeaderUi, '127.0.0.1') !== false);
 
 // Always show generic success message — show as modal with a Back button to auth.php
 ?>
@@ -182,22 +197,6 @@ $isLocalUi = (stripos($hostHeaderUi, 'localhost') !== false) || (stripos($hostHe
         </div>
         <div class="modal-body">
           <p>We have sent a password reset link. Please check your email.</p>
-          <?php if ($isLocalUi): ?>
-            <div class="alert alert-info mt-3 mb-0">
-              <div class="fw-semibold">Local test info</div>
-              <div class="small">If Gmail SMTP is blocked on this machine, you can still test using this link:</div>
-              <div class="small"><a href="<?= htmlspecialchars($link, ENT_QUOTES) ?>"><?= htmlspecialchars($link) ?></a></div>
-              <?php if ($mailError): ?>
-                <div class="small text-muted mt-2">Mail error: <?= htmlspecialchars($mailError) ?></div>
-              <?php endif; ?>
-              <?php if ($debugMode && $smtpDebug): ?>
-                <details class="mt-2">
-                  <summary class="small">SMTP debug</summary>
-                  <pre class="small mb-0" style="white-space:pre-wrap;"><?= htmlspecialchars($smtpDebug) ?></pre>
-                </details>
-              <?php endif; ?>
-            </div>
-          <?php endif; ?>
         </div>
         <div class="modal-footer">
           <a href="auth.php" class="btn btn-secondary">Back to Sign In</a>
@@ -212,6 +211,11 @@ $isLocalUi = (stripos($hostHeaderUi, 'localhost') !== false) || (stripos($hostHe
       var modalEl = document.getElementById('resetSentModal');
       var modal = new bootstrap.Modal(modalEl, { backdrop: 'static', keyboard: false });
       modal.show();
+
+      // Give the user time to read, then return to Sign In.
+      setTimeout(function () {
+        window.location.href = 'auth.php';
+      }, 6000);
     });
   </script>
 </body>

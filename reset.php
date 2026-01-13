@@ -3,11 +3,11 @@ require_once __DIR__ . '/connect.php';
 
 // Validate token
 if (!isset($_GET['token']) || empty($_GET['token'])) {
-    die("Invalid or expired reset link.");
+    $errorMessage = 'Invalid or expired reset link.';
 }
 
-$token = $_GET['token'];
-$token_hash = hash('sha256', $token);
+$token = $_GET['token'] ?? '';
+$token_hash = $token ? hash('sha256', $token) : '';
 
 // Find token
 $sql = "SELECT reset_token_expires_at 
@@ -21,8 +21,8 @@ $result = $stmt->get_result();
 
 $user = $result->fetch_assoc();
 
-if (!$user || strtotime($user['reset_token_expires_at']) < time()) {
-    die("Invalid or expired reset link.");
+if (empty($errorMessage) && (!$user || strtotime($user['reset_token_expires_at']) < time())) {
+    $errorMessage = 'Invalid or expired reset link.';
 }
 ?>
 
@@ -35,6 +35,36 @@ if (!$user || strtotime($user['reset_token_expires_at']) < time()) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body class="container py-5">
+
+<?php if (!empty($errorMessage)): ?>
+    <div class="modal fade" id="invalidTokenModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Reset Password</h5>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-0"><?= htmlspecialchars($errorMessage) ?></p>
+                </div>
+                <div class="modal-footer">
+                    <a href="forgot_password.php" class="btn btn-primary">Back</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var modalEl = document.getElementById('invalidTokenModal');
+            var modal = new bootstrap.Modal(modalEl, { backdrop: 'static', keyboard: false });
+            modal.show();
+        });
+    </script>
+</body>
+</html>
+<?php exit; ?>
+<?php endif; ?>
 
     <h2 class="mb-4">Reset Password</h2>
 

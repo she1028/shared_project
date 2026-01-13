@@ -90,6 +90,10 @@ $stmt->execute();
       var modalEl = document.getElementById('successModal');
       var modal = new bootstrap.Modal(modalEl, { backdrop: 'static', keyboard: false });
       modal.show();
+
+      setTimeout(function () {
+        window.location.href = 'auth.php';
+      }, 4000);
     });
   </script>
 </body>
