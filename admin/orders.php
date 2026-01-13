@@ -35,13 +35,21 @@ $conn->query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS total DECIMAL(12,2) NO
 $conn->query("CREATE TABLE IF NOT EXISTS order_items (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     order_id INT UNSIGNED NOT NULL,
+    item_type VARCHAR(20) NULL,
+    item_ref VARCHAR(50) NULL,
     product_name VARCHAR(200) NOT NULL,
     quantity INT UNSIGNED NOT NULL,
     price DECIMAL(12,2) NOT NULL,
     line_total DECIMAL(12,2) NOT NULL,
+    color_id INT NULL,
+    color_name VARCHAR(100) NULL,
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 $conn->query("ALTER TABLE order_items ADD COLUMN IF NOT EXISTS line_total DECIMAL(12,2) NOT NULL DEFAULT 0.00");
+$conn->query("ALTER TABLE order_items ADD COLUMN IF NOT EXISTS item_type VARCHAR(20) NULL");
+$conn->query("ALTER TABLE order_items ADD COLUMN IF NOT EXISTS item_ref VARCHAR(50) NULL");
+$conn->query("ALTER TABLE order_items ADD COLUMN IF NOT EXISTS color_id INT NULL");
+$conn->query("ALTER TABLE order_items ADD COLUMN IF NOT EXISTS color_name VARCHAR(100) NULL");
 
 // Notifications table for client-facing updates
 $conn->query("CREATE TABLE IF NOT EXISTS notifications (

@@ -37,14 +37,22 @@ $conn->query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS total DECIMAL(12,2) NO
 $conn->query("CREATE TABLE IF NOT EXISTS order_items (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     order_id INT UNSIGNED NOT NULL,
+    item_type VARCHAR(20) NULL,
+    item_ref VARCHAR(50) NULL,
     product_name VARCHAR(200) NOT NULL,
     quantity INT UNSIGNED NOT NULL,
     price DECIMAL(12,2) NOT NULL,
     line_total DECIMAL(12,2) NOT NULL,
+    color_id INT NULL,
+    color_name VARCHAR(100) NULL,
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
 $conn->query("ALTER TABLE order_items ADD COLUMN IF NOT EXISTS line_total DECIMAL(12,2) NOT NULL DEFAULT 0.00");
+$conn->query("ALTER TABLE order_items ADD COLUMN IF NOT EXISTS item_type VARCHAR(20) NULL");
+$conn->query("ALTER TABLE order_items ADD COLUMN IF NOT EXISTS item_ref VARCHAR(50) NULL");
+$conn->query("ALTER TABLE order_items ADD COLUMN IF NOT EXISTS color_id INT NULL");
+$conn->query("ALTER TABLE order_items ADD COLUMN IF NOT EXISTS color_name VARCHAR(100) NULL");
 
 // Notifications table for client-facing updates (needed by checkout flow even if admin page wasn't opened yet)
 $conn->query("CREATE TABLE IF NOT EXISTS notifications (
@@ -120,26 +128,43 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $notifyStmt->close();
     }
 
-    // Insert items
+    // Insert items (supports both food + rentals, from the same session cart)
     foreach ($cart as $item) {
         $qty = isset($item['qty']) ? (int)$item['qty'] : 1;
         $price = isset($item['price']) ? (float)$item['price'] : 0.0;
         $lineTotal = $price * $qty;
 
+        $productName = $item['name'] ?? ($item['product_name'] ?? '');
+        $itemType = $item['type'] ?? null;
+        $itemRef = $item['id'] ?? ($item['food_id'] ?? ($item['item_id'] ?? null));
+        if ($itemType === null) {
+            $itemType = isset($item['item_id']) ? 'rental' : 'food';
+        }
+
+        $colorId = isset($item['color_id']) && $item['color_id'] !== '' ? (int)$item['color_id'] : null;
+        $colorName = $item['color_name'] ?? null;
+
         $stmtItem = $conn->prepare("
-            INSERT INTO order_items (order_id, product_name, quantity, price, line_total)
-            VALUES (?,?,?,?,?)
+            INSERT INTO order_items (order_id, item_type, item_ref, product_name, quantity, price, line_total, color_id, color_name)
+            VALUES (?,?,?,?,?,?,?,?,?)
         ");
-            $stmtItem->bind_param(
-                "isidd",
-                $order_id,
-                $item['name'],
-                $qty,
-                $price,
-                $lineTotal
-            );
-            $stmtItem->execute();
-            $stmtItem->close();
+        if (!$stmtItem) {
+            continue;
+        }
+        $stmtItem->bind_param(
+            "isssiddis",
+            $order_id,
+            $itemType,
+            $itemRef,
+            $productName,
+            $qty,
+            $price,
+            $lineTotal,
+            $colorId,
+            $colorName
+        );
+        $stmtItem->execute();
+        $stmtItem->close();
     }
 
     // Clear cart
