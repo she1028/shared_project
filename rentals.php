@@ -69,6 +69,15 @@
         let rentalsData = [];
         let allItems = [];
 
+        function scrollToHashTarget() {
+            const hash = (window.location.hash || '').replace('#', '').trim();
+            if (!hash) return;
+            const target = document.getElementById(decodeURIComponent(hash));
+            if (!target) return;
+
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
         function buildCard(item) {
             const col = document.createElement('div');
             col.className = 'col';
@@ -121,18 +130,22 @@
                 const sectionId = (category.group_key || category.group_name).replace(/\s+/g, '');
                 const block = document.createElement('div');
                 block.innerHTML = `
+                    <div id="${sectionId}"></div>
                     <hr class="m-5">
                     <h2 class="fw-bold m-3 mb-3">${category.group_name}</h2>
                     <div class="mt-1">${category.description || ''}</div>
-                    <div class="row row-cols-1 row-cols-md-4 g-4 mt-2" id="${sectionId}"></div>
+                    <div class="row row-cols-1 row-cols-md-4 g-4 mt-2" id="${sectionId}-row"></div>
                 `;
                 content.appendChild(block);
 
-                const row = block.querySelector(`#${sectionId}`);
+                const row = block.querySelector(`#${sectionId}-row`);
                 (category.items || []).forEach(item => {
                     row.appendChild(buildCard(item));
                 });
             });
+
+            // Handle deep links (e.g., rentals.php#decorations) after DOM is built.
+            scrollToHashTarget();
         }
 
         function renderSearchResults(items) {
@@ -182,6 +195,9 @@
             .catch(() => {
                 content.innerHTML = '<p class="text-danger">Failed to load rentals.</p>';
             });
+
+        // If user changes the hash while on the page, scroll to it.
+        window.addEventListener('hashchange', scrollToHashTarget);
 
         searchInput.addEventListener('input', searchItems);
         searchBtn.addEventListener('click', searchItems);

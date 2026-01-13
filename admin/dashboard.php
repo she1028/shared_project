@@ -14,22 +14,6 @@ $total_users = $conn->query("SELECT COUNT(*) AS cnt FROM users")->fetch_assoc()[
 $total_food_categories = $conn->query("SELECT COUNT(*) AS cnt FROM food_categories")->fetch_assoc()['cnt'];
 $total_foods = $conn->query("SELECT COUNT(*) AS cnt FROM foods")->fetch_assoc()['cnt'];
 
-// Packages count (optional)
-$total_packages = 0;
-try {
-    $total_packages = $conn->query("SELECT COUNT(*) AS cnt FROM packages")->fetch_assoc()['cnt'];
-} catch (mysqli_sql_exception $e) {
-    $total_packages = 0;
-}
-
-// Package details / inclusions count (optional)
-$total_package_details = 0;
-try {
-    $total_package_details = $conn->query("SELECT COUNT(*) AS cnt FROM package_details")->fetch_assoc()['cnt'];
-} catch (mysqli_sql_exception $e) {
-    $total_package_details = 0;
-}
-
 // Rentals counts (optional)
 $total_rental_groups = 0;
 $total_rental_items = 0;
@@ -51,6 +35,25 @@ try {
     $total_orders = $conn->query("SELECT COUNT(*) AS cnt FROM orders")->fetch_assoc()['cnt'];
 } catch (mysqli_sql_exception $e) {
     $total_orders = 0;
+}
+
+// Notifications count (client-facing)
+$total_notifications = 0;
+$total_unread_notifications = 0;
+try {
+    $total_notifications = $conn->query("SELECT COUNT(*) AS cnt FROM notifications")->fetch_assoc()['cnt'];
+    $total_unread_notifications = $conn->query("SELECT COUNT(*) AS cnt FROM notifications WHERE is_read = 0")->fetch_assoc()['cnt'];
+} catch (mysqli_sql_exception $e) {
+    $total_notifications = 0;
+    $total_unread_notifications = 0;
+}
+
+// Footer settings count (optional)
+$total_footer_settings = 0;
+try {
+    $total_footer_settings = $conn->query("SELECT COUNT(*) AS cnt FROM footer_settings")->fetch_assoc()['cnt'];
+} catch (mysqli_sql_exception $e) {
+    $total_footer_settings = 0;
 }
 
 
@@ -147,24 +150,6 @@ try {
                     </div>
                 </div>
 
-                <!-- Total Packages Card -->
-                <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
-                    <div class="card card-admin shadow text-center w-100 m-3" style="max-width: 300px;">
-                        <h5 class="mb-2">Total Packages</h5>
-                        <h2 class="mb-3"><?php echo $total_packages; ?></h2>
-                        <a href="packages.php" class="btn btn-primary btn-sm">Manage Packages</a>
-                    </div>
-                </div>
-
-                <!-- Package Details / Inclusions Card -->
-                <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
-                    <div class="card card-admin shadow text-center w-100 m-3" style="max-width: 300px;">
-                        <h5 class="mb-2">Package Details</h5>
-                        <h2 class="mb-3"><?php echo $total_package_details; ?></h2>
-                        <a href="package_details.php" class="btn btn-primary btn-sm">Manage Inclusions</a>
-                    </div>
-                </div>
-
                 <!-- Rentals Groups Card -->
                 <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
                     <div class="card card-admin shadow text-center w-100 m-3" style="max-width: 300px;">
@@ -189,6 +174,25 @@ try {
                         <h5 class="mb-2">Orders</h5>
                         <h2 class="mb-3"><?php echo $total_orders; ?></h2>
                         <a href="orders.php" class="btn btn-primary btn-sm">View Orders</a>
+                    </div>
+                </div>
+
+                <!-- Notifications Card -->
+                <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
+                    <div class="card card-admin shadow text-center w-100 m-3" style="max-width: 300px;">
+                        <h5 class="mb-2">Notifications</h5>
+                        <h2 class="mb-1"><?php echo $total_notifications; ?></h2>
+                        <div class="small text-muted mb-3">Unread: <?php echo $total_unread_notifications; ?></div>
+                        <a href="notifications.php" class="btn btn-primary btn-sm">Manage Notifications</a>
+                    </div>
+                </div>
+
+                <!-- Footer Settings Card -->
+                <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
+                    <div class="card card-admin shadow text-center w-100 m-3" style="max-width: 300px;">
+                        <h5 class="mb-2">Footer</h5>
+                        <h2 class="mb-3"><?php echo $total_footer_settings; ?></h2>
+                        <a href="footer_settings.php" class="btn btn-primary btn-sm">Manage Footer</a>
                     </div>
                 </div>
 

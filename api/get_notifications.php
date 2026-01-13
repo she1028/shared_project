@@ -9,8 +9,8 @@ if ($email === '') {
     exit;
 }
 
-$stmt = $conn->prepare("SELECT id, order_id, status, message, is_read, created_at FROM notifications WHERE recipient_email = ? ORDER BY created_at DESC");
-$stmt->bind_param('s', $email);
+$stmt = $conn->prepare("SELECT n.id, n.order_id, n.status, n.message, n.is_read, n.created_at, n.updated_at\nFROM notifications n\nJOIN orders o ON n.order_id = o.id\nWHERE (o.client_email = ? OR o.email = ?)\nORDER BY n.updated_at DESC, n.created_at DESC");
+$stmt->bind_param('ss', $email, $email);
 $stmt->execute();
 $result = $stmt->get_result();
 $rows = [];

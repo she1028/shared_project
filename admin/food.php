@@ -173,6 +173,24 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete') {
     <title>Food Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="admin.css">
+    <style>
+        /* Keep wide tables inside the card and allow horizontal scrolling */
+        .table-scroll-x {
+            overflow-x: auto;
+            max-width: 100%;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .table-scroll-x table {
+            min-width: 1100px;
+        }
+
+        .food-desc {
+            max-width: 300px;
+            white-space: normal;
+            overflow-wrap: anywhere;
+        }
+    </style>
 </head>
 
 <body>
@@ -200,6 +218,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete') {
                             </select>
                         </form>
 
+                        <div class="w-100 mt-3 table-responsive table-scroll-x">
                         <table class="table table-hover text-center align-middle">
                             <thead class="table-dark">
                                 <tr>
@@ -236,7 +255,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete') {
                                         <td><?= htmlspecialchars($f['category_name']) ?></td>
 
                                         <!-- Description -->
-                                        <td style="max-width:300px; word-wrap:break-word;"><?= htmlspecialchars($f['food_description']) ?></td>
+                                        <td class="food-desc"><?= htmlspecialchars($f['food_description']) ?></td>
 
                                         <!-- Price -->
                                         <td>$ <?= number_format($f['food_price'], 2) ?></td>
@@ -272,19 +291,13 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete') {
                             </tbody>
                         </table>
 
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
 
-
-
-
-
-
-
-
-        
         <!-- Add Modal -->
         <div class="modal fade" id="addFoodModal" tabindex="-1">
             <div class="modal-dialog">
@@ -347,6 +360,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete') {
                 </div>
             </div>
         </div>
+        
         <!-- Edit Modal -->
         <div class="modal fade" id="editFoodModal" tabindex="-1">
             <div class="modal-dialog">

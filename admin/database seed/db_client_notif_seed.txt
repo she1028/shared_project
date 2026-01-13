@@ -1,0 +1,16 @@
+SELECT 
+    n.id,
+    n.order_id,
+    o.client_email AS email,
+    n.message,
+    n.status,
+    n.is_read,
+    n.created_at,
+    n.updated_at
+FROM 
+    notifications n
+JOIN 
+    orders o ON n.order_id = o.id
+ORDER BY 
+    n.updated_at DESC, n.created_at DESC
+LIMIT 0, 25;

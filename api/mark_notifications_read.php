@@ -16,8 +16,8 @@ if ($email === '') {
 }
 
 if ($idsRaw === '') {
-    $stmt = $conn->prepare("UPDATE notifications SET is_read = 1 WHERE recipient_email = ?");
-    $stmt->bind_param('s', $email);
+    $stmt = $conn->prepare("UPDATE notifications n\nJOIN orders o ON n.order_id = o.id\nSET n.is_read = 1\nWHERE (o.client_email = ? OR o.email = ?)");
+    $stmt->bind_param('ss', $email, $email);
     $stmt->execute();
     $stmt->close();
     echo 'ok';
@@ -32,10 +32,17 @@ if (empty($idParts)) {
 
 $placeholders = implode(',', array_fill(0, count($idParts), '?'));
 $types = str_repeat('i', count($idParts));
-$sql = "UPDATE notifications SET is_read = 1 WHERE recipient_email = ? AND id IN ($placeholders)";
+$sql = "UPDATE notifications n\nJOIN orders o ON n.order_id = o.id\nSET n.is_read = 1\nWHERE (o.client_email = ? OR o.email = ?) AND n.id IN ($placeholders)";
 $stmt = $conn->prepare($sql);
-$params = array_merge([$email], $idParts);
-$stmt->bind_param('s' . $types, ...$params);
+$params = array_merge([$email, $email], $idParts);
+
+// mysqli_stmt::bind_param requires references
+$bind = [];
+$bind[] = 'ss' . $types;
+for ($i = 0; $i < count($params); $i++) {
+    $bind[] = &$params[$i];
+}
+call_user_func_array([$stmt, 'bind_param'], $bind);
 $stmt->execute();
 $stmt->close();
 

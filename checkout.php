@@ -1,6 +1,56 @@
 <?php
 session_start();
-$cart = $_SESSION['cart'] ?? [];
+
+// If coming from cart.php, persist selected items + updated quantities for this checkout.
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $cartAll = $_SESSION['cart'] ?? [];
+    $qtyMap = $_POST['qty'] ?? [];
+
+    // Update quantities in session cart (best-effort)
+    if (is_array($qtyMap)) {
+        foreach ($qtyMap as $idx => $qtyRaw) {
+            $i = (int)$idx;
+            if (!isset($cartAll[$i])) {
+                continue;
+            }
+            $qty = (int)$qtyRaw;
+            if ($qty < 1) {
+                $qty = 1;
+            }
+            $cartAll[$i]['qty'] = $qty;
+        }
+    }
+
+    $selected = $_POST['selected'] ?? [];
+    $selected = is_array($selected) ? $selected : [$selected];
+    $selectedIdx = [];
+    foreach ($selected as $s) {
+        $i = (int)$s;
+        if ($i >= 0 && isset($cartAll[$i])) {
+            $selectedIdx[$i] = true;
+        }
+    }
+
+    if (empty($selectedIdx)) {
+        $_SESSION['cart'] = $cartAll;
+        header('Location: cart.php?error=select');
+        exit;
+    }
+
+    $checkoutCart = [];
+    foreach (array_keys($selectedIdx) as $i) {
+        $checkoutCart[] = $cartAll[$i];
+    }
+
+    $_SESSION['cart'] = $cartAll;
+    $_SESSION['checkout_cart'] = $checkoutCart;
+
+    // Redirect to avoid form resubmission
+    header('Location: checkout.php');
+    exit;
+}
+
+$cart = $_SESSION['checkout_cart'] ?? ($_SESSION['cart'] ?? []);
 ?>
 <!doctype html>
 <html lang="en">

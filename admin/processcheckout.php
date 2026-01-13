@@ -34,6 +34,17 @@ $conn->query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS subtotal DECIMAL(12,2)
 $conn->query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS shipping DECIMAL(12,2) NOT NULL DEFAULT 0.00");
 $conn->query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS total DECIMAL(12,2) NOT NULL DEFAULT 0.00");
 
+// Columns for client notification join/schema
+$conn->query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS client_email VARCHAR(255) NOT NULL DEFAULT ''");
+$conn->query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS items JSON NULL");
+$conn->query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS total_amount DECIMAL(10,2) NULL");
+try {
+    $conn->query("UPDATE orders SET client_email = email WHERE (client_email = '' OR client_email IS NULL) AND email <> ''");
+    $conn->query("UPDATE orders SET total_amount = total WHERE total_amount IS NULL");
+} catch (mysqli_sql_exception $e) {
+    // ignore
+}
+
 $conn->query("CREATE TABLE IF NOT EXISTS order_items (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     order_id INT UNSIGNED NOT NULL,
@@ -58,15 +69,30 @@ $conn->query("ALTER TABLE order_items ADD COLUMN IF NOT EXISTS color_name VARCHA
 $conn->query("CREATE TABLE IF NOT EXISTS notifications (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     order_id INT UNSIGNED NOT NULL,
-    recipient_email VARCHAR(150) NOT NULL,
-    status VARCHAR(20) NOT NULL DEFAULT 'pending',
-    message TEXT NULL,
+    message TEXT NOT NULL,
+    status ENUM('pending','paid','shipped') NOT NULL DEFAULT 'pending',
     is_read TINYINT(1) NOT NULL DEFAULT 0,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
-$cart = $_SESSION['cart'] ?? [];
+$conn->query("ALTER TABLE notifications ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
+try {
+    // Clean legacy rows that would violate the stricter schema
+    $conn->query("DELETE FROM notifications WHERE order_id IS NULL OR order_id = 0");
+    $conn->query("UPDATE notifications SET message = '' WHERE message IS NULL");
+    $conn->query("UPDATE notifications SET status = 'pending' WHERE status IS NULL OR status NOT IN ('pending','paid','shipped')");
+
+    $conn->query("ALTER TABLE notifications MODIFY COLUMN message TEXT NOT NULL");
+    $conn->query("ALTER TABLE notifications MODIFY COLUMN status ENUM('pending','paid','shipped') NOT NULL DEFAULT 'pending'");
+} catch (mysqli_sql_exception $e) {
+    // ignore
+}
+
+$checkoutCart = $_SESSION['checkout_cart'] ?? null;
+$usingCheckoutCart = is_array($checkoutCart);
+$cart = $usingCheckoutCart ? $checkoutCart : ($_SESSION['cart'] ?? []);
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
@@ -119,11 +145,28 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $stmt->execute();
     $order_id = $stmt->insert_id;
 
+    // Store client_email/items/total_amount for the simplified notification join/query
+    try {
+        $itemsForJson = [];
+        foreach ($cart as $item) {
+            $qty = isset($item['qty']) ? (int)$item['qty'] : 1;
+            $productName = $item['name'] ?? ($item['product_name'] ?? '');
+            $itemsForJson[] = ['item' => $productName, 'qty' => $qty];
+        }
+        $itemsJson = json_encode($itemsForJson, JSON_UNESCAPED_UNICODE);
+        $syncStmt = $conn->prepare("UPDATE orders SET client_email = ?, items = ?, total_amount = ? WHERE id = ?");
+        $syncStmt->bind_param('ssdi', $email, $itemsJson, $finalTotal, $order_id);
+        $syncStmt->execute();
+        $syncStmt->close();
+    } catch (mysqli_sql_exception $e) {
+        // ignore
+    }
+
     // Create an initial notification for the client (best-effort; do not fail checkout if notifications aren't available)
-    $notifyStmt = $conn->prepare("INSERT INTO notifications (order_id, recipient_email, status, message) VALUES (?,?,?,?)");
+    $notifyStmt = $conn->prepare("INSERT INTO notifications (order_id, message, status, is_read) VALUES (?,?,?,0)");
     if ($notifyStmt) {
         $initialMsg = "Order placed. Status: pending.";
-        $notifyStmt->bind_param("isss", $order_id, $email, $status, $initialMsg);
+        $notifyStmt->bind_param("iss", $order_id, $initialMsg, $status);
         $notifyStmt->execute();
         $notifyStmt->close();
     }
@@ -167,8 +210,34 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmtItem->close();
     }
 
-    // Clear cart
-    unset($_SESSION['cart']);
+    // Clear cart / selection
+    if ($usingCheckoutCart) {
+        // Remove only checked-out items from the main cart
+        $remaining = $_SESSION['cart'] ?? [];
+
+        $makeKey = function ($it) {
+            $id = $it['id'] ?? ($it['food_id'] ?? ($it['item_id'] ?? ''));
+            $colorId = $it['color_id'] ?? '';
+            $colorName = $it['color_name'] ?? '';
+            return (string)$id . '|' . (string)$colorId . '|' . (string)$colorName;
+        };
+
+        $removeKeys = [];
+        foreach ($cart as $it) {
+            $removeKeys[$makeKey($it)] = true;
+        }
+
+        $filtered = [];
+        foreach ($remaining as $it) {
+            if (!isset($removeKeys[$makeKey($it)])) {
+                $filtered[] = $it;
+            }
+        }
+        $_SESSION['cart'] = $filtered;
+        unset($_SESSION['checkout_cart']);
+    } else {
+        unset($_SESSION['cart']);
+    }
 
     echo "success";
     exit;

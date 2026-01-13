@@ -20,6 +20,133 @@
 
     <?php include("includes/chatbot.php"); ?>
 
+<style>
+/* Position landing notification button on bottom-right opposite chatbot */
+.landing-notif-fab {
+    position: fixed;
+    bottom: 20px;
+    right: 1em; /* adjust distance from chatbot */
+    background-color: #e83e8c;
+    color: white;
+    border-radius: 50%;
+    width: 55px;
+    height: 55px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 1050;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.landing-notif-fab:hover {
+    /* background-color: #ffffff; */
+    transform: scale(1.1);
+}
+
+.landing-notif-panel {
+    position: fixed;
+    bottom: 85px; /* above the button */
+    right: 90px;
+    width: 320px;
+    max-height: 400px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    padding: 15px;
+    display: none;
+    flex-direction: column;
+    z-index: 1050;
+    overflow: hidden;
+}
+
+.landing-notif-panel.open {
+    display: flex;
+}
+
+.landing-notif-panel .notif-item {
+    border-bottom: 1px solid #ddd;
+    padding: 5px 0;
+}
+
+.landing-notif-panel .status-pill.paid { background-color: #28a745; color: white; padding: 2px 5px; border-radius: 5px; }
+.landing-notif-panel .status-pill.shipped { background-color: #ffc107; color: white; padding: 2px 5px; border-radius: 5px; }
+.landing-notif-panel .status-pill.pending { background-color: #6c757d; color: white; padding: 2px 5px; border-radius: 5px; }
+</style>
+
+<script>
+const landingFab = document.getElementById('landingNotifFab');
+const landingPanel = document.getElementById('landingNotifPanel');
+const landingClose = document.getElementById('landingNotifClose');
+const landingEmailInput = document.getElementById('landingNotifEmail');
+const landingList = document.getElementById('landingNotifList');
+const landingSave = document.getElementById('landingNotifSave');
+const landingRefresh = document.getElementById('landingNotifRefresh');
+const landingBadge = document.getElementById('landingNotifBadge');
+
+const getLandingEmail = () => { return localStorage.getItem('landingNotifEmail') || ''; }
+const storeLandingEmail = (email) => { localStorage.setItem('landingNotifEmail', email); }
+
+const renderLandingNotifications = (list) => {
+    landingList.innerHTML = '';
+    if (!list || list.length === 0) {
+        landingList.innerHTML = '<div class="notif-empty">No notifications yet. Save your order email to get updates.</div>';
+        landingBadge.style.display = 'none';
+        return;
+    }
+    let unread = 0;
+    list.forEach(n => {
+        if (!parseInt(n.is_read, 10)) unread++;
+        const wrap = document.createElement('div');
+        wrap.className = 'notif-item';
+        const dateStr = new Date(n.created_at).toLocaleString();
+        wrap.innerHTML = `
+            <div class="d-flex justify-content-between align-items-start">
+                <span class="status-pill ${n.status}">${n.status.toUpperCase()}</span>
+                <span class="notif-meta">${dateStr}</span>
+            </div>
+            <div class="mt-1">${n.message || ''}</div>
+            <div class="notif-meta">Order #${n.order_id}</div>
+        `;
+        landingList.appendChild(wrap);
+    });
+    landingBadge.textContent = unread || '';
+    landingBadge.style.display = unread > 0 ? 'flex' : 'none';
+}
+
+const fetchLandingNotifications = async (email) => {
+    if (!email) return;
+    try {
+        const res = await fetch(`api/get_notifications.php?email=${encodeURIComponent(email)}`);
+        const data = await res.json();
+        if (!data.success) return;
+        renderLandingNotifications(data.notifications);
+    } catch (err) { console.error(err); }
+}
+
+landingFab.addEventListener('click', () => {
+    landingPanel.classList.toggle('open');
+    if (landingPanel.classList.contains('open')) fetchLandingNotifications(landingEmailInput.value || getLandingEmail());
+});
+landingClose.addEventListener('click', () => landingPanel.classList.remove('open'));
+landingSave.addEventListener('click', () => {
+    const email = landingEmailInput.value.trim();
+    if (!email) return;
+    storeLandingEmail(email);
+    fetchLandingNotifications(email);
+});
+landingRefresh.addEventListener('click', () => {
+    fetchLandingNotifications(landingEmailInput.value.trim() || getLandingEmail());
+});
+
+// Prefill
+const savedLandingEmail = getLandingEmail();
+if (savedLandingEmail) {
+    landingEmailInput.value = savedLandingEmail;
+    fetchLandingNotifications(savedLandingEmail);
+}
+</script>
+
     <!-- Home -->
     <section id="home">
         <div class="container-fluid align-items-center hero">
@@ -48,7 +175,7 @@
     </section>
 
     <!-- Packages -->
-    <section id="packages" class="my-5 pb-5 border" style="background-color:#EADCC6;">
+    <!-- <section id="packages" class="my-5 pb-5 border" style="background-color:#EADCC6;">
         <div class="text-center text-dark p-5">
             <h2 class="fw-bold display-6 mb-2 mt-3 text-dark" style="font-family: 'Poppins', sans-serif;">
                 Packages
@@ -63,28 +190,28 @@
             <div class="row g-3 justify-content-center" id="packageRow">
             </div>
         </div>
-    </section>
+    </section> -->
 
 
     <!-- Food Menu -->
-    <section id="category" class="food-menu my-5 py-4">
-        <div class="container-fluid my-5" id="menu" style="position: relative;">
+    <section id="category" class=" my-5 py-4">
+        <div class="container-fluid my-5 mb-5" style="position: relative;">
             <div class="row">
                 <div class="col-12">
-                    <div class="display-4 fw-bold home-text1 home-text text-center text-light"
+                    <div class="display-4 fw-bold home-text1 home-text text-center text-warning"
                         style="font-family: Poppins;">
                         Food Menu </div>
                 </div>
             </div>
-            <div class="row mx-auto text-center justify-content-center text-dark mb-3">
-                <div class="col-lg-7 col-11 text-light">
+            <div class="row mx-auto text-center justify-content-center mb-5">
+                <div class="col-lg-7 col-11 text-muted">
                     <small>Our catering menu offers a wide selection of delicious dishes, from savory mains to
                         delectable desserts, perfect for any occasion. Each dish is crafted with fresh ingredients to
                         delight your guests and make every event memorable.</small>
                 </div>
             </div>
 
-            <div class="scroll-container">
+            <div class="scroll-container ">
                 <div class="scroll-content" id="foodCategory"></div>
             </div>
         </div>
@@ -92,7 +219,7 @@
         <div class="container-fluid my-5">
             <div class="row text-center d-flex justify-content-center">
                 <div class="col-md-4 col-10">
-                    <a href="foodmenu.php" class="index-menu-button rounded-5 px-5 py-2">View Menu</a>
+                    <a href="foodmenu.php" class="index-menu-button rounded-5 text-warning px-5 py-2 shadow">View Menu</a>
                 </div>
             </div>
         </div>
@@ -104,7 +231,7 @@
         <div class="container-fluid my-5 pb-5" style="background-color: #EADCC6;">
             <div class="row">
                 <div class="col-9 mx-auto text-center p-5">
-                    <h2 class="display-6 fw-bold mb-2 mt-3 text-dark">Rentals</h2>
+                    <h2 class="display-5 fw-bold mb-2 mt-3 text-dark">Rentals</h2>
                     <p class="text-muted">High-quality event rentals to complement your catering from tables and chairs to décor and serving essentials, we provide
                         everything you need for a seamless celebration.</p>
                 </div>
@@ -114,7 +241,7 @@
                 </div>
                 <div class="row text-center d-flex justify-content-center">
                     <div class="col-md-4 col-10">
-                        <a href="rentals.php" class="index-menu-button rounded-5 px-5 py-2">View More</a>
+                        <a href="rentals.php" class="index-menu-button rounded-5 px-5 py-2 shadow">View More</a>
                     </div>
                 </div>
             </div>
@@ -195,102 +322,6 @@
         </div>
     </section>
 
-    <!-- testimonials -->
-    <section class="mt-5">
-
-        <div class="container">
-            <hr style="margin: 0 auto;">
-            <div class="text-center mt-4">
-                <sup class="border border-dark rounded-5 px-2 py-1">Testimonials</sup>
-                <div class="fs-2 fw-bold">What Our Client Says</div>
-            </div>
-            <div class="container my-5">
-                <div class="row g-4">
-
-                    <!-- Comment Card -->
-                    <div class="col-lg-4">
-                        <div class="card comment-card border border-dark p-2">
-                            <div class="d-flex align-items-center">
-                                <div class="ms-3 w-100">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <h6 class="mb-1 fw-bold">Lorem I.</h6>
-                                        <div class="rating">
-                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
-                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
-                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
-                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
-                                            <i class="bi bi-star"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                                <p class="comment-text mt-2">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4">
-                        <div class="card comment-card border border-dark p-2">
-                            <div class="d-flex align-items-center">
-                                <div class="ms-3 w-100">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <h6 class="mb-1 fw-bold">Lorem I.</h6>
-                                        <div class="rating">
-                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
-                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
-                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
-                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
-                                            <i class="bi bi-star"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                                <p class="comment-text mt-2">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4">
-                        <div class="card comment-card border border-dark p-2">
-                            <div class="d-flex align-items-center">
-                                <div class="ms-3 w-100">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <h6 class="mb-1 fw-bold">Lorem I.</h6>
-                                        <div class="rating">
-                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
-                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
-                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
-                                            <i class="bi bi-star-fill" style="font-size: 1.2rem; color: #ffd700"></i>
-                                            <i class="bi bi-star"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                                <p class="comment-text mt-2">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            <hr style="margin: 0 auto;">
-        </div>
-    </section>
 
     <!-- Contact Section -->
     <section id="contact">
@@ -336,59 +367,75 @@
         // Rentals Section
         var rentalsRow = document.getElementById("rentalsRow");
 
+        const rentalGroupKeyByTitle = {
+            'tenting': 'tent',
+            'chairs': 'chairs',
+            'tableware & utensils': 'tableware-utensils',
+            'tables': 'tables',
+            'fabric & linens': 'fabric-linens',
+            'containers': 'containers',
+            'decorations': 'decorations',
+            'tables & chair setup': 'tables-and-chairs'
+        };
+
         rentals.rntCategories.forEach(rntCategory => {
+            const title = (rntCategory.title || '').trim();
+            const groupKey = rentalGroupKeyByTitle[title.toLowerCase()] || '';
+            const hashTarget = groupKey || title.replace(/\s+/g, '');
             rentalsRow.innerHTML += `
         <div class="col-md-4 col-lg-3 col-10 mb-3">
-            <div class="card border rental-card" style="height: 260px; overflow: hidden;">
-                <img src="` + rntCategory.img + `" class="card-img-center" alt="` + rntCategory.title + `" style="height: 100%; object-fit: cover;">
-                <div class="card-img-overlay d-flex justify-content-center align-items-center p-2">
-                    <p class="fs-5 rounded-5 px-2 m-0 text-white">` + rntCategory.title + `</p>
+            <a href="rentals.php#` + hashTarget + `" class="text-decoration-none" style="display:block;">
+                <div class="card border rental-card" style="height: 260px; overflow: hidden;">
+                    <img src="` + rntCategory.img + `" class="card-img-center" alt="` + title + `" style="height: 100%; object-fit: cover;">
+                    <div class="card-img-overlay d-flex justify-content-center align-items-center p-2">
+                        <p class="fs-5 rounded-5 px-2 m-0 text-white">` + title + `</p>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
     `;
         });
 
 
         // Package Section
-        var packageRow = document.getElementById("packageRow");
+    //     var packageRow = document.getElementById("packageRow");
 
-        packages.pkgCategories.forEach(pkgCategory => {
-            let link = "";
-            switch (pkgCategory.title.toLowerCase()) {
-                case "wedding":
-                    link = "wedding.php";
-                    break;
-                case "debut":
-                    link = "debut.php";
-                    break;
-                case "kids party":
-                    link = "children_party.php";
-                    break;
-                case "corporate events":
-                    link = "corporate.php";
-                    break;
-            }
-            packageRow.innerHTML += `
-        <div class="col-md-4 col-lg-3 col-10">
-                    <div class="card-pkg card border" style="height: 350px; overflow: hidden;">
-                        <img src="` + pkgCategory.img + `" class="card-img-top h-100"
-                            style="object-fit: cover;" alt="Wedding">
-                        <div class="card-img-overlay d-flex justify-content-start align-items-start p-2">
-                            <p class="fw-bold text-muted bg-light rounded-5 px-3 mb-0">` + pkgCategory.title + `</p>
-                        </div>
-                        <div
-                            class="card-img-overlay d-flex flex-column justify-content-end text-white text-start explore-text">
-                            <p class="small mb-2">` + pkgCategory.desc + `
+    //     packages.pkgCategories.forEach(pkgCategory => {
+    //         let link = "";
+    //         switch (pkgCategory.title.toLowerCase()) {
+    //             case "wedding":
+    //                 link = "wedding.php";
+    //                 break;
+    //             case "debut":
+    //                 link = "debut.php";
+    //                 break;
+    //             case "kids party":
+    //                 link = "children_party.php";
+    //                 break;
+    //             case "corporate events":
+    //                 link = "corporate.php";
+    //                 break;
+    //         }
+    //         packageRow.innerHTML += `
+    //     <div class="col-md-4 col-lg-3 col-10">
+    //                 <div class="card-pkg card border" style="height: 350px; overflow: hidden;">
+    //                     <img src="` + pkgCategory.img + `" class="card-img-top h-100"
+    //                         style="object-fit: cover;" alt="Wedding">
+    //                     <div class="card-img-overlay d-flex justify-content-start align-items-start p-2">
+    //                         <p class="fw-bold text-muted bg-light rounded-5 px-3 mb-0">` + pkgCategory.title + `</p>
+    //                     </div>
+    //                     <div
+    //                         class="card-img-overlay d-flex flex-column justify-content-end text-white text-start explore-text">
+    //                         <p class="small mb-2">` + pkgCategory.desc + `
                                 
-                            </p>
-                            <a href="` + link + `" class="btn btn-light btn-sm"
-                                style="z-index: 6; color: rgb(231, 87, 231);">View Package</a>
-                        </div>
-                    </div>
-                </div>
-    `;
-        });
+    //                         </p>
+    //                         <a href="` + link + `" class="btn btn-light btn-sm"
+    //                             style="z-index: 6; color: rgb(231, 87, 231);">View Package</a>
+    //                     </div>
+    //                 </div>
+    //             </div>
+    // `;
+    //     });
 
         // food menu 
         const categories = [{

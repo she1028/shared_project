@@ -100,9 +100,9 @@
                                 <h4 class="fw-semibold">Price: <span id="modalRentalPrice"></span></h4>
                             </div>
                             <!-- availabile colors -->
-                            <div class="col-lg-6 col-12 mx-3">
+                            <div class="col-12 mx-3 justify-content-end ">
                                 <span class="fs-6">Available In: </span>
-                                <span id="modalRentalColors" class="d-flex flex-wrap gap-2 "></span>
+                                <span id="modalRentalColors" class="d-flex flex-wrap gap-2"></span>
                             </div>
                         </div>
                         <div class="d-flex justify-content-between align-items-center mt-3">

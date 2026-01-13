@@ -1,0 +1,56 @@
+-- =====================================
+-- FOOTER SETTINGS TABLE
+-- =====================================
+
+DROP TABLE IF EXISTS footer_settings;
+
+CREATE TABLE footer_settings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    logo_path VARCHAR(255) NOT NULL,
+
+    business_name VARCHAR(100) NOT NULL,
+    copyright_text VARCHAR(150) NOT NULL,
+
+    business_hours VARCHAR(100) NOT NULL,
+    address TEXT NOT NULL,
+
+    catering_phone VARCHAR(50) NOT NULL,
+    food_order_phone VARCHAR(50) NOT NULL,
+
+    instagram_url VARCHAR(255),
+    x_url VARCHAR(255),
+    facebook_url VARCHAR(255),
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
+        ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- =====================================
+-- FOOTER SEED DATA
+-- =====================================
+
+INSERT INTO footer_settings (
+    logo_path,
+    business_name,
+    copyright_text,
+    business_hours,
+    address,
+    catering_phone,
+    food_order_phone,
+    instagram_url,
+    x_url,
+    facebook_url
+) VALUES (
+    'images/logo.png',
+    'YMZM Catering Services',
+    '© 2026 YMZM Catering Services',
+    '9:00 AM - 7:00 PM | Monday to Friday',
+    '123 Main Street, City, Country',
+    '0912 XXX XXXX | 09XX XXX XXXX',
+    '09XX XXX XXXX | 09XX XXX XXXX',
+    'https://instagram.com/ymzm_catering',
+    'https://x.com/ymzm_catering',
+    'https://facebook.com/ymzm_catering'
+);

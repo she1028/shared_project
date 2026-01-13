@@ -32,6 +32,18 @@ $conn->query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS status VARCHAR(20) NOT
 $conn->query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS subtotal DECIMAL(12,2) NOT NULL DEFAULT 0.00");
 $conn->query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS shipping DECIMAL(12,2) NOT NULL DEFAULT 0.00");
 $conn->query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS total DECIMAL(12,2) NOT NULL DEFAULT 0.00");
+
+// Columns for client notification join/schema
+$conn->query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS client_email VARCHAR(255) NOT NULL DEFAULT ''");
+$conn->query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS items JSON NULL");
+$conn->query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS total_amount DECIMAL(10,2) NULL");
+// Keep new columns synced for existing rows (best-effort)
+try {
+    $conn->query("UPDATE orders SET client_email = email WHERE (client_email = '' OR client_email IS NULL) AND email <> ''");
+    $conn->query("UPDATE orders SET total_amount = total WHERE total_amount IS NULL");
+} catch (mysqli_sql_exception $e) {
+    // ignore
+}
 $conn->query("CREATE TABLE IF NOT EXISTS order_items (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     order_id INT UNSIGNED NOT NULL,
@@ -55,13 +67,27 @@ $conn->query("ALTER TABLE order_items ADD COLUMN IF NOT EXISTS color_name VARCHA
 $conn->query("CREATE TABLE IF NOT EXISTS notifications (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     order_id INT UNSIGNED NOT NULL,
-    recipient_email VARCHAR(150) NOT NULL,
-    status VARCHAR(20) NOT NULL DEFAULT 'pending',
-    message TEXT NULL,
+    message TEXT NOT NULL,
+    status ENUM('pending','paid','shipped') NOT NULL DEFAULT 'pending',
     is_read TINYINT(1) NOT NULL DEFAULT 0,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+
+// Backfill/upgrade legacy notifications schema if it exists
+$conn->query("ALTER TABLE notifications ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
+try {
+    // Clean legacy rows that would violate the stricter schema
+    $conn->query("DELETE FROM notifications WHERE order_id IS NULL OR order_id = 0");
+    $conn->query("UPDATE notifications SET message = '' WHERE message IS NULL");
+    $conn->query("UPDATE notifications SET status = 'pending' WHERE status IS NULL OR status NOT IN ('pending','paid','shipped')");
+
+    $conn->query("ALTER TABLE notifications MODIFY COLUMN message TEXT NOT NULL");
+    $conn->query("ALTER TABLE notifications MODIFY COLUMN status ENUM('pending','paid','shipped') NOT NULL DEFAULT 'pending'");
+} catch (mysqli_sql_exception $e) {
+    // ignore
+}
 
 $alert = null;
 $statusOptions = ['pending', 'paid', 'shipped'];
@@ -101,14 +127,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($stmt->execute()) {
             $alert = ['type' => 'success', 'text' => 'Order added.'];
             $newOrderId = $stmt->insert_id;
-            if ($email !== '') {
-                $noteText = $notifyMessage !== '' ? $notifyMessage : "Order created. Status: {$status}.";
-                $notifStmt = $conn->prepare("INSERT INTO notifications (order_id, recipient_email, status, message) VALUES (?,?,?,?)");
-                $notifStmt->bind_param("isss", $newOrderId, $email, $status, $noteText);
-                $notifStmt->execute();
-                $notifStmt->close();
-                $alert['text'] .= ' Notification sent to ' . htmlspecialchars($email, ENT_QUOTES);
+
+            // Keep client_email/total_amount in sync (best-effort)
+            try {
+                $syncStmt = $conn->prepare("UPDATE orders SET client_email = ?, total_amount = ? WHERE id = ?");
+                $syncStmt->bind_param('sdi', $email, $total, $newOrderId);
+                $syncStmt->execute();
+                $syncStmt->close();
+            } catch (mysqli_sql_exception $e) {
+                // ignore
             }
+
+            // Create/update client notification for this order (email is derived from orders.client_email)
+            $noteText = $notifyMessage !== '' ? $notifyMessage : "Order created. Status: {$status}.";
+            $notifStmt = $conn->prepare("INSERT INTO notifications (order_id, message, status, is_read) VALUES (?,?,?,0)");
+            $notifStmt->bind_param("iss", $newOrderId, $noteText, $status);
+            $notifStmt->execute();
+            $notifStmt->close();
+            $alert['text'] .= ' Notification created.';
         } else {
             $alert = ['type' => 'danger', 'text' => 'Unable to add order.'];
         }
@@ -124,6 +160,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
         if ($stmt->execute()) {
             $alert = ['type' => 'success', 'text' => 'Order updated.'];
+
+            // Keep client_email/total_amount in sync (best-effort)
+            try {
+                $syncStmt = $conn->prepare("UPDATE orders SET client_email = ?, total_amount = ? WHERE id = ?");
+                $syncStmt->bind_param('sdi', $email, $total, $orderId);
+                $syncStmt->execute();
+                $syncStmt->close();
+            } catch (mysqli_sql_exception $e) {
+                // ignore
+            }
         } else {
             $alert = ['type' => 'danger', 'text' => 'Unable to update order.'];
         }
@@ -144,22 +190,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param("si", $status, $orderId);
         if ($stmt->execute()) {
             $alert = ['type' => 'success', 'text' => 'Status updated.'];
-            // Record notification for this status change
-            $emailStmt = $conn->prepare("SELECT email FROM orders WHERE id=?");
-            $emailStmt->bind_param("i", $orderId);
-            $emailStmt->execute();
-            $emailStmt->bind_result($recipientEmail);
-            if ($emailStmt->fetch() && $recipientEmail) {
-                $emailStmt->close();
-                $finalMessage = $notifyMessage !== '' ? $notifyMessage : "Status updated to {$status}.";
-                $notifStmt = $conn->prepare("INSERT INTO notifications (order_id, recipient_email, status, message) VALUES (?,?,?,?)");
-                $notifStmt->bind_param("isss", $orderId, $recipientEmail, $status, $finalMessage);
-                $notifStmt->execute();
-                $notifStmt->close();
-                $alert['text'] .= ' Notification sent to ' . htmlspecialchars($recipientEmail, ENT_QUOTES);
-            } else {
-                $emailStmt->close();
+
+            $finalMessage = $notifyMessage !== '' ? $notifyMessage : "Status updated to {$status}.";
+
+            // Update the most recent notification for this order; if none exists, insert one.
+            $updStmt = $conn->prepare("UPDATE notifications SET status=?, message=?, is_read=0 WHERE order_id=? ORDER BY updated_at DESC, created_at DESC LIMIT 1");
+            $updStmt->bind_param("ssi", $status, $finalMessage, $orderId);
+            $updStmt->execute();
+            $affected = $updStmt->affected_rows;
+            $updStmt->close();
+
+            if ($affected === 0) {
+                $insStmt = $conn->prepare("INSERT INTO notifications (order_id, message, status, is_read) VALUES (?,?,?,0)");
+                $insStmt->bind_param("iss", $orderId, $finalMessage, $status);
+                $insStmt->execute();
+                $insStmt->close();
             }
+
+            $alert['text'] .= ' Notification updated.';
         } else {
             $alert = ['type' => 'danger', 'text' => 'Unable to update status.'];
         }
