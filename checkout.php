@@ -58,12 +58,19 @@ $cart = $_SESSION['cart'] ?? [];
                         <small class="small-msg"></small>
                     </div>
 
+                    <div class="mb-2">
+                        <select class="form-select" id="paymentMethod">
+                            <option value="" selected disabled>Payment Method</option>
+                            <option value="full">Full Payment</option>
+                            <option value="cash">Cash</option>
+                        </select>
+                    </div>
+
                     <!-- Delivery & Event Details -->
                     <div class="mb-2">
                         <select class="form-select" id="deliveryMethod">
                             <option value="" selected disabled>Delivery Method</option>
                             <option value="ship">Ship</option>
-                            <option value="pickup">Pick up</option>
                         </select>
                     </div>
 
@@ -137,7 +144,7 @@ $cart = $_SESSION['cart'] ?? [];
                     $subtotal = 0;
                     foreach ($cart as $index => $item):
                         $subtotal += $item['price'];
-                    ?>
+                        ?>
                         <div class="d-flex mb-3 align-items-center">
                             <div class="item-number"><?= $index + 1 ?></div>
                             <div class="flex-grow-1 ms-2">
@@ -172,6 +179,29 @@ $cart = $_SESSION['cart'] ?? [];
         </div>
     </div>
 
+    <!-- Cash Payment Modal -->
+    <div class="modal fade" id="cashModal" tabindex="-1" aria-labelledby="cashModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cashModalLabel">Thank You for Your Order!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body text-center">
+                    <p>Make sure to prepare the payment below when your order is delivered:</p>
+                    <h4>Total Amount: ₱<span id="cashTotal"></span></h4>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener("DOMContentLoaded", () => {
 
@@ -199,6 +229,20 @@ $cart = $_SESSION['cart'] ?? [];
                 return msg;
             }
 
+            // --- CASH MODAL REDIRECT ---
+            const cashModalCloseBtn = document.querySelector("#cashModal .btn-close");
+            if (cashModalCloseBtn) {
+                cashModalCloseBtn.addEventListener("click", () => {
+                    window.location.href = "index.php";
+                });
+            }
+            const cashModalFooterBtn = document.querySelector("#cashModal .modal-footer button");
+            if (cashModalFooterBtn) {
+                cashModalFooterBtn.addEventListener("click", () => {
+                    window.location.href = "index.php";
+                });
+            }
+
             // --- FULL NAME VALIDATION ---
             const nameInput = document.querySelector('input[placeholder="Full Name"]');
             const nameMsg = createMsg(nameInput);
@@ -222,13 +266,12 @@ $cart = $_SESSION['cart'] ?? [];
 
             // --- CONTACT VALIDATION ---
             const contactInput = document.querySelector('input[placeholder="Contact No."]');
-            contactInput.value = "09"; // start with 09 by default
+            contactInput.value = "09";
             const contactMsg = createMsg(contactInput);
 
             function updateContact() {
-                let val = contactInput.value.replace(/\D/g, ""); // digits only
+                let val = contactInput.value.replace(/\D/g, "");
                 if (val.startsWith("09")) {
-                    // 09 format → max 10 digits (09 + 8 more)
                     val = val.slice(0, 10);
                     contactInput.value = val;
                     if (val.length === 10) {
@@ -241,7 +284,6 @@ $cart = $_SESSION['cart'] ?? [];
                         contactInput.style.borderColor = "red";
                     }
                 } else {
-                    // +63 format → max 12 digits (+63 + 9 more)
                     val = val.slice(0, 12);
                     contactInput.value = "+63" + val;
                     if (val.length === 12) {
@@ -256,7 +298,6 @@ $cart = $_SESSION['cart'] ?? [];
                 }
             }
 
-            // Input events
             contactInput.addEventListener("input", updateContact);
             contactInput.addEventListener("keydown", (e) => {
                 if ((e.key === "Backspace" || e.key === "Delete") && contactInput.selectionStart <= 2 && contactInput.value.startsWith("09")) e.preventDefault();
@@ -264,8 +305,6 @@ $cart = $_SESSION['cart'] ?? [];
                 if (contactInput.selectionStart < 2 && contactInput.value.startsWith("09") && e.key.length === 1) e.preventDefault();
                 if (contactInput.selectionStart < 3 && contactInput.value.startsWith("+63") && e.key.length === 1) e.preventDefault();
             });
-
-            // Paste event
             contactInput.addEventListener("paste", (e) => {
                 e.preventDefault();
                 let paste = e.clipboardData.getData("text").replace(/\D/g, "");
@@ -297,7 +336,7 @@ $cart = $_SESSION['cart'] ?? [];
                 }
             });
 
-            // --- ADDRESS VALIDATION (Only for Ship) ---
+            // --- ADDRESS VALIDATION (Ship) ---
             const streetInput = document.querySelector('input[placeholder="Street Number / #"]');
             const barangayInput = document.querySelector('input[placeholder="Barangay"]');
             const cityInput = document.querySelector('input[placeholder="City"]');
@@ -313,7 +352,6 @@ $cart = $_SESSION['cart'] ?? [];
             const notesMsg = createMsg(notesInput);
 
             function validateShipFields() {
-                // Only validate if ship is selected
                 if (deliverySelect.value !== "ship") return;
 
                 streetInput.value = streetInput.value.replace(/\D/g, "").slice(0, 4);
@@ -363,33 +401,32 @@ $cart = $_SESSION['cart'] ?? [];
 
         });
 
-        // --- Complete Order Button: Check required fields and confirm ---
+        // --- Complete Order ---
         const checkoutForm = document.getElementById("checkoutForm");
-        const deliverySelect = document.querySelector('select.form-select');
+        const deliverySelectForm = document.getElementById("deliveryMethod");
         const checkoutError = document.getElementById("checkoutError");
+        const paymentSelect = document.getElementById("paymentMethod");
+        const cashTotalSpan = document.getElementById("cashTotal");
 
-        checkoutForm.addEventListener("submit", function(e) {
-            e.preventDefault(); // prevent form submission
+        checkoutForm.addEventListener("submit", function (e) {
+            e.preventDefault();
 
-            // Hide previous error message
             checkoutError.style.display = "none";
             checkoutError.textContent = "";
 
-            // --- Validate common required fields ---
             const name = document.querySelector('input[placeholder="Full Name"]').value.trim();
             const contact = document.querySelector('input[placeholder="Contact No."]').value.trim();
             const email = document.querySelector('input[placeholder="Email"]').value.trim();
-            const delivery = deliverySelect.value;
+            const delivery = deliverySelectForm.value;
+            const payment = paymentSelect.value;
 
-            if (!name || !contact || !email || !delivery) {
+            if (!name || !contact || !email || !delivery || !payment) {
                 checkoutError.textContent = "Please complete all required details";
                 checkoutError.style.display = "block";
-                return; // stop submission
+                return;
             }
 
-            // --- Validate Ship-specific fields ---
-            if (delivery === "Ship") {
-                // Select all shipping inputs dynamically
+            if (delivery === "ship") {
                 const shipFields = [
                     'input[placeholder="Street Number / #"]',
                     'input[placeholder="Barangay"]',
@@ -402,15 +439,25 @@ $cart = $_SESSION['cart'] ?? [];
                     if (!field || !field.value.trim()) {
                         checkoutError.textContent = "Please complete all shipping details";
                         checkoutError.style.display = "block";
-                        return; // stop submission
+                        return;
                     }
                 }
             }
 
-            // --- All fields are complete, show confirmation ---
-            const confirmPay = confirm("Are you sure you want to pay?");
-            if (confirmPay) {
-                window.location.href = "paypal.php";
+            if (payment === "cash") {
+                const totalAmount = <?= $total ?>;
+                cashTotalSpan.textContent = totalAmount.toFixed(2);
+
+                const cashModal = new bootstrap.Modal(document.getElementById('cashModal'));
+                cashModal.show();
+                return;
+            }
+
+            if (payment === "full") {
+                const confirmPay = confirm("Are you sure you want to pay?");
+                if (confirmPay) {
+                    window.location.href = "payment.php";
+                }
             }
         });
     </script>
