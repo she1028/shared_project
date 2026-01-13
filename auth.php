@@ -1,7 +1,25 @@
-
 <?php
 include("connect.php"); // $conn and executeQuery()
 session_start();
+
+// Helper: sanitize and produce safe "next" redirect (internal only)
+function getSafeNext() {
+    $next = null;
+    if (!empty($_GET['next'])) $next = $_GET['next'];
+    elseif (!empty($_POST['next'])) $next = $_POST['next'];
+
+     if ($next) {
+        // Reject absolute URLs (prevent open redirect)
+        if (strpos($next, 'http://') === false && strpos($next, 'https://') === false) {
+            $candidate = str_replace("\0", '', $next);
+            if (strpos($candidate, '..') === false) {
+                // allow relative path starting with / or a filename
+                return $candidate;
+            }
+        }
+    }
+    return null;
+}
 
 // ==================== SIGN UP ====================
 if (isset($_POST['name'], $_POST['email'], $_POST['password'])) {
@@ -10,7 +28,8 @@ if (isset($_POST['name'], $_POST['email'], $_POST['password'])) {
     } else {
         $name = trim($_POST['name']);
         $email = trim($_POST['email']);
-        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+        $rawPassword = $_POST['password'];
+        $passwordHash = password_hash($rawPassword, PASSWORD_DEFAULT);
         $role = 'user'; // force normal user
 
         // Check if email exists
@@ -19,11 +38,30 @@ if (isset($_POST['name'], $_POST['email'], $_POST['password'])) {
             $signup_error = "Email already exists!";
         } else {
             $stmt = $conn->prepare("INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)");
-            $stmt->bind_param("ssss", $name, $email, $password, $role);
+            $stmt->bind_param("ssss", $name, $email, $passwordHash, $role);
             if ($stmt->execute()) {
-                $signup_success = "Sign Up successful! You can now log in.";
+                // Auto-login the newly created user
+                $newUserId = $stmt->insert_id ?: $conn->insert_id;
+                // CONSISTENT SESSION KEYS (set several common variants)
+                $_SESSION['userID']  = $newUserId;
+                $_SESSION['userId']  = $newUserId;
+                $_SESSION['user_id'] = $newUserId;
+                $_SESSION['name']    = $name;
+                $_SESSION['role']    = $role;
+                $_SESSION['email']   = $email;
+
+                // Redirect to safe next or index
+                $safeNext = getSafeNext();
+                if ($safeNext) {
+                     header("Location: {$safeNext}");
+                    exit();
+                } else {
+                    header("Location: index.php");
+                    exit();
+                }
+
             } else {
-                $signup_error = "Sign Up failed. Please try again.";
+                 $signup_error = "Sign Up failed. Please try again.";
             }
             $stmt->close();
         }
@@ -38,16 +76,39 @@ if (isset($_POST['email'], $_POST['password']) && !isset($_POST['name'])) {
     if ($res && mysqli_num_rows($res) == 1) {
         $user = mysqli_fetch_assoc($res);
         if (password_verify($password, $user['password'])) {
-            // Set session
-            $_SESSION['userID'] = $user['userID'];
-            $_SESSION['name'] = $user['name'];
-            $_SESSION['role'] = $user['role'];
+            // Normalize DB id key: accept userId or userID
+            $dbUserId = null;
+            if (isset($user['userId'])) $dbUserId = $user['userId'];
+            elseif (isset($user['userID'])) $dbUserId = $user['userID'];
+            else {
+                // fallback to any id-like field
+                foreach ($user as $k => $v) {
+                    if (stripos($k, 'id') !== false) { $dbUserId = $v; break; }
+                }
+            }
+
+            // CONSISTENT SESSION KEYS
+            $_SESSION['userID']  = $dbUserId;
+            $_SESSION['userId']  = $dbUserId;
+            $_SESSION['user_id'] = $dbUserId;
+            $_SESSION['name']    = $user['name'] ?? '';
+            $_SESSION['role']    = $user['role'] ?? 'user';
+            $_SESSION['email']   = $user['email'] ?? '';
+
+            // Determine safe next redirect
+            $safeNext = getSafeNext();
 
             // Redirect based on role
-            if ($user['role'] === 'admin') {
+            if (isset($user['role']) && $user['role'] === 'admin') {
                 header("Location: admin/dashboard.php");
             } else {
-                header("Location: index.php"); // normal user dashboard
+                if ($safeNext) {
+                    header("Location: {$safeNext}");
+                    exit();
+                } else {
+                    header("Location: index.php");
+                    exit();
+                }
             }
             exit();
         } else {
@@ -58,8 +119,6 @@ if (isset($_POST['email'], $_POST['password']) && !isset($_POST['name'])) {
     }
 }
 ?>
-
-
 
 <!doctype html>
 <html lang="en">
@@ -106,12 +165,12 @@ if (isset($_POST['email'], $_POST['password']) && !isset($_POST['name'])) {
 
             <!-- sign in -->
             <form id="signInForm" class="auth-form" method="POST" action="">
-                <div class="mb-4"> <label class="form-label">Email</label> <input type="email" id="signInEmail" name="email" class="form-control border-dark rounded-3" placeholder="Enter email" required> </div>
+                <div class="mb-4"> <label class="form-label">Email</label> <input type="email" name="email" class="form-control border-dark rounded-3" placeholder="Enter email" required> </div>
                 <div class="mb-3">
                     <div class="position-relative"> <input type="password" id="signInPassword" class="form-control" placeholder="Enter password" name="password" required> <i class="bi bi-eye-slash password-toggle" data-target="signInPassword"></i> </div>
                 </div>
                 <div class="d-flex justify-content-between mb-4">
-                    <div class="form-check"> <input class="form-check-input border-dark" type="checkbox" id="rememberMe" name="rememberMe"> <label class="form-check-label" for="rememberMe">Remember me</label> </div> <a id="forgotPasswordLink" href="forgot_password.php" class="small">Forgot Password?</a>
+                    <div class="form-check"> <input class="form-check-input border-dark" type="checkbox" id="rememberMe" name="rememberMe"> <label class="form-check-label" for="rememberMe">Remember me</label> </div> <a href="#" class="small">Forgot Password?</a>
                 </div> <button type="submit" class="btn btn-dark w-100 py-2 mb-3">Sign In</button>
                 <div class="d-flex align-items-center my-3">
                     <hr class="flex-grow-1"> <span class="mx-2">Or</span>
@@ -254,31 +313,6 @@ if (isset($_POST['email'], $_POST['password']) && !isset($_POST['name'])) {
             passwordNotice.classList.toggle("text-success", isValid);
             passwordNotice.classList.toggle("text-warning", !isValid);
         });
-
-        // Persist the email typed on Sign In for the reset flow
-        const signInEmailInput = document.getElementById('signInEmail');
-        const forgotPasswordLink = document.getElementById('forgotPasswordLink');
-
-        function setLastAuthEmailCookie(value) {
-            if (!value) return;
-            const maxAge = 60 * 60; // 1 hour
-            document.cookie = 'last_auth_email=' + encodeURIComponent(value) + '; path=/; max-age=' + maxAge + '; samesite=lax';
-        }
-
-        if (signInEmailInput) {
-            signInEmailInput.addEventListener('input', function () {
-                setLastAuthEmailCookie(signInEmailInput.value.trim());
-            });
-            signInEmailInput.addEventListener('blur', function () {
-                setLastAuthEmailCookie(signInEmailInput.value.trim());
-            });
-        }
-
-        if (forgotPasswordLink && signInEmailInput) {
-            forgotPasswordLink.addEventListener('click', function () {
-                setLastAuthEmailCookie(signInEmailInput.value.trim());
-            });
-        }
 
         // Toggle password visibility
         document.querySelectorAll(".password-toggle").forEach(icon => {
