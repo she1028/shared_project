@@ -1,6 +1,15 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_name('admin_session');
+    session_start();
+}
 require_once "../connect.php";
+
+// Only allow admin
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    header("Location: ../adminsignin.php");
+    exit();
+}
 
 // Handle Delete action
 if (isset($_POST['delete_otp_id'])) {

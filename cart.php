@@ -57,6 +57,10 @@ $total = !empty($cart) ? ($subtotal + $shipping) : 0;
             $price = isset($item['price']) ? (float)$item['price'] : 0.0;
             $itemTotal = $price * $qty;
             $img = $item['image'] ?? '';
+            $maxQtyAttr = '';
+            if (($item['type'] ?? '') === 'rental' && isset($item['color_stock']) && $item['color_stock'] !== null && (int)$item['color_stock'] > 0) {
+              $maxQtyAttr = ' max="' . (int)$item['color_stock'] . '"';
+            }
         ?>
           <div class="d-flex mb-3 align-items-center cart-item" data-index="<?= (int)$index ?>" data-price="<?= htmlspecialchars((string)$price) ?>">
             <div class="me-2 d-flex align-items-center" style="min-width: 18px;">
@@ -80,7 +84,7 @@ $total = !empty($cart) ? ($subtotal + $shipping) : 0;
             <div class="d-flex align-items-center gap-2 cart-actions">
               <div class="input-group input-group-sm" style="width: 120px;">
                 <button class="btn btn-outline-secondary qty-minus" type="button">-</button>
-                <input type="number" class="form-control text-center cart-qty" name="qty[<?= (int)$index ?>]" form="checkoutCartForm" value="<?= (int)$qty ?>" min="1" step="1">
+                <input type="number" class="form-control text-center cart-qty" name="qty[<?= (int)$index ?>]" form="checkoutCartForm" value="<?= (int)$qty ?>" min="1" step="1"<?= $maxQtyAttr ?>>
                 <button class="btn btn-outline-secondary qty-plus" type="button">+</button>
               </div>
               <div class="text-nowrap">₱<span class="item-total"><?= number_format($itemTotal, 2) ?></span></div>
@@ -154,9 +158,13 @@ $total = !empty($cart) ? ($subtotal + $shipping) : 0;
       const summaryTotalEl = document.getElementById('summaryTotalValue');
       const checkoutBtn = document.getElementById('checkoutBtn');
 
-      function clampQty(val) {
+      function clampQty(val, maxVal) {
         const n = parseInt(val, 10);
-        return Number.isFinite(n) && n > 0 ? n : 1;
+        const base = Number.isFinite(n) && n > 0 ? n : 1;
+        if (typeof maxVal === 'number' && Number.isFinite(maxVal) && maxVal > 0) {
+          return Math.min(base, Math.floor(maxVal));
+        }
+        return base;
       }
 
       function recalc() {
@@ -169,7 +177,9 @@ $total = !empty($cart) ? ($subtotal + $shipping) : 0;
           const qtyInput = row.querySelector('.cart-qty');
           const totalSpan = row.querySelector('.item-total');
 
-          const qty = clampQty(qtyInput.value);
+          const maxAttr = qtyInput && qtyInput.max ? parseInt(qtyInput.max, 10) : NaN;
+          const maxVal = Number.isFinite(maxAttr) ? maxAttr : undefined;
+          const qty = clampQty(qtyInput.value, maxVal);
           qtyInput.value = qty;
 
           const line = price * qty;
@@ -206,8 +216,11 @@ $total = !empty($cart) ? ($subtotal + $shipping) : 0;
         const qtyInput = row.querySelector('.cart-qty');
         if (!qtyInput || qtyInput.disabled) return;
 
-        const current = clampQty(qtyInput.value);
-        qtyInput.value = minus ? Math.max(1, current - 1) : (current + 1);
+        const maxAttr = qtyInput && qtyInput.max ? parseInt(qtyInput.max, 10) : NaN;
+        const maxVal = Number.isFinite(maxAttr) ? maxAttr : undefined;
+        const current = clampQty(qtyInput.value, maxVal);
+        const next = minus ? Math.max(1, current - 1) : (current + 1);
+        qtyInput.value = clampQty(next, maxVal);
         recalc();
       });
 

@@ -6,6 +6,46 @@ file_put_contents("debug_raw.txt", file_get_contents("php://input"));
 
 require_once "connect.php"; 
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_name('client_session');
+    session_start();
+}
+
+// Ensure required tables exist (for fresh DBs)
+$conn->query("CREATE TABLE IF NOT EXISTS bookings (
+    booking_ref VARCHAR(32) PRIMARY KEY,
+    phone VARCHAR(30) NOT NULL,
+    booking_status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    confirmed_at DATETIME NULL,
+    cancelled_at DATETIME NULL,
+    sms_sent_at DATETIME NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+
+$conn->query("CREATE TABLE IF NOT EXISTS otp_requests (
+    otp_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    phone VARCHAR(30) NOT NULL,
+    booking_ref VARCHAR(32) NOT NULL,
+    otp_hash VARCHAR(255) NOT NULL,
+    used TINYINT(1) NOT NULL DEFAULT 0,
+    expires_at DATETIME NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_phone_created (phone, created_at),
+    INDEX idx_booking (booking_ref)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+
+$conn->query("CREATE TABLE IF NOT EXISTS sms_logs (
+    sms_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    phone VARCHAR(30) NOT NULL,
+    booking_ref VARCHAR(32) NULL,
+    sms_direction VARCHAR(20) NOT NULL,
+    sms_message TEXT NOT NULL,
+    status VARCHAR(30) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_booking (booking_ref),
+    INDEX idx_phone_created (phone, created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+
 // Normalize phone
 function normalizePhone($num) {
     $num = preg_replace('/\D/', '', $num);
@@ -99,7 +139,10 @@ $stmt_log->execute();
 
 // Return response
 if ($response === false) {
-    echo json_encode(["success" => false, "message" => "SMS Gateway unreachable"]);
+    echo json_encode(["success" => false, "message" => "SMS Gateway unreachable", "booking_ref" => $booking_ref]);
 } else {
-    echo json_encode(["success" => true]);
+    // Keep track of the current booking ref for this checkout attempt
+    $_SESSION['sms_booking_ref'] = $booking_ref;
+    $_SESSION['sms_phone'] = $phone;
+    echo json_encode(["success" => true, "booking_ref" => $booking_ref]);
 }

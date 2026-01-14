@@ -146,6 +146,42 @@
     const qtyDisplay = document.querySelector('#rentalModal .qty-box span');
     const colorsContainer = document.getElementById('modalRentalColors');
 
+    const qtyMinusBtn = document.getElementById('qty-minus');
+    const qtyPlusBtn = document.getElementById('qty-plus');
+    const addToCartBtn = document.getElementById('addToCartBtn');
+
+    function getMaxQty() {
+        // Prefer per-color stock when available.
+        const colorStock = selectedColor && typeof selectedColor.color_stock === 'number'
+            ? selectedColor.color_stock
+            : (selectedColor && typeof selectedColor.color_stock !== 'undefined' ? Number(selectedColor.color_stock) : null);
+
+        if (Number.isFinite(colorStock)) return Math.max(0, Math.floor(colorStock));
+
+        // Fallback to item-level stock if provided.
+        const itemStock = currentItem && typeof currentItem.stock !== 'undefined' ? Number(currentItem.stock) : null;
+        if (Number.isFinite(itemStock)) return Math.max(0, Math.floor(itemStock));
+
+        return null; // unknown
+    }
+
+    function updateQtyUi() {
+        const max = getMaxQty();
+        if (typeof max === 'number') {
+            if (currentQty > max) currentQty = Math.max(1, max);
+        }
+        if (qtyDisplay) qtyDisplay.innerText = String(currentQty);
+
+        const isOutOfStock = (typeof max === 'number' && max <= 0);
+        if (qtyPlusBtn) qtyPlusBtn.disabled = (typeof max === 'number' && currentQty >= max);
+        if (qtyMinusBtn) qtyMinusBtn.disabled = currentQty <= 1;
+
+        if (addToCartBtn) {
+            addToCartBtn.classList.toggle('disabled', isOutOfStock);
+            addToCartBtn.setAttribute('aria-disabled', isOutOfStock ? 'true' : 'false');
+        }
+    }
+
     function showToast(message, success = true) {
         const toastEl = document.getElementById('cartToast');
         const toastMessage = document.getElementById('cartToastMessage');
@@ -192,6 +228,7 @@
                 btn.addEventListener('click', () => {
                     selectedColor = c;
                     updateColorSelection();
+                    updateQtyUi();
                 });
                 colorsContainer.appendChild(btn);
             });
@@ -199,22 +236,51 @@
             updateColorSelection();
         }
 
+        updateQtyUi();
+
         const modal = new bootstrap.Modal(document.getElementById('rentalModal'));
         modal.show();
     };
 
-    document.getElementById('qty-minus').addEventListener('click', () => {
-        if (currentQty > 1) currentQty--;
-        if (qtyDisplay) qtyDisplay.innerText = currentQty;
-    });
+    if (qtyMinusBtn) {
+        qtyMinusBtn.addEventListener('click', () => {
+            if (currentQty > 1) currentQty--;
+            updateQtyUi();
+        });
+    }
 
-    document.getElementById('qty-plus').addEventListener('click', () => {
-        currentQty++;
-        if (qtyDisplay) qtyDisplay.innerText = currentQty;
-    });
+    if (qtyPlusBtn) {
+        qtyPlusBtn.addEventListener('click', () => {
+            const max = getMaxQty();
+            if (typeof max === 'number' && currentQty >= max) {
+                const cn = selectedColor ? (selectedColor.color_name || selectedColor.name || '') : '';
+                showToast(`Only ${max} available${cn ? ' in ' + cn : ''}.`, false);
+                updateQtyUi();
+                return;
+            }
+            currentQty++;
+            updateQtyUi();
+        });
+    }
 
-    document.getElementById('addToCartBtn').addEventListener('click', () => {
+    if (addToCartBtn) addToCartBtn.addEventListener('click', () => {
         if (!currentItem) return;
+
+        const max = getMaxQty();
+        if (typeof max === 'number') {
+            if (max <= 0) {
+                const cn = selectedColor ? (selectedColor.color_name || selectedColor.name || '') : '';
+                showToast(`Out of stock${cn ? ' for ' + cn : ''}.`, false);
+                return;
+            }
+            if (currentQty > max) {
+                const cn = selectedColor ? (selectedColor.color_name || selectedColor.name || '') : '';
+                showToast(`Only ${max} available${cn ? ' in ' + cn : ''}.`, false);
+                currentQty = Math.max(1, max);
+                updateQtyUi();
+                return;
+            }
+        }
 
         const colorName = selectedColor ? (selectedColor.color_name || selectedColor.name || '') : '';
         const colorId = selectedColor && typeof selectedColor.id !== 'undefined' ? selectedColor.id : null;

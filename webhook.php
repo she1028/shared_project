@@ -2,6 +2,41 @@
 require_once "connect.php";
 header("Content-Type: application/json");
 
+// Ensure required tables exist (for fresh DBs)
+$conn->query("CREATE TABLE IF NOT EXISTS bookings (
+    booking_ref VARCHAR(32) PRIMARY KEY,
+    phone VARCHAR(30) NOT NULL,
+    booking_status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    confirmed_at DATETIME NULL,
+    cancelled_at DATETIME NULL,
+    sms_sent_at DATETIME NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+
+$conn->query("CREATE TABLE IF NOT EXISTS otp_requests (
+    otp_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    phone VARCHAR(30) NOT NULL,
+    booking_ref VARCHAR(32) NOT NULL,
+    otp_hash VARCHAR(255) NOT NULL,
+    used TINYINT(1) NOT NULL DEFAULT 0,
+    expires_at DATETIME NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_phone_created (phone, created_at),
+    INDEX idx_booking (booking_ref)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+
+$conn->query("CREATE TABLE IF NOT EXISTS sms_logs (
+    sms_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    phone VARCHAR(30) NOT NULL,
+    booking_ref VARCHAR(32) NULL,
+    sms_direction VARCHAR(20) NOT NULL,
+    sms_message TEXT NOT NULL,
+    status VARCHAR(30) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_booking (booking_ref),
+    INDEX idx_phone_created (phone, created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+
 
 // Read JSON from SMS Forwarder
 $raw = file_get_contents("php://input");
@@ -87,7 +122,7 @@ if (preg_match('/^\s*(no|n|nope)[\s\.\!\?]*$/i', $text)) {
             UPDATE sms_logs
             SET status = 'CANCELLED'
             WHERE phone = ? AND booking_ref = ? AND sms_direction = 'RECEIVED'
-            ORDER BY id DESC
+            ORDER BY sms_id DESC
             LIMIT 1
         ");
         $stmt->bind_param("ss", $phone, $booking_ref);

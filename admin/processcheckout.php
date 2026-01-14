@@ -17,6 +17,44 @@ if (!$isLoggedIn) {
     exit;
 }
 
+// Require SMS confirmation for this checkout session
+$smsConfirmed = !empty($_SESSION['sms_confirmed'])
+    && !empty($_SESSION['sms_booking_ref'])
+    && !empty($_SESSION['sms_phone'])
+    && !empty($_SESSION['sms_confirmed_at'])
+    && (time() - (int)$_SESSION['sms_confirmed_at'] <= 15 * 60);
+
+if (!$smsConfirmed) {
+    echo 'error:sms_not_confirmed';
+    exit;
+}
+
+$bookingRef = (string)($_SESSION['sms_booking_ref'] ?? '');
+$smsPhone = (string)($_SESSION['sms_phone'] ?? '');
+if ($bookingRef === '' || $smsPhone === '') {
+    echo 'error:sms_not_confirmed';
+    exit;
+}
+
+// Verify the booking is actually confirmed in DB
+try {
+    $stmtSms = $conn->prepare("SELECT booking_status FROM bookings WHERE booking_ref = ? AND phone = ? LIMIT 1");
+    if ($stmtSms) {
+        $stmtSms->bind_param('ss', $bookingRef, $smsPhone);
+        $stmtSms->execute();
+        $resSms = $stmtSms->get_result();
+        $rowSms = $resSms ? $resSms->fetch_assoc() : null;
+        $statusSms = strtoupper((string)($rowSms['booking_status'] ?? ''));
+        if ($statusSms !== 'CONFIRMED') {
+            echo 'error:sms_not_confirmed';
+            exit;
+        }
+    }
+} catch (mysqli_sql_exception $e) {
+    echo 'error:sms_not_confirmed';
+    exit;
+}
+
 // Ensure tables exist to avoid conflicts when seeding against a fresh DB
 $conn->query("CREATE TABLE IF NOT EXISTS orders (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -139,6 +177,72 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $finalSubtotal = $computedSubtotal;
     $finalTotal = $computedTotal;
 
+    // Begin transaction so stock updates + order insert stay consistent.
+    $conn->begin_transaction();
+
+    // Validate and reserve stock for rentals (decrement only after validation).
+    foreach ($cart as $item) {
+        $itemType = $item['type'] ?? null;
+        if ($itemType === null) {
+            $itemType = isset($item['item_id']) ? 'rental' : 'food';
+        }
+        if ($itemType !== 'rental') {
+            continue;
+        }
+
+        $qty = isset($item['qty']) ? (int)$item['qty'] : 1;
+        if ($qty < 1) $qty = 1;
+
+        $itemId = $item['id'] ?? ($item['item_id'] ?? null);
+        $itemId = $itemId !== null ? (int)$itemId : null;
+
+        $colorId = isset($item['color_id']) && $item['color_id'] !== '' ? (int)$item['color_id'] : null;
+
+        if ($itemId === null) {
+            $conn->rollback();
+            echo 'Invalid rental item.';
+            exit;
+        }
+
+        if ($colorId !== null) {
+            // Atomically decrement color stock if enough remains.
+            $upd = $conn->prepare('UPDATE rental_item_colors SET color_stock = color_stock - ? WHERE id = ? AND item_id = ? AND color_stock >= ?');
+            if (!$upd) {
+                $conn->rollback();
+                echo 'Unable to reserve rental stock.';
+                exit;
+            }
+            $upd->bind_param('iiii', $qty, $colorId, $itemId, $qty);
+            $upd->execute();
+            $affected = $upd->affected_rows;
+            $upd->close();
+
+            if ($affected < 1) {
+                $conn->rollback();
+                echo 'Some rental items are out of stock. Please update your cart and try again.';
+                exit;
+            }
+        } else {
+            // Fallback: decrement item-level stock.
+            $upd = $conn->prepare('UPDATE rental_items SET stock = stock - ? WHERE id = ? AND stock >= ?');
+            if (!$upd) {
+                $conn->rollback();
+                echo 'Unable to reserve rental stock.';
+                exit;
+            }
+            $upd->bind_param('iii', $qty, $itemId, $qty);
+            $upd->execute();
+            $affected = $upd->affected_rows;
+            $upd->close();
+
+            if ($affected < 1) {
+                $conn->rollback();
+                echo 'Some rental items are out of stock. Please update your cart and try again.';
+                exit;
+            }
+        }
+    }
+
     $stmt = $conn->prepare("
         INSERT INTO orders 
         (full_name, contact, email, payment_method, delivery_method, status, street, barangay, city, province, postal_code, notes, subtotal, shipping, total)
@@ -248,6 +352,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     } else {
         unset($_SESSION['cart']);
     }
+
+    $conn->commit();
+
+    unset($_SESSION['sms_confirmed'], $_SESSION['sms_booking_ref'], $_SESSION['sms_phone'], $_SESSION['sms_confirmed_at']);
 
     echo "success";
     exit;

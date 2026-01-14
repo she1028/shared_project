@@ -1,12 +1,21 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_name('admin_session');
+    session_start();
+}
 require_once "../connect.php";
+
+// Only allow admin
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    header("Location: ../adminsignin.php");
+    exit();
+}
 
 $statusFilter = $_GET['status'] ?? 'all';
 $where = "";
 
 if ($statusFilter !== "all") {
-    $where = "WHERE booking_status = '" . $conn->real_escape_string($statusFilter) . "'";
+    $where = "WHERE booking_status = '" . $conn->real_escape_string(strtoupper($statusFilter)) . "'";
 }
 
 // Handle Delete action
@@ -110,9 +119,9 @@ if (isset($_POST['update_ref'])) {
                     <input type='hidden' name='update_ref' value='{$ref}'>
                     <label>Status</label>
                     <select name='booking_status' class='form-select'>
-                        <option value='pending' " . ($row['booking_status'] == 'pending' ? 'selected' : '') . ">Pending</option>
-                        <option value='confirmed' " . ($row['booking_status'] == 'confirmed' ? 'selected' : '') . ">Confirmed</option>
-                        <option value='cancelled' " . ($row['booking_status'] == 'cancelled' ? 'selected' : '') . ">Cancelled</option>
+                        <option value='PENDING' " . ($row['booking_status'] == 'PENDING' ? 'selected' : '') . ">Pending</option>
+                        <option value='CONFIRMED' " . ($row['booking_status'] == 'CONFIRMED' ? 'selected' : '') . ">Confirmed</option>
+                        <option value='CANCELLED' " . ($row['booking_status'] == 'CANCELLED' ? 'selected' : '') . ">Cancelled</option>
                     </select>
                 </div>
                 <div class='modal-footer'>

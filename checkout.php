@@ -68,6 +68,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $cart = $_SESSION['checkout_cart'] ?? ($_SESSION['cart'] ?? []);
+
+// Require SMS confirmation before placing an order (prevents bypassing smsbooking.php)
+$smsConfirmed = !empty($_SESSION['sms_confirmed'])
+    && !empty($_SESSION['sms_booking_ref'])
+    && !empty($_SESSION['sms_phone'])
+    && !empty($_SESSION['sms_confirmed_at'])
+    && (time() - (int)$_SESSION['sms_confirmed_at'] <= 15 * 60);
+
+if (!$smsConfirmed) {
+    header('Location: smsbooking.php');
+    exit;
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -571,10 +583,18 @@ $cart = $_SESSION['checkout_cart'] ?? ($_SESSION['cart'] ?? []);
                         ? "Your cart is empty. Please add items before checking out."
                         : trimmed === "error:not_logged_in"
                             ? "Please sign in to checkout."
+                            : trimmed === "error:sms_not_confirmed"
+                                ? "Please confirm your order via SMS first."
                         : trimmed;
 
                     checkoutError.textContent = friendly || "There was a problem processing your order. Please try again.";
                     checkoutError.style.display = "block";
+
+                    if (trimmed === "error:sms_not_confirmed") {
+                        setTimeout(() => {
+                            window.location.href = "smsbooking.php";
+                        }, 1200);
+                    }
                 }
             })
             .catch(() => {

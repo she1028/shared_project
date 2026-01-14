@@ -50,6 +50,34 @@ try {
     $total_unread_notifications = 0;
 }
 
+// SMS booking confirmations (bookings / OTP / SMS logs)
+$total_bookings = 0;
+$total_bookings_pending = 0;
+$total_bookings_confirmed = 0;
+$total_otp_requests = 0;
+$total_sms_logs = 0;
+try {
+    $total_bookings = $conn->query("SELECT COUNT(*) AS cnt FROM bookings")->fetch_assoc()['cnt'];
+    $total_bookings_pending = $conn->query("SELECT COUNT(*) AS cnt FROM bookings WHERE booking_status = 'PENDING'")->fetch_assoc()['cnt'];
+    $total_bookings_confirmed = $conn->query("SELECT COUNT(*) AS cnt FROM bookings WHERE booking_status = 'CONFIRMED'")->fetch_assoc()['cnt'];
+} catch (mysqli_sql_exception $e) {
+    $total_bookings = 0;
+    $total_bookings_pending = 0;
+    $total_bookings_confirmed = 0;
+}
+
+try {
+    $total_otp_requests = $conn->query("SELECT COUNT(*) AS cnt FROM otp_requests")->fetch_assoc()['cnt'];
+} catch (mysqli_sql_exception $e) {
+    $total_otp_requests = 0;
+}
+
+try {
+    $total_sms_logs = $conn->query("SELECT COUNT(*) AS cnt FROM sms_logs")->fetch_assoc()['cnt'];
+} catch (mysqli_sql_exception $e) {
+    $total_sms_logs = 0;
+}
+
 // Footer settings count (optional)
 $total_footer_settings = 0;
 try {
@@ -187,6 +215,34 @@ try {
                         <h5 class="mb-2">Footer</h5>
                         <h2 class="mb-3"><?php echo $total_footer_settings; ?></h2>
                         <a href="footer_settings.php" class="btn btn-primary btn-sm">Manage Footer</a>
+                    </div>
+                </div>
+
+                <!-- Bookings (SMS) Card -->
+                <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
+                    <div class="card card-admin shadow text-center w-100 m-3" style="max-width: 300px;">
+                        <h5 class="mb-2">Bookings (SMS)</h5>
+                        <h2 class="mb-1"><?php echo $total_bookings; ?></h2>
+                        <div class="small text-muted mb-3">Pending: <?php echo $total_bookings_pending; ?> · Confirmed: <?php echo $total_bookings_confirmed; ?></div>
+                        <a href="bookings.php" class="btn btn-primary btn-sm">View Bookings</a>
+                    </div>
+                </div>
+
+                <!-- OTP Requests Card -->
+                <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
+                    <div class="card card-admin shadow text-center w-100 m-3" style="max-width: 300px;">
+                        <h5 class="mb-2">OTP Requests</h5>
+                        <h2 class="mb-3"><?php echo $total_otp_requests; ?></h2>
+                        <a href="otp_request.php" class="btn btn-primary btn-sm">View OTP Requests</a>
+                    </div>
+                </div>
+
+                <!-- SMS Logs Card -->
+                <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
+                    <div class="card card-admin shadow text-center w-100 m-3" style="max-width: 300px;">
+                        <h5 class="mb-2">SMS Logs</h5>
+                        <h2 class="mb-3"><?php echo $total_sms_logs; ?></h2>
+                        <a href="sms_log.php" class="btn btn-primary btn-sm">View SMS Logs</a>
                     </div>
                 </div>
 
