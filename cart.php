@@ -138,7 +138,7 @@ $total = !empty($cart) ? ($subtotal + $shipping) : 0;
       </div>
 
       <p class="text-muted small mb-2">Taxes and shipping calculated at checkout</p>
-      <form id="checkoutCartForm" action="checkout.php" method="post">
+      <form id="checkoutCartForm" action="smsbooking.php" method="post">
         <button type="submit" class="btn btn-dark w-100" id="checkoutBtn" <?= empty($cart) ? 'disabled' : '' ?>>Check Out</button>
       </form>
     </div>
