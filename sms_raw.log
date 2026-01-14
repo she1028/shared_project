@@ -40,3 +40,206 @@
   "receivedStamp":1768402451872,
   "sim":"sim1"
 }
+2026-01-14 16:13:08 {
+  "from":"SMART",
+  "text":"Your Allnet Texts will expire in 60 minutes.                                                                                                                   ",
+  "sentStamp":1768403584000,
+  "receivedStamp":1768403586410,
+  "sim":"sim1"
+}
+2026-01-14 16:13:09 {
+  "from":"SMART",
+  "text":" Always stay connected. Check out the Smart App for Promo Load, Rewards, latest offers and MORE!",
+  "sentStamp":1768403585000,
+  "receivedStamp":1768403586775,
+  "sim":"sim1"
+}
+2026-01-14 17:18:37 {
+  "from":"SMART",
+  "text":"Your Allnet Texts for today has expired.                                                                                                                       ",
+  "sentStamp":1768407513000,
+  "receivedStamp":1768407514805,
+  "sim":"sim1"
+}
+2026-01-14 17:18:37 {
+  "from":"SMART",
+  "text":" Need load urgently? Borrow up to 1GB with LOAN-A-LOAD. Dial *5623# to get started!",
+  "sentStamp":1768407513000,
+  "receivedStamp":1768407515194,
+  "sim":"sim1"
+}
+2026-01-14 18:01:09 {
+  "from":"123456789",
+  "text":"test message",
+  "sentStamp":1768410066982,
+  "receivedStamp":1768410066983,
+  "sim":"sim1"
+}
+2026-01-14 18:03:24 {
+  "from":"+639928941069",
+  "text":"Yes 199759",
+  "sentStamp":1768410117000,
+  "receivedStamp":1768410119354,
+  "sim":"sim1"
+}
+2026-01-14 18:03:28 {
+  "from":"+639928941069",
+  "text":"Yes 199759",
+  "sentStamp":1768410117000,
+  "receivedStamp":1768410119354,
+  "sim":"sim1"
+}
+2026-01-14 18:06:57 {
+  "from":"+639928941069",
+  "text":"Yes 747804",
+  "sentStamp":1768410221000,
+  "receivedStamp":1768410221817,
+  "sim":"sim1"
+}
+2026-01-14 18:06:58 {
+  "from":"+639928941069",
+  "text":"Yes 747804",
+  "sentStamp":1768410221000,
+  "receivedStamp":1768410221817,
+  "sim":"sim1"
+}
+2026-01-14 18:07:03 {
+  "from":"+639928941069",
+  "text":"Yes 747804",
+  "sentStamp":1768410221000,
+  "receivedStamp":1768410221817,
+  "sim":"sim1"
+}
+2026-01-14 18:09:12 {
+  "from":"+639928941069",
+  "text":"Yes 747804",
+  "sentStamp":1768410221000,
+  "receivedStamp":1768410221817,
+  "sim":"sim1"
+}
+2026-01-14 18:12:26 {
+  "from":"+639928941069",
+  "text":"yes 304254",
+  "sentStamp":1768410744000,
+  "receivedStamp":1768410744681,
+  "sim":"sim1"
+}
+2026-01-14 18:16:22 {
+  "from":"+639928941069",
+  "text":"Yes 289812",
+  "sentStamp":1768410980000,
+  "receivedStamp":1768410980352,
+  "sim":"sim1"
+}
+2026-01-14 18:25:35 {
+  "from":"+639928941069",
+  "text":"yes 518674",
+  "sentStamp":1768411515000,
+  "receivedStamp":1768411516075,
+  "sim":"sim1"
+}
+2026-01-14 18:27:13 {
+  "from":"+639928941069",
+  "text":"no",
+  "sentStamp":1768411630000,
+  "receivedStamp":1768411631163,
+  "sim":"sim1"
+}
+2026-01-14 18:32:07 {
+  "from":"+639928941069",
+  "text":"No",
+  "sentStamp":1768411925000,
+  "receivedStamp":1768411925673,
+  "sim":"sim1"
+}
+2026-01-14 18:33:05 {
+  "from":"+639928941069",
+  "text":"yes 403065",
+  "sentStamp":1768411958000,
+  "receivedStamp":1768411958196,
+  "sim":"sim1"
+}
+2026-01-14 18:35:20 {
+  "from":"+639928941069",
+  "text":"No",
+  "sentStamp":1768412082000,
+  "receivedStamp":1768412083130,
+  "sim":"sim1"
+}
+2026-01-14 18:38:14 {
+  "from":"+639928941069",
+  "text":"No",
+  "sentStamp":1768412082000,
+  "receivedStamp":1768412083130,
+  "sim":"sim1"
+}
+2026-01-14 18:39:01 {
+  "from":"+639928941069",
+  "text":"No",
+  "sentStamp":1768412082000,
+  "receivedStamp":1768412083130,
+  "sim":"sim1"
+}
+2026-01-14 18:41:15 {
+  "from":"+639928941069",
+  "text":"No",
+  "sentStamp":1768412082000,
+  "receivedStamp":1768412083130,
+  "sim":"sim1"
+}
+2026-01-14 18:41:17 {
+  "from":"+639928941069",
+  "text":"No",
+  "sentStamp":1768412212000,
+  "receivedStamp":1768412212918,
+  "sim":"sim1"
+}
+2026-01-14 18:42:06 {
+  "from":"+639928941069",
+  "text":"no",
+  "sentStamp":1768412213000,
+  "receivedStamp":1768412213627,
+  "sim":"sim1"
+}
+2026-01-14 18:44:21 {
+  "from":"+639928941069",
+  "text":"no",
+  "sentStamp":1768412344000,
+  "receivedStamp":1768412344184,
+  "sim":"sim1"
+}
+2026-01-14 18:46:15 {
+  "from":"+639267084699",
+  "text":"no",
+  "sentStamp":1768412468000,
+  "receivedStamp":1768412468960,
+  "sim":"sim1"
+}
+2026-01-14 18:48:28 {
+  "from":"+639267084699",
+  "text":"no",
+  "sentStamp":1768412631000,
+  "receivedStamp":1768412631492,
+  "sim":"sim1"
+}
+2026-01-14 18:55:13 {
+  "from":"+639928941069",
+  "text":"No",
+  "sentStamp":1768412766000,
+  "receivedStamp":1768412765943,
+  "sim":"sim1"
+}
+2026-01-14 18:56:41 {
+  "from":"+639267084699",
+  "text":"no",
+  "sentStamp":1768412468000,
+  "receivedStamp":1768412468960,
+  "sim":"sim1"
+}
+2026-01-14 18:57:30 {
+  "from":"+639267084699",
+  "text":"No",
+  "sentStamp":1768412869000,
+  "receivedStamp":1768412869572,
+  "sim":"sim1"
+}
