@@ -218,24 +218,6 @@ if (session_status() === PHP_SESSION_NONE) session_start();
         </div>
     </section>
 
-    <!-- Packages -->
-    <!-- <section id="packages" class="my-5 pb-5 border" style="background-color:#EADCC6;">
-        <div class="text-center text-dark p-5">
-            <h2 class="fw-bold display-6 mb-2 mt-3 text-dark" style="font-family: 'Poppins', sans-serif;">
-                Packages
-            </h2>
-            <small class="text-muted">
-                Our catering packages are made to fit any celebration big or small, bringing great food and seamless
-                service to your special moments.
-            </small>
-        </div>
-
-        <div class="container">
-            <div class="row g-3 justify-content-center" id="packageRow">
-            </div>
-        </div>
-    </section> -->
-
 
     <!-- Food Menu -->
     <section id="category" class=" my-5 py-4">
@@ -453,47 +435,6 @@ if (session_status() === PHP_SESSION_NONE) session_start();
         </div>
     `;
         });
-
-
-        // Package Section
-        //     var packageRow = document.getElementById("packageRow");
-
-        //     packages.pkgCategories.forEach(pkgCategory => {
-        //         let link = "";
-        //         switch (pkgCategory.title.toLowerCase()) {
-        //             case "wedding":
-        //                 link = "wedding.php";
-        //                 break;
-        //             case "debut":
-        //                 link = "debut.php";
-        //                 break;
-        //             case "kids party":
-        //                 link = "children_party.php";
-        //                 break;
-        //             case "corporate events":
-        //                 link = "corporate.php";
-        //                 break;
-        //         }
-        //         packageRow.innerHTML += `
-        //     <div class="col-md-4 col-lg-3 col-10">
-        //                 <div class="card-pkg card border" style="height: 350px; overflow: hidden;">
-        //                     <img src="` + pkgCategory.img + `" class="card-img-top h-100"
-        //                         style="object-fit: cover;" alt="Wedding">
-        //                     <div class="card-img-overlay d-flex justify-content-start align-items-start p-2">
-        //                         <p class="fw-bold text-muted bg-light rounded-5 px-3 mb-0">` + pkgCategory.title + `</p>
-        //                     </div>
-        //                     <div
-        //                         class="card-img-overlay d-flex flex-column justify-content-end text-white text-start explore-text">
-        //                         <p class="small mb-2">` + pkgCategory.desc + `
-
-        //                         </p>
-        //                         <a href="` + link + `" class="btn btn-light btn-sm"
-        //                             style="z-index: 6; color: rgb(231, 87, 231);">View Package</a>
-        //                     </div>
-        //                 </div>
-        //             </div>
-        // `;
-        //     });
 
         // food menu 
         const categories = [{
