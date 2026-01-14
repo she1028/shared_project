@@ -1,5 +1,8 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+  session_name('client_session');
+  session_start();
+}
 $checkoutError = $_GET['error'] ?? '';
 // Avoid using stale selection if user returns to cart
 unset($_SESSION['checkout_cart']);

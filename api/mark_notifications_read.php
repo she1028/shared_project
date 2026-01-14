@@ -2,6 +2,7 @@
 include __DIR__ . '/../connect.php';
 
 if (session_status() === PHP_SESSION_NONE) {
+    session_name('client_session');
     session_start();
 }
 

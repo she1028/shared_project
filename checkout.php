@@ -1,5 +1,22 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_name('client_session');
+    session_start();
+}
+
+// Guests cannot checkout
+$isLoggedIn = !empty($_SESSION['userID']) || !empty($_SESSION['userId']) || !empty($_SESSION['user_id']);
+if (!$isLoggedIn) {
+    $currentUri = $_SERVER['REQUEST_URI'] ?? 'checkout.php';
+    header('Location: auth.php?next=' . urlencode($currentUri));
+    exit;
+}
+
+// Admin accounts should not use client checkout
+if (!empty($_SESSION['role']) && $_SESSION['role'] === 'admin') {
+    header('Location: admin/dashboard.php');
+    exit;
+}
 
 // If coming from cart.php, persist selected items + updated quantities for this checkout.
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -552,6 +569,8 @@ $cart = $_SESSION['checkout_cart'] ?? ($_SESSION['cart'] ?? []);
                 } else {
                     const friendly = trimmed === "error:empty_cart"
                         ? "Your cart is empty. Please add items before checking out."
+                        : trimmed === "error:not_logged_in"
+                            ? "Please sign in to checkout."
                         : trimmed;
 
                     checkoutError.textContent = friendly || "There was a problem processing your order. Please try again.";

@@ -40,9 +40,6 @@
             <span id="clearBtn" style="position: right; right:12px; cursor:pointer; font-size:18px; display:none;">&times;</span>
         </div>
         <i class="bi bi-search" id="searchBtn" style="font-size:23px; cursor:pointer;"></i>
-        <a href="cart.php" class="btn" style="text-decoration:none;">
-            <i class="bi bi-cart3" style="font-size:23px; cursor:pointer;"></i>
-        </a>
     </div>
 
     <div class="container text-center my-5">

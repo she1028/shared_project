@@ -1,7 +1,18 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_name('client_session');
+    session_start();
+}
 
 header('Content-Type: application/json');
+
+// Block guests from adding to cart
+$isLoggedIn = !empty($_SESSION['userID']) || !empty($_SESSION['userId']) || !empty($_SESSION['user_id']);
+if (!$isLoggedIn) {
+    http_response_code(401);
+    echo json_encode(['success' => false, 'message' => 'Please sign in to add items to cart.']);
+    exit;
+}
 
 $data = json_decode(file_get_contents('php://input'), true);
 

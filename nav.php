@@ -2,13 +2,8 @@
 // nav.php - navbar that shows Sign In when guest, user name + dropdown when logged in
 // Place this file in your project root (same path used by include("nav.php"))
 if (session_status() === PHP_SESSION_NONE) {
+    session_name('client_session');
     session_start();
-}
-
-// Prevent admin accounts from using client pages
-if (!empty($_SESSION['role']) && $_SESSION['role'] === 'admin') {
-    header('Location: admin/dashboard.php');
-    exit();
 }
 
 // Reliable logged-in detection: accept several session key names
@@ -84,7 +79,6 @@ $authUrl = 'auth.php?next=' . urlencode($currentUri);
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto align-items-lg-center">
                 <li class="nav-item"><a class="nav-link px-3 text-dark" href="index.php#home">Home</a></li>
-                <li class="nav-item"><a class="nav-link px-3 text-dark" href="index.php#packages">Packages</a></li>
                 <li class="nav-item"><a class="nav-link px-3 text-dark" href="index.php#menu">Menu</a></li>
                 <li class="nav-item"><a class="nav-link px-3 text-dark" href="index.php#rentals">Rentals</a></li>
                 <li class="nav-item"><a class="nav-link px-3 text-dark" href="index.php#contact">Contact</a></li>
@@ -115,12 +109,12 @@ $authUrl = 'auth.php?next=' . urlencode($currentUri);
                         <i class="bi bi-cart3" style="font-size:23px; cursor:pointer;"></i>
                     </a>
                 <?php else: ?>
-                    <li class="nav-item">
-                        <a class="nav-link sign-in-link px-3 text-dark border border-primary rounded-5" href="<?= $authUrl ?>">Sign In / Sign Up</a>
-                    </li>
                     <a href="cart.php" class="btn" style="text-decoration:none;">
                         <i class="bi bi-cart3" style="font-size:23px; cursor:pointer;"></i>
                     </a>
+                    <li class="nav-item">
+                        <a class="nav-link sign-in-link px-3 text-dark border border-primary rounded-5" href="<?= $authUrl ?>">Sign In / Sign Up</a>
+                    </li>
                 <?php endif; ?>
             </ul>
         </div>

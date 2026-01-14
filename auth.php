@@ -1,6 +1,9 @@
 <?php
 include("connect.php"); // $conn and executeQuery()
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_name('client_session');
+    session_start();
+}
 
 // Helper: sanitize and produce safe "next" redirect (internal only)
 function getSafeNext() {
@@ -52,8 +55,16 @@ if (isset($_POST['name'], $_POST['email'], $_POST['password'])) {
 
                 // Redirect to safe next or index
                 $safeNext = getSafeNext();
+                // Prevent normal users from being routed to /admin
                 if ($safeNext) {
-                     header("Location: {$safeNext}");
+                    $normalizedNext = ltrim($safeNext, '/');
+                    if (stripos($normalizedNext, 'admin/') === 0) {
+                        $safeNext = null;
+                    }
+                }
+
+                if ($safeNext) {
+                    header("Location: {$safeNext}");
                     exit();
                 } else {
                     header("Location: index.php");
@@ -87,21 +98,30 @@ if (isset($_POST['email'], $_POST['password']) && !isset($_POST['name'])) {
                 }
             }
 
-            // CONSISTENT SESSION KEYS
-            $_SESSION['userID']  = $dbUserId;
-            $_SESSION['userId']  = $dbUserId;
-            $_SESSION['user_id'] = $dbUserId;
-            $_SESSION['name']    = $user['name'] ?? '';
-            $_SESSION['role']    = $user['role'] ?? 'user';
-            $_SESSION['email']   = $user['email'] ?? '';
+            // Admin accounts must not sign in via client auth (use generic message)
+            if (($user['role'] ?? '') === 'admin') {
+                $signin_error = 'Invalid email';
+            } else {
+                // CONSISTENT SESSION KEYS
+                $_SESSION['userID']  = $dbUserId;
+                $_SESSION['userId']  = $dbUserId;
+                $_SESSION['user_id'] = $dbUserId;
+                $_SESSION['name']    = $user['name'] ?? '';
+                $_SESSION['role']    = $user['role'] ?? 'user';
+                $_SESSION['email']   = $user['email'] ?? '';
 
             // Determine safe next redirect
             $safeNext = getSafeNext();
 
-            // Redirect based on role
-            if (isset($user['role']) && $user['role'] === 'admin') {
-                header("Location: admin/dashboard.php");
-            } else {
+            // Prevent normal users from being routed to /admin
+            if ($safeNext) {
+                $normalizedNext = ltrim($safeNext, '/');
+                if (stripos($normalizedNext, 'admin/') === 0) {
+                    $safeNext = null;
+                }
+            }
+
+                // Redirect (client only)
                 if ($safeNext) {
                     header("Location: {$safeNext}");
                     exit();
@@ -110,7 +130,6 @@ if (isset($_POST['email'], $_POST['password']) && !isset($_POST['name'])) {
                     exit();
                 }
             }
-            exit();
         } else {
             $signin_error = "Incorrect password!";
         }

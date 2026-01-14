@@ -2,10 +2,20 @@
 // Persist checkout details posted from checkout.php and items stored in the PHP session cart.
 // The table names match the simple "orders" / "order_items" schema used by the existing checkout flow.
 
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_name('client_session');
+    session_start();
+}
 include "../connect.php"; // DB connection (one level up from /admin)
 
 header('Content-Type: text/plain; charset=utf-8');
+
+// Guests cannot place orders
+$isLoggedIn = !empty($_SESSION['userID']) || !empty($_SESSION['userId']) || !empty($_SESSION['user_id']);
+if (!$isLoggedIn) {
+    echo 'error:not_logged_in';
+    exit;
+}
 
 // Ensure tables exist to avoid conflicts when seeding against a fresh DB
 $conn->query("CREATE TABLE IF NOT EXISTS orders (

@@ -1,5 +1,8 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_name('client_session');
+    session_start();
+}
 
 // Unset all session variables
 $_SESSION = [];

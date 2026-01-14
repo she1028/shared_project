@@ -248,7 +248,7 @@
                 const instance = bootstrap.Modal.getInstance(modalEl);
                 if (instance) instance.hide();
             } else {
-                showToast('Error adding to cart', false); // replaced alert
+                showToast(data.message || 'Error adding to cart', false); // replaced alert
             }
         })
         .catch(() => showToast('Error adding to cart', false)); // replaced alert

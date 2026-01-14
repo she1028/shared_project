@@ -1,5 +1,8 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_name('client_session');
+    session_start();
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -188,7 +191,6 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                     <!-- <a href="" class="btn btn-outline-secondary rounded-5 px-3 py-1" style="text-decoration: none;">Book
                         Now</a> -->
                     <?php
-                    if (session_status() === PHP_SESSION_NONE) session_start();
                     $logged = !empty($_SESSION['userID']) || !empty($_SESSION['userId']) || !empty($_SESSION['user_id']);
                     ?>
                     <!-- ... -->
@@ -220,7 +222,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 
 
     <!-- Food Menu -->
-    <section id="category" class=" my-5 py-4">
+    <section id="menu" class=" my-5 py-4">
         <div class="container-fluid my-5 mb-5" style="position: relative;">
             <div class="row">
                 <div class="col-12">

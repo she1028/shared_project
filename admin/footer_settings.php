@@ -1,10 +1,13 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_name('admin_session');
+    session_start();
+}
 include("../connect.php");
 
 // Only admin
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-    header("Location: ../auth.php");
+    header("Location: ../adminsignin.php");
     exit();
 }
 
