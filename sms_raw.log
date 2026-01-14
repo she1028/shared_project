@@ -1,0 +1,28 @@
+2026-01-14 14:34:45 {
+  "from":"123456789",
+  "text":"test message",
+  "sentStamp":1768397683501,
+  "receivedStamp":1768397683501,
+  "sim":"sim1"
+}
+2026-01-14 14:34:48 {
+  "from":"123456789",
+  "text":"test message",
+  "sentStamp":1768397686470,
+  "receivedStamp":1768397686470,
+  "sim":"sim1"
+}
+2026-01-14 14:35:06 {
+  "from":"123456789",
+  "text":"test message",
+  "sentStamp":1768397704282,
+  "receivedStamp":1768397704283,
+  "sim":"sim1"
+}
+2026-01-14 14:36:58 {
+  "from":"+639928941069",
+  "text":"yes683237",
+  "sentStamp":1768397816000,
+  "receivedStamp":1768397816730,
+  "sim":"sim1"
+}
