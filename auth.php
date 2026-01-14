@@ -189,10 +189,11 @@ if (isset($_POST['email'], $_POST['password']) && !isset($_POST['name'])) {
                     <div class="position-relative"> <input type="password" id="signInPassword" class="form-control" placeholder="Enter password" name="password" required> <i class="bi bi-eye-slash password-toggle" data-target="signInPassword"></i> </div>
                 </div>
                 <div class="d-flex justify-content-between mb-4">
-                    <div class="form-check"> <input class="form-check-input border-dark" type="checkbox" id="rememberMe" name="rememberMe"> <label class="form-check-label" for="rememberMe">Remember me</label> </div> <a id="forgotPasswordLink" href="forgot_password.php" class="small">Forgot Password?</a>
+                     <a id="forgotPasswordLink" href="forgot_password.php" class="small">Forgot Password?</a>
                 </div> <button type="submit" class="btn btn-dark w-100 py-2 mb-3">Sign In</button>
                 <div class="d-flex align-items-center my-3">
-                    <hr class="flex-grow-1"> <span class="mx-2">Or</span>
+                    <hr class="flex-grow-1"> <span class="mx-2">Visit us on</span>
+                    
                     <hr class="flex-grow-1">
                 </div>
                 <div class="text-center"> <i class="bi bi-google fs-4 mx-3"></i> <i class="bi bi-facebook fs-4 mx-3"></i> <i class="bi bi-apple fs-4 mx-3"></i> </div>

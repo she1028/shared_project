@@ -359,6 +359,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 
 
+
     <!-- Contact Section -->
     <section id="contact">
         <div class="container-fluid py-5 mt-5" style="background-color: #EADCC6;">
@@ -370,13 +371,23 @@ if (session_status() === PHP_SESSION_NONE) {
                         and reliable service from start to finish.
                         We’re here to take care of the details so you can enjoy the moment.</p>
                     <div class="text-center mt-4">
-                        <a href="#" class="btn btn-light rounded-pill px-4" data-bs-toggle="modal"
-                            data-bs-target="#contactModal">
+                        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#contactModal">
                             Contact Us
-                        </a>
+                        </button>
             </div>
     </section>
+    <!-- Contact Modal -->
+<?php include("contact.php"); ?>
 
+    <!-- Contact Toast (match add-to-cart style) -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1080;">
+        <div id="contactToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="contactToastMessage">Message sent!</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
     <?php
         $isClientLoggedIn = (!empty($_SESSION['role']) && $_SESSION['role'] !== 'admin') && (!empty($_SESSION['userID']) || !empty($_SESSION['userId']) || !empty($_SESSION['user_id']));
     ?>
@@ -618,6 +629,44 @@ if (session_status() === PHP_SESSION_NONE) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
+
+    <script>
+        (function () {
+            const params = new URLSearchParams(window.location.search);
+            const status = params.get('contact');
+            if (!status || !window.bootstrap) return;
+
+            const toastEl = document.getElementById('contactToast');
+            const toastMsg = document.getElementById('contactToastMessage');
+            if (!toastEl || !toastMsg) return;
+
+            const success = status === 'sent';
+            const message = success
+                ? 'Message was sent successfully!'
+                : (status === 'invalid' ? 'Please check your contact form details.' : 'Sorry, we could not send your message right now. Please try again.');
+
+            toastMsg.textContent = message;
+            toastEl.classList.toggle('text-bg-success', success);
+            toastEl.classList.toggle('text-bg-danger', !success);
+
+            const toast = new bootstrap.Toast(toastEl, { delay: 2500 });
+            toast.show();
+
+            // If something went wrong, re-open the contact modal so the user can try again.
+            if (!success) {
+                const modalEl = document.getElementById('contactModal');
+                if (modalEl) {
+                    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                    modal.show();
+                }
+            }
+
+            // Clean URL so refresh doesn't re-show the toast.
+            params.delete('contact');
+            const next = window.location.pathname + (params.toString() ? ('?' + params.toString()) : '') + window.location.hash;
+            window.history.replaceState({}, document.title, next);
+        })();
+    </script>
 </body>
 
 </html>

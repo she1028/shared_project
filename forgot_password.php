@@ -76,11 +76,6 @@ if (!empty($_GET['email'])) {
 
       // prevent double submit
       form.addEventListener('submit', function() {
-                const emailInput = document.getElementById('email');
-                if (emailInput && emailInput.value) {
-                    const maxAge = 60 * 60; // 1 hour
-                    document.cookie = 'last_auth_email=' + encodeURIComponent(emailInput.value.trim()) + '; path=/; max-age=' + maxAge + '; samesite=lax';
-                }
         submitBtn.disabled = true;
       });
     </script>
