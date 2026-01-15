@@ -1,0 +1,19 @@
+{
+  "about": {
+    "business_type": "We are a full-service catering business providing food and event catering.",
+    "events": "We cater weddings, birthdays, corporate events, debuts, and private parties."
+  },
+  "ordering": {
+    "how_to_order": "You can place an order through phone, Facebook, or by visiting our website.",
+    "lead_time": "Orders should be placed at least 24 hours before the event.",
+    "payment": "We accept cash and Paypal payments."
+  },
+  "catering": {
+    "inclusions": "Catering packages include food, serving tables, warmers, utensils, and staff.",
+    "setup": "Setup and food preparation are handled by our catering team."
+  },
+  "policies": {
+    "cancellation": "Cancellations must be made at least 12 hours before the scheduled event.",
+    "changes": "Changes to orders must be communicated before food preparation starts."
+  }
+}
