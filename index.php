@@ -26,79 +26,6 @@ if (session_status() === PHP_SESSION_NONE) {
 
     <?php include("includes/chatbot.php"); ?>
 
-    <style>
-        /* Position landing notification button on bottom-right opposite chatbot */
-        .landing-notif-fab {
-            position: fixed;
-            bottom: 20px;
-            right: 1em;
-            /* adjust distance from chatbot */
-            background-color: #e83e8c;
-            color: white;
-            border-radius: 50%;
-            width: 55px;
-            height: 55px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            z-index: 1050;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-        }
-
-        .landing-notif-fab:hover {
-            /* background-color: #ffffff; */
-            transform: scale(1.1);
-        }
-
-        .landing-notif-panel {
-            position: fixed;
-            bottom: 85px;
-            /* above the button */
-            right: 90px;
-            width: 320px;
-            max-height: 400px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            padding: 15px;
-            display: none;
-            flex-direction: column;
-            z-index: 1050;
-            overflow: hidden;
-        }
-
-        .landing-notif-panel.open {
-            display: flex;
-        }
-
-        .landing-notif-panel .notif-item {
-            border-bottom: 1px solid #ddd;
-            padding: 5px 0;
-        }
-
-        .landing-notif-panel .status-pill.paid {
-            background-color: #28a745;
-            color: white;
-            padding: 2px 5px;
-            border-radius: 5px;
-        }
-
-        .landing-notif-panel .status-pill.shipped {
-            background-color: #ffc107;
-            color: white;
-            padding: 2px 5px;
-            border-radius: 5px;
-        }
-
-        .landing-notif-panel .status-pill.pending {
-            background-color: #6c757d;
-            color: white;
-            padding: 2px 5px;
-            border-radius: 5px;
-        }
-    </style>
-
     <script>
         const landingFab = document.getElementById('landingNotifFab');
         const landingPanel = document.getElementById('landingNotifPanel');
@@ -184,8 +111,8 @@ if (session_status() === PHP_SESSION_NONE) {
             <div class="row text-center">
                 <div class="col-12 z-5">
                     <div class=" display-1 fw-bold"
-                        style="margin-top: 2.3em; z-index: 3; color: white; font-family: 'Oranienbaum'; font-size: 90px;">
-                        CATERING</div>
+                        style="margin-top: 2.3em; z-index: 3; color: white; font-family: 'Poppins'; font-size: 100px;">
+                        YMZM</div>
                 </div>
                 <div class="col-12 mt-1">
                     <!-- <a href="" class="btn btn-outline-secondary rounded-5 px-3 py-1" style="text-decoration: none;">Book
@@ -195,7 +122,7 @@ if (session_status() === PHP_SESSION_NONE) {
                     ?>
                     <!-- ... -->
                     <?php if (!$logged): ?>
-                        <a href="auth.php?next=<?= urlencode('index.php') ?>" class="btn btn-outline-secondary rounded-5 px-3 py-1" style="text-decoration: none;">Book Now</a>
+                        <a href="auth.php?next=<?= urlencode('index.php') ?>" class="btn btn-outline-warning rounded-5 px-3 py-1" style="text-decoration: none;">Book Now</a>
                     <?php else: ?>
                         <!-- Book Now on homepage is intentionally hidden for logged in users -->
                     <?php endif; ?>
@@ -205,16 +132,13 @@ if (session_status() === PHP_SESSION_NONE) {
 
         <div class="container bg-light p-4 px-5 shadow rounded-4 text-home">
             <h3>About Us</h3>
-            <div class="home-text"> At YMZM Event Catering Services, we are dedicated to making every event
-                unforgettable. We offer a wide range of services,
-                including delicious food catering, stylish event rentals, and creative event design. Whether you need
-                individual services like tables, chairs,
-                and tableware, or a fully customized package from basic to premium, we tailor our offerings to meet your
-                unique needs.
+            <div class="home-text"> At YMZM Event Catering Services, we turn your events into unforgettable experiences 
+                through exceptional food and dependable event rentals. Our expertly crafted food menu is designed to delight every guest, 
+                while our high-quality rental items—such as tables, chairs, and tableware—ensure your event looks polished and well-organized.
 
-                Our team is committed to delivering smooth, stress-free, and high-quality experiences for gatherings of
-                any size. From intimate
-                celebrations to grand events, we focus on creating memorable moments that leave a lasting impression.
+                From intimate gatherings to large-scale celebrations, we take pride in delivering seamless service, 
+                attention to detail, and reliable support from start to finish. With YMZM, you can enjoy your special moments 
+                while we handle the essentials—making every event flavorful, stylish, and stress-free.
                 </p>
             </div>
         </div>
@@ -259,7 +183,9 @@ if (session_status() === PHP_SESSION_NONE) {
         <div class="container-fluid my-5 pb-5" style="background-color: #EADCC6;">
             <div class="row">
                 <div class="col-9 mx-auto text-center p-5">
-                    <h2 class="display-6 fw-bold mb-2 mt-3 text-dark">Rentals</h2>
+                    <div class="display-4 fw-bold home-text1 home-text text-center text-dark"
+                        style="font-family: Poppins;">
+                        Rentals </div>
                     <p class="text-muted">High-quality event rentals to complement your catering from tables and chairs
                         to décor and serving essentials, we provide
                         everything you need for a seamless celebration.</p>
@@ -270,7 +196,7 @@ if (session_status() === PHP_SESSION_NONE) {
                 </div>
                 <div class="row text-center d-flex justify-content-center">
                     <div class="col-md-4 col-10">
-                        <a href="rentals.php" class="index-menu-button rounded-5 px-5 py-2">View More</a>
+                        <a href="rentals.php" class="index-menu-button rounded-5 px-5 py-2 text-warning shadow">View More</a>
                     </div>
                 </div>
             </div>
@@ -283,16 +209,15 @@ if (session_status() === PHP_SESSION_NONE) {
         <div class="container text-start my-5">
             <h2 class="fw-bold mb-2 mt-3 px-3">How It Works</h2>
             <p class="mb-5 px-3">
-                Planning your event is simple with our step-by-step catering process—from selection to service.
+                Planning your event is easy with our simple step-by-step process—from selecting food and rentals to event-day service.
             </p>
             <div class="row justify-content-center gy-5">
                 <div class="col-12 col-sm-6 col-md-4 col-lg-2 d-flex justify-content-center">
                     <div
                         class="d-flex flex-column align-items-center justify-content-center border rounded-4 shadow p-3 hiw-card">
-                        <i class="bi bi-box-seam fs-1 mb-1"></i>
-                        <h5 class="fw-bold text-center pb-3">Choose a Package</h5>
-                        <p class="text-center">Explore our catering packages, menu options, and rental items that suit
-                            your event needs.</p>
+                        <i class="bi bi-list-ul fs-1 mb-1"></i>
+                        <h5 class="fw-bold text-center pb-3">Choose Food & Rentals</h5>
+                        <p class="text-center">Browse our food menu and select the rental items you need for your event.</p>
                     </div>
                 </div>
                 <div class="col-12 col-sm-6 col-md-4 col-lg-2 d-flex justify-content-center">
@@ -300,28 +225,23 @@ if (session_status() === PHP_SESSION_NONE) {
                         class="d-flex flex-column align-items-center justify-content-center border rounded-4 shadow p-3 hiw-card">
                         <i class="bi bi-pencil-square fs-1 mb-1"></i>
                         <h5 class="fw-bold text-center pb-3">Customize Your Order</h5>
-                        <p class="text-center">Personalize your menu, add equipment rentals, and share your event
-                            details with us.
-                        </p>
+                        <p class="text-center">Adjust quantities, add special requests, and provide your event details.</p>
                     </div>
                 </div>
                 <div class="col-12 col-sm-6 col-md-4 col-lg-2 d-flex justify-content-center">
                     <div
                         class="d-flex flex-column align-items-center justify-content-center border rounded-4 shadow p-3 hiw-card">
-                        <i class="bi bi-quote fs-1 mb-1"></i>
-                        <h5 class="fw-bold text-center pb-3">Request a Quote & Confirm</h5>
-                        <p class="text-center">Receive a detailed quotation and secure your booking with a reservation
-                            payment.</p>
+                        <i class="bi bi-receipt fs-1 mb-1"></i>
+                        <h5 class="fw-bold text-center pb-3">Request a Quote</h5>
+                        <p class="text-center">Receive a clear and detailed quotation based on your selected food and rentals.</p>
                     </div>
                 </div>
                 <div class="col-12 col-sm-6 col-md-4 col-lg-2 d-flex justify-content-center">
                     <div
                         class="d-flex flex-column align-items-center justify-content-center border rounded-4 shadow p-3 hiw-card">
-                        <i class="bi bi-check2-circle fs-1 mb-1"></i>
-                        <h5 class="fw-bold text-center pb-3">Catering Head Confirmation</h5>
-                        <p class="text-center">Our catering head carefully reviews and confirms all event details for
-                            accuracy.
-                        </p>
+                        <i class="bi bi-check2-circle fs-1 mb-1"></i>   
+                        <h5 class="fw-bold text-center pb-3">Order Confirmation</h5>
+                        <p class="text-center">Our team reviews and confirms your order to ensure everything is accurate.</p>
                     </div>
                 </div>
                 <div class="col-12 col-sm-6 col-md-4 col-lg-2 d-flex justify-content-center">
@@ -329,8 +249,7 @@ if (session_status() === PHP_SESSION_NONE) {
                         class="d-flex flex-column align-items-center justify-content-center border rounded-4 shadow p-3 hiw-card">
                         <i class="bi bi-truck fs-1 mb-1"></i>
                         <h5 class="fw-bold text-center pb-3">Event Day Service</h5>
-                        <p class="text-center">We handle the preparation, delivery, setup, service, and cleanup, so you
-                            can relax and enjoy your event.</p>
+                        <p class="text-center">We prepare, deliver, set up, and collect rentals so you can enjoy your event stress-free.</p>
                     </div>
                 </div>
             </div>
@@ -345,24 +264,20 @@ if (session_status() === PHP_SESSION_NONE) {
             <ul class="list-unstyled fs-5 text-start px-5">
                 <li class="mb-3"><i class="bi bi-check-circle-fill me-2"></i>Experienced and professional catering team
                 </li>
-                <li class="mb-3"><i class="bi bi-check-circle-fill me-2"></i>Customizable packages to fit your needs
+                <li class="mb-3"><i class="bi bi-check-circle-fill me-2"></i>Customizable food menu
                 </li>
                 <li class="mb-3"><i class="bi bi-check-circle-fill me-2"></i>High-quality ingredients and presentation
                 </li>
                 <li class="mb-3"><i class="bi bi-check-circle-fill me-2"></i>Reliable and timely service</li>
-                <li class="mb-3"><i class="bi bi-check-circle-fill me-2"></i>Comprehensive rental options for all event
-                    needs</li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill me-2"></i>Comprehensive rental options</li>
             </ul>
         </div>
     </section>
 
 
-
-
-
     <!-- Contact Section -->
     <section id="contact">
-        <div class="container-fluid py-5 mt-5" style="background-color: #EADCC6;">
+        <div class="container-fluid py-5 mt-5">
             <div class="display-5 fw-semibold text-center text-dark pb-2">Make Your Event Hassle-Free</div>
             <div class="row d-flex justify-content-center">
                 <div class="col-md-10 text-center text-dark">
@@ -371,7 +286,7 @@ if (session_status() === PHP_SESSION_NONE) {
                         and reliable service from start to finish.
                         We’re here to take care of the details so you can enjoy the moment.</p>
                     <div class="text-center mt-4">
-                        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#contactModal">
+                        <button type="button" class=" index-menu-button btn-light rounded-pill px-5 py-2 shadow text-warning fw-bold" data-bs-toggle="modal" data-bs-target="#contactModal">
                             Contact Us
                         </button>
             </div>
@@ -409,8 +324,6 @@ if (session_status() === PHP_SESSION_NONE) {
         </div>
     <?php endif; ?>
 
-
-    <!-- Footer -->
         <!-- Footer -->
     <?php include("footer.php"); ?>
 
@@ -438,7 +351,7 @@ if (session_status() === PHP_SESSION_NONE) {
             rentalsRow.innerHTML += `
         <div class="col-md-4 col-lg-3 col-10 mb-3">
             <a href="rentals.php#` + hashTarget + `" class="text-decoration-none" style="display:block;">
-                <div class="card border rental-card" style="height: 260px; overflow: hidden;">
+                <div class="card border rental-card rounded-4" style="height: 260px; overflow: hidden;">
                     <img src="` + rntCategory.img + `" class="card-img-center" alt="` + title + `" style="height: 100%; object-fit: cover;">
                     <div class="card-img-overlay d-flex justify-content-center align-items-center p-2">
                         <p class="fs-5 rounded-5 px-2 m-0 text-white">` + title + `</p>

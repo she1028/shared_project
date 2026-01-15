@@ -108,7 +108,7 @@
                 <img src="${item.image}" class="card-img-top" style="height:200px; object-fit:cover;">
                 <div class="card-body text-start">
                     <h5 class="card-title">${item.name}</h5>
-                    <p class="card-text">$ ${item.price.toFixed(2)}</p>
+                    <p class="card-text">₱ ${item.price.toFixed(2)}</p>
                 </div>
             </div>
         </div>

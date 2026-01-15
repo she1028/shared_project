@@ -34,7 +34,7 @@
 }
 
 .rental-card img {
-    filter: brightness(40%);
+    filter: brightness(65%);
     transition: filter 0.3s ease, transform 0.3s ease;
 }
 
@@ -47,37 +47,6 @@
     filter: brightness(100%);
 }
 
-.card-pkg {
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.card-pkg:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    z-index: 2;
-}
-
-.card-pkg .explore-text {
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
-    transform: translateY(20%);
-    opacity: 0;
-    transition: transform 0.4s ease, opacity 0.4s ease;
-    padding: 1rem;
-}
-
-.card-pkg:hover .explore-text {
-    transform: translateY(0);
-    opacity: 1;
-}
-
-.comment-img {
-    width: 150px;
-    height: 100px;
-    object-fit: cover;
-    object-position: top;
-}
 
 .text-home {
     position: relative;
@@ -280,3 +249,75 @@
     color: #6c757d;
     padding: 20px 10px;
 }
+
+        /* Position landing notification button on bottom-right opposite chatbot */
+        .landing-notif-fab {
+            position: fixed;
+            bottom: 20px;
+            right: 1em;
+            /* adjust distance from chatbot */
+            background-color: #e83e8c;
+            color: white;
+            border-radius: 50%;
+            width: 55px;
+            height: 55px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1050;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .landing-notif-fab:hover {
+            /* background-color: #ffffff; */
+            transform: scale(1.1);
+        }
+
+        .landing-notif-panel {
+            position: fixed;
+            bottom: 85px;
+            /* above the button */
+            right: 90px;
+            width: 320px;
+            max-height: 400px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            display: none;
+            flex-direction: column;
+            z-index: 1050;
+            overflow: hidden;
+        }
+
+        .landing-notif-panel.open {
+            display: flex;
+        }
+
+        .landing-notif-panel .notif-item {
+            border-bottom: 1px solid #ddd;
+            padding: 5px 0;
+        }
+
+        .landing-notif-panel .status-pill.paid {
+            background-color: #28a745;
+            color: white;
+            padding: 2px 5px;
+            border-radius: 5px;
+        }
+
+        .landing-notif-panel .status-pill.shipped {
+            background-color: #ffc107;
+            color: white;
+            padding: 2px 5px;
+            border-radius: 5px;
+        }
+
+        .landing-notif-panel .status-pill.pending {
+            background-color: #6c757d;
+            color: white;
+            padding: 2px 5px;
+            border-radius: 5px;
+        }
+   

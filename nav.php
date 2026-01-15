@@ -99,9 +99,6 @@ $authUrl = 'auth.php?next=' . urlencode($currentUri);
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="profile.php">My Profile</a></li>
-                            <li><a class="dropdown-item" href="cart.php">Cart</a></li>
-                            <li><a class="dropdown-item" href="event_form.php">Book Event</a></li>
                             <li><a class="dropdown-item" href="logout.php">Logout</a></li>
                         </ul>
                     </li>
@@ -113,7 +110,7 @@ $authUrl = 'auth.php?next=' . urlencode($currentUri);
                         <i class="bi bi-cart3" style="font-size:23px; cursor:pointer;"></i>
                     </a>
                     <li class="nav-item">
-                        <a class="nav-link sign-in-link px-3 text-dark border border-primary rounded-5" href="<?= $authUrl ?>">Sign In / Sign Up</a>
+                        <a class="nav-link sign-in-link px-3 text-dark border border-primary rounded-5" href="<?= $authUrl ?>">Sign In</a>
                     </li>
                 <?php endif; ?>
             </ul>

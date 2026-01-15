@@ -81,7 +81,7 @@ if (basename($_SERVER['SCRIPT_NAME'] ?? '') === 'cardmodal.php') {
                         <div class="d-flex align-items-center justify-content-center m-2">
                             <span id="modalFoodCategory"
                                 class="rounded-5 text-center py-1 px-3"
-                                style="background-color: #c6c6c6cc; font-size: 13px;">
+                                style="background-color: #ffffffcc; font-size: 13px;">
                             </span>
                         </div>
                         <div class="row mt-2">
