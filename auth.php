@@ -192,8 +192,28 @@ if (isset($_POST['email'], $_POST['password']) && !isset($_POST['name'])) {
                      <a id="forgotPasswordLink" href="forgot_password.php" class="small">Forgot Password?</a>
                 </div> <button type="submit" class="btn btn-dark w-100 py-2 mb-3">Sign In</button>
                 <div class="d-flex align-items-center my-3">
+                    <hr class="flex-grow-1"> <span class="mx-2">or</span>
+                    <hr class="flex-grow-1">
+                </div>
+                
+                <!-- Bake & Take Login Button -->
+                <button type="button" id="bakeAndTakeLoginBtn" class="btn btn-outline-light w-100 py-2 mb-3 d-flex align-items-center justify-content-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+                    </svg>
+                    Login with Bake & Take
+                </button>
+                
+                <div id="bakeAndTakeError" class="alert alert-danger text-dark d-none"></div>
+                <div id="bakeAndTakeLoading" class="text-center d-none">
+                    <div class="spinner-border spinner-border-sm text-light" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <span class="ms-2">Authenticating with Bake & Take...</span>
+                </div>
+                
+                <div class="d-flex align-items-center my-3">
                     <hr class="flex-grow-1"> <span class="mx-2">Visit us on</span>
-                    
                     <hr class="flex-grow-1">
                 </div>
                 <div class="text-center"> <i class="bi bi-google fs-4 mx-3"></i> <i class="bi bi-facebook fs-4 mx-3"></i> <i class="bi bi-apple fs-4 mx-3"></i> </div>
@@ -425,6 +445,63 @@ if (isset($_POST['email'], $_POST['password']) && !isset($_POST['name'])) {
         termsCheck.addEventListener("change", function() {
             if (termsCheck.checked) {
                 termsNotice.classList.add("d-none");
+            }
+        });
+
+        // ==================== BAKE & TAKE LOGIN ====================
+        const bakeAndTakeLoginBtn = document.getElementById('bakeAndTakeLoginBtn');
+        const bakeAndTakeError = document.getElementById('bakeAndTakeError');
+        const bakeAndTakeLoading = document.getElementById('bakeAndTakeLoading');
+
+        bakeAndTakeLoginBtn.addEventListener('click', async function() {
+            const email = document.getElementById('signInEmail').value.trim();
+            const password = document.getElementById('signInPassword').value;
+
+            // Validate inputs
+            if (!email || !password) {
+                bakeAndTakeError.textContent = 'Please enter your Bake & Take email and password.';
+                bakeAndTakeError.classList.remove('d-none');
+                return;
+            }
+
+            // Hide previous errors and show loading
+            bakeAndTakeError.classList.add('d-none');
+            bakeAndTakeLoading.classList.remove('d-none');
+            bakeAndTakeLoginBtn.disabled = true;
+
+            try {
+                const response = await fetch('api/bakeandtake_login.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.status === 'success') {
+                    // Get the redirect URL from query params or use default
+                    const urlParams = new URLSearchParams(window.location.search);
+                    let redirectUrl = urlParams.get('next') || data.redirect || 'index.php';
+                    
+                    // Security: prevent redirect to admin paths for normal users
+                    if (redirectUrl.toLowerCase().includes('admin/')) {
+                        redirectUrl = 'index.php';
+                    }
+                    
+                    window.location.href = redirectUrl;
+                } else {
+                    bakeAndTakeError.textContent = data.message || 'Login failed. Please check your credentials.';
+                    bakeAndTakeError.classList.remove('d-none');
+                }
+            } catch (error) {
+                console.error('Bake & Take login error:', error);
+                bakeAndTakeError.textContent = 'Unable to connect to Bake & Take. Please try again later.';
+                bakeAndTakeError.classList.remove('d-none');
+            } finally {
+                bakeAndTakeLoading.classList.add('d-none');
+                bakeAndTakeLoginBtn.disabled = false;
             }
         });
     </script>
