@@ -155,7 +155,6 @@
 }
 
 .foodImg:hover {
-    filter: none;
     transform: scale(1.1);
 }
 
@@ -201,6 +200,12 @@
     cursor: pointer;
     z-index: 1100;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.notif-fab .notif-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .notif-fab:hover {
@@ -274,6 +279,31 @@
 .status-pill.pending { background: #ffc107; color: #000; }
 .status-pill.paid { background: #28a745; }
 .status-pill.shipped { background: #0dcaf0; color: #000; }
+
+/* Notification panel controls */
+.notif-icon-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    transition: transform 0.12s ease;
+    padding: 0;
+    font-size: 22px;
+}
+
+.notif-icon-btn:hover {
+    transform: translateY(-1px);
+}
+
+.notif-icon-btn:active {
+    transform: translateY(1px);
+}
 
 .notif-empty {
     text-align: center;

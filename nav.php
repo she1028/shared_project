@@ -136,9 +136,6 @@ $authUrl = 'auth.php?next=' . urlencode($currentUri);
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="profile.php">My Profile</a></li>
-                            <li><a class="dropdown-item" href="cart.php">Cart</a></li>
-                            <li><a class="dropdown-item" href="event_form.php">Book Event</a></li>
                             <li><a class="dropdown-item" href="logout.php">Logout</a></li>
                         </ul>
                     </li>

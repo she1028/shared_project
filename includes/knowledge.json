@@ -1,4 +1,7 @@
 {
+   "greetings": {
+    "hello": "Hello! How can I assist you today?"
+  },
   "about": {
     "business_type": "We are a full-service catering business providing food and event catering.",
     "events": "We cater weddings, birthdays, corporate events, debuts, and private parties."
