@@ -243,3 +243,115 @@
   "receivedStamp":1768412869572,
   "sim":"sim1"
 }
+2026-01-14 19:29:08 {
+  "from":"123456789",
+  "text":"test message",
+  "sentStamp":1768415346767,
+  "receivedStamp":1768415346767,
+  "sim":"sim1"
+}
+2026-01-14 19:33:14 {
+  "from":"+639928941069",
+  "text":"Yes 757693",
+  "sentStamp":1768415593000,
+  "receivedStamp":1768415593347,
+  "sim":"sim1"
+}
+2026-01-14 19:39:55 {
+  "from":"+639928941069",
+  "text":"yes 213643",
+  "sentStamp":1768415993000,
+  "receivedStamp":1768415994217,
+  "sim":"sim1"
+}
+2026-01-14 20:02:43 {
+  "from":"SMART",
+  "text":"Your Trinet Mins has expired.                                                                                                                                  ",
+  "sentStamp":1768417361000,
+  "receivedStamp":1768417361533,
+  "sim":"sim1"
+}
+2026-01-14 20:02:43 {
+  "from":"SMART",
+  "text":"Your Sakto Data subscription has expired.                                                                                                                      ",
+  "sentStamp":1768417361000,
+  "receivedStamp":1768417361937,
+  "sim":"sim1"
+}
+2026-01-14 20:02:45 {
+  "from":"SMART",
+  "text":" Need load urgently? Borrow up to 1GB with LOAN-A-LOAD. Dial *5623# to get started!",
+  "sentStamp":1768417361000,
+  "receivedStamp":1768417363366,
+  "sim":"sim1"
+}
+2026-01-14 20:09:55 {
+  "from":"+639928941069",
+  "text":"Yes497166",
+  "sentStamp":1768417793000,
+  "receivedStamp":1768417794357,
+  "sim":"sim1"
+}
+2026-01-14 20:25:29 {
+  "from":"+639928941069",
+  "text":"Yes 662561",
+  "sentStamp":1768418727000,
+  "receivedStamp":1768418727782,
+  "sim":"sim1"
+}
+2026-01-14 20:39:59 {
+  "from":"+639928941069",
+  "text":"Yes 421828",
+  "sentStamp":1768419598000,
+  "receivedStamp":1768419598013,
+  "sim":"sim1"
+}
+2026-01-14 21:03:48 {
+  "from":"+639928941069",
+  "text":"Yes 616317",
+  "sentStamp":1768421026000,
+  "receivedStamp":1768421027133,
+  "sim":"sim1"
+}
+2026-01-14 21:22:39 {
+  "from":"+639928941069",
+  "text":"Yes 559008",
+  "sentStamp":1768421930000,
+  "receivedStamp":1768421931130,
+  "sim":"sim1"
+}
+2026-01-14 21:22:39 {
+  "from":"+639928941069",
+  "text":"Yes 587568",
+  "sentStamp":1768421968000,
+  "receivedStamp":1768421968470,
+  "sim":"sim1"
+}
+2026-01-14 22:04:58 {
+  "from":"+639928941069",
+  "text":"Yes 687765",
+  "sentStamp":1768424594000,
+  "receivedStamp":1768424595783,
+  "sim":"sim1"
+}
+2026-01-14 22:07:14 {
+  "from":"+639928941069",
+  "text":"yes494276",
+  "sentStamp":1768424657000,
+  "receivedStamp":1768424657830,
+  "sim":"sim1"
+}
+2026-01-14 22:07:14 {
+  "from":"+639928941069",
+  "text":"YES 184517",
+  "sentStamp":1768424731000,
+  "receivedStamp":1768424731316,
+  "sim":"sim1"
+}
+2026-01-14 22:26:26 {
+  "from":"+639928941069",
+  "text":"Yes 110036",
+  "sentStamp":1768425899000,
+  "receivedStamp":1768425900749,
+  "sim":"sim1"
+}

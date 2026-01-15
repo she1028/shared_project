@@ -54,6 +54,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $_SESSION['cart'] = $cartAll;
     $_SESSION['checkout_cart'] = $checkoutCart;
+
+    // Persist selected event date (date-only)
+    $eventDate = trim((string)($_POST['event_date'] ?? ''));
+    if ($eventDate !== '' && preg_match('/^\d{4}-\d{2}-\d{2}$/', $eventDate)) {
+        $minDate = date('Y-m-d', strtotime('+3 days'));
+        if ($eventDate < $minDate) {
+            unset($_SESSION['checkout_event_date']);
+            $_SESSION['cart'] = $cartAll;
+            header('Location: cart.php?error=date');
+            exit;
+        }
+        $_SESSION['checkout_event_date'] = $eventDate;
+    } else {
+        unset($_SESSION['checkout_event_date']);
+        $_SESSION['cart'] = $cartAll;
+        header('Location: cart.php?error=date');
+        exit;
+    }
+
+    // Persist delivery time (time-only)
+    $deliveryTime = trim((string)($_POST['delivery_time'] ?? ''));
+    if ($deliveryTime !== '' && preg_match('/^\d{2}:\d{2}$/', $deliveryTime)) {
+        // Basic availability window (08:00–18:00)
+        if ($deliveryTime < '08:00' || $deliveryTime > '18:00') {
+            unset($_SESSION['checkout_delivery_time']);
+            $_SESSION['cart'] = $cartAll;
+            header('Location: cart.php?error=time');
+            exit;
+        }
+        $_SESSION['checkout_delivery_time'] = $deliveryTime;
+    } else {
+        unset($_SESSION['checkout_delivery_time']);
+        $_SESSION['cart'] = $cartAll;
+        header('Location: cart.php?error=time');
+        exit;
+    }
     
     // Clear old SMS booking session to ensure each checkout gets a fresh booking reference
     unset($_SESSION['sms_booking_ref'], $_SESSION['sms_phone'], $_SESSION['sms_confirmed'], $_SESSION['sms_confirmed_at']);

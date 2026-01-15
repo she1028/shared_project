@@ -11,6 +11,14 @@ $isLoggedIn = !empty($_SESSION['userID']) || !empty($_SESSION['userId']) || !emp
 $userName = $_SESSION['name'] ?? ($_SESSION['username'] ?? '');
 $userEmail = $_SESSION['email'] ?? '';
 
+$cartCount = 0;
+$cart = $_SESSION['cart'] ?? [];
+if (is_array($cart)) {
+    foreach ($cart as $it) {
+        $cartCount += (int)($it['qty'] ?? 1);
+    }
+}
+
 $currentUri = htmlspecialchars($_SERVER['REQUEST_URI'] ?? 'index.php', ENT_QUOTES, 'UTF-8');
 $authUrl = 'auth.php?next=' . urlencode($currentUri);
 ?>
@@ -66,6 +74,35 @@ $authUrl = 'auth.php?next=' . urlencode($currentUri);
         transform: translateY(-1px);
         box-shadow: 0 8px 18px rgba(62, 39, 35, 0.28);
     }
+
+    .cart-icon {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 9999px;
+    }
+
+    .cart-badge {
+        position: absolute;
+        top: 3px;
+        right: 3px;
+        min-width: 18px;
+        height: 18px;
+        padding: 0 5px;
+        border-radius: 9999px;
+        background: #dc3545;
+        color: #fff;
+        font-size: 12px;
+        line-height: 18px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #f8f9fa;
+    }
 </style>
 
 <nav class="navbar navbar-expand-lg bg-light navbar-light fixed-top shadow-sm mt-3 rounded-4 mx-4">
@@ -105,12 +142,14 @@ $authUrl = 'auth.php?next=' . urlencode($currentUri);
                             <li><a class="dropdown-item" href="logout.php">Logout</a></li>
                         </ul>
                     </li>
-                    <a href="cart.php" class="btn" style="text-decoration:none;">
+                    <a href="cart.php" class="btn cart-icon" style="text-decoration:none;">
                         <i class="bi bi-cart3" style="font-size:23px; cursor:pointer;"></i>
+                        <span class="cart-badge" data-cart-badge="1" style="<?= $cartCount > 0 ? '' : 'display:none;' ?>"><?= (int)$cartCount ?></span>
                     </a>
                 <?php else: ?>
-                    <a href="cart.php" class="btn" style="text-decoration:none;">
+                    <a href="cart.php" class="btn cart-icon" style="text-decoration:none;">
                         <i class="bi bi-cart3" style="font-size:23px; cursor:pointer;"></i>
+                        <span class="cart-badge" data-cart-badge="1" style="<?= $cartCount > 0 ? '' : 'display:none;' ?>"><?= (int)$cartCount ?></span>
                     </a>
                     <li class="nav-item">
                         <a class="nav-link sign-in-link px-3 text-dark border border-primary rounded-5" href="<?= $authUrl ?>">Sign In / Sign Up</a>
@@ -120,3 +159,29 @@ $authUrl = 'auth.php?next=' . urlencode($currentUri);
         </div>
     </div>
 </nav>
+
+<script>
+(() => {
+    function setCartCount(count) {
+        const n = Number(count);
+        const safe = Number.isFinite(n) && n > 0 ? Math.floor(n) : 0;
+        document.querySelectorAll('[data-cart-badge="1"]').forEach((el) => {
+            el.textContent = safe;
+            el.style.display = safe > 0 ? 'inline-flex' : 'none';
+        });
+    }
+
+    async function updateCartCount() {
+        try {
+            const res = await fetch('api/get_cart_count.php', { credentials: 'same-origin' });
+            const data = await res.json();
+            if (data && data.success) setCartCount(data.cart_count);
+        } catch (e) {
+            // ignore
+        }
+    }
+
+    window.setCartCount = setCartCount;
+    window.updateCartCount = updateCartCount;
+})();
+</script>

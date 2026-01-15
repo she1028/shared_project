@@ -10,16 +10,22 @@ unset($_SESSION['checkout_cart']);
 $cart = $_SESSION['cart'] ?? [];
 $shipping = 120;
 $subtotal = 0;
+$totalItemCount = 0;
+$minEventDate = date('Y-m-d', strtotime('+3 days'));
+$savedDeliveryTime = (string)($_SESSION['checkout_delivery_time'] ?? '');
 
 // Calculate subtotal (default: all items selected)
 foreach ($cart as $item) {
   $qty = isset($item['qty']) ? (int)$item['qty'] : 1;
   $price = isset($item['price']) ? (float)$item['price'] : 0.0;
   $subtotal += $price * $qty;
+  $totalItemCount += $qty;
 }
 
 $total = !empty($cart) ? ($subtotal + $shipping) : 0;
+
 ?>
+
 
 <!doctype html>
 <html lang="en">
@@ -34,117 +40,131 @@ $total = !empty($cart) ? ($subtotal + $shipping) : 0;
 <body class="bg-light">
   <div class="container py-4">
     <div class="m-2">
-      <span class="d-inline-flex align-items-center back-action g-2" onclick="history.back()">
+      <a class="d-inline-flex align-items-center back-action g-2" href="index.php">
         <i class="material-icons">&#xe5c4;</i>
         <span>back</span>
-      </span>
+      </a>
     </div>
 
-    <h3 class="text-center fw-bold my-3">SHOPPING CART</h3>
+    <h3 class="text-center fw-bold my-3">SHOPPING CART</h3> 
 
     <?php if ($checkoutError === 'select'): ?>
       <div class="alert alert-warning" role="alert">
         Please select at least one item to checkout.
       </div>
+    <?php elseif ($checkoutError === 'date'): ?>
+      <div class="alert alert-warning" role="alert">  
+        Please select a date at least 3 days in advance.
+      </div>
+    <?php elseif ($checkoutError === 'time'): ?>
+      <div class="alert alert-warning" role="alert">
+        Please select a valid delivery time.
+      </div>
     <?php endif; ?>
 
-    <div id="cartList" class="cart-card shadow-sm p-3">
-      <h6 class="fw-bold mb-3">CART ITEMS</h6>
-
-      <?php if (!empty($cart)): ?>
-        <?php foreach ($cart as $index => $item):
-            $qty = isset($item['qty']) ? (int)$item['qty'] : 1;
-            $price = isset($item['price']) ? (float)$item['price'] : 0.0;
-            $itemTotal = $price * $qty;
-            $img = $item['image'] ?? '';
-            $maxQtyAttr = '';
-            if (($item['type'] ?? '') === 'rental' && isset($item['color_stock']) && $item['color_stock'] !== null && (int)$item['color_stock'] > 0) {
-              $maxQtyAttr = ' max="' . (int)$item['color_stock'] . '"';
-            }
-        ?>
-          <div class="d-flex mb-3 align-items-center cart-item" data-index="<?= (int)$index ?>" data-price="<?= htmlspecialchars((string)$price) ?>">
-            <div class="me-2 d-flex align-items-center" style="min-width: 18px;">
-              <input class="form-check-input cart-select m-0" type="checkbox" name="selected[]" value="<?= (int)$index ?>" form="checkoutCartForm" checked>
-            </div>
-
-            <?php if (!empty($img)): ?>
-              <img src="<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($item['name']) ?>" style="width:54px; height:54px; object-fit:cover; border-radius:8px;" class="me-2">
-            <?php else: ?>
-              <div class="me-2" style="width:54px; height:54px; border-radius:8px; background:#f1f1f1;"></div>
-            <?php endif; ?>
-
-            <div class="flex-grow-1">
-              <div class="fw-semibold"><?= htmlspecialchars($item['name']) ?></div>
-              <?php if (!empty($item['color_name'])): ?>
-                <div class="text-muted small">Color: <?= htmlspecialchars($item['color_name']) ?></div>
-              <?php endif; ?>
-              <div class="text-muted small">₱<?= number_format($price, 2) ?> each</div>
-            </div>
-
-            <div class="d-flex align-items-center gap-2 cart-actions">
-              <div class="input-group input-group-sm" style="width: 120px;">
-                <button class="btn btn-outline-secondary qty-minus" type="button">-</button>
-                <input type="number" class="form-control text-center cart-qty" name="qty[<?= (int)$index ?>]" form="checkoutCartForm" value="<?= (int)$qty ?>" min="1" step="1"<?= $maxQtyAttr ?>>
-                <button class="btn btn-outline-secondary qty-plus" type="button">+</button>
-              </div>
-              <div class="text-nowrap">₱<span class="item-total"><?= number_format($itemTotal, 2) ?></span></div>
-
-              <!-- REMOVE BUTTON (keep separate form) -->
-              <form method="post" class="ms-1" action="removefromcart.php">
-                <input type="hidden" name="id" value="<?= htmlspecialchars((string)($item['id'] ?? '')) ?>">
-                <input type="hidden" name="color_id" value="<?= isset($item['color_id']) ? htmlspecialchars((string)$item['color_id']) : '' ?>">
-                <input type="hidden" name="color_name" value="<?= isset($item['color_name']) ? htmlspecialchars((string)$item['color_name']) : '' ?>">
-                <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
-              </form>
-            </div>
+    <div class="row g-3 align-items-start">
+      <div class="col-lg-8">
+        <div id="cartList" class="cart-card shadow-sm p-3">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="fw-bold m-0">Cart</h6>
+            <div class="text-muted small">Items: <?= (int)$totalItemCount ?></div>
           </div>
-        <?php endforeach; ?>
-      <?php else: ?>
-        <p class="text-center text-muted">Your cart is empty.</p>
-      <?php endif; ?>
 
-      <hr>
+          <?php if (!empty($cart)): ?>
+            <?php foreach ($cart as $index => $item):
+                $qty = isset($item['qty']) ? (int)$item['qty'] : 1;
+                $price = isset($item['price']) ? (float)$item['price'] : 0.0;
+                $itemTotal = $price * $qty;
+                $img = $item['image'] ?? '';
+                $maxQtyAttr = '';
+                if (($item['type'] ?? '') === 'rental' && isset($item['color_stock']) && $item['color_stock'] !== null && (int)$item['color_stock'] > 0) {
+                  $maxQtyAttr = ' max="' . (int)$item['color_stock'] . '"';
+                }
+            ?>
+              <div class="d-flex mb-3 align-items-center cart-item" data-index="<?= (int)$index ?>" data-price="<?= htmlspecialchars((string)$price) ?>">
+                <div class="me-2 d-flex align-items-center" style="min-width: 18px;">
+                  <input class="form-check-input cart-select m-0" type="checkbox" name="selected[]" value="<?= (int)$index ?>" form="checkoutCartForm" checked>
+                </div>
 
-      <div class="d-flex justify-content-between">
-        <span>Subtotal</span>
-        <span id="subtotalValue">₱<?= number_format($subtotal, 2) ?></span>
+                <?php if (!empty($img)): ?>
+                  <img src="<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($item['name']) ?>" style="width:64px; height:64px; object-fit:cover; border-radius:10px;" class="me-3">
+                <?php else: ?>
+                  <div class="me-3" style="width:64px; height:64px; border-radius:10px; background:#f1f1f1;"></div>
+                <?php endif; ?>
+
+                <div class="flex-grow-1">
+                  <div class="fw-semibold"><?= htmlspecialchars($item['name']) ?></div>
+                  <?php if (!empty($item['color_name'])): ?>
+                    <div class="text-muted small">Color: <?= htmlspecialchars($item['color_name']) ?></div>
+                  <?php endif; ?>
+                  <div class="text-muted small">₱<?= number_format($price, 2) ?> each</div>
+                </div>
+
+                <div class="d-flex align-items-center gap-2 cart-actions">
+                  <div class="input-group input-group-sm" style="width: 124px;">
+                    <button class="btn btn-outline-secondary qty-minus" type="button">-</button>
+                    <input type="number" class="form-control text-center cart-qty" name="qty[<?= (int)$index ?>]" form="checkoutCartForm" value="<?= (int)$qty ?>" min="1" step="1"<?= $maxQtyAttr ?>>
+                    <button class="btn btn-outline-secondary qty-plus" type="button">+</button>
+                  </div>
+                  <div class="text-nowrap">₱<span class="item-total"><?= number_format($itemTotal, 2) ?></span></div>
+
+                  <form method="post" class="ms-1" action="removefromcart.php">
+                    <input type="hidden" name="id" value="<?= htmlspecialchars((string)($item['id'] ?? '')) ?>">
+                    <input type="hidden" name="color_id" value="<?= isset($item['color_id']) ? htmlspecialchars((string)$item['color_id']) : '' ?>">
+                    <input type="hidden" name="color_name" value="<?= isset($item['color_name']) ? htmlspecialchars((string)$item['color_name']) : '' ?>">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                  </form>
+                </div>
+              </div>
+            <?php endforeach; ?>
+          <?php else: ?>
+            <p class="text-center text-muted mb-0">Your cart is empty.</p>
+          <?php endif; ?>
+        </div>
       </div>
-      <div class="d-flex justify-content-between">
-        <span>Shipping</span>
-        <span id="shippingValue">₱<?= number_format(!empty($cart) ? $shipping : 0, 2) ?></span>
+
+      <div class="col-lg-4">
+        <div class="card p-3 shadow-sm cart-summary sticky-top" style="top: 90px;">
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
+            <h6 class="fw-bold m-0">Checkout Details</h6>
+            <div class="text-muted small">Select date & time</div>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label">Select Date</label>
+            <input type="date" class="form-control" name="event_date" form="checkoutCartForm" min="<?= htmlspecialchars($minEventDate) ?>" required>
+            <div class="form-text">Must be at least 3 days from today.</div>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label">Delivery Time</label>
+            <input type="time" class="form-control" id="deliveryTime" name="delivery_time" form="checkoutCartForm" value="<?= htmlspecialchars($savedDeliveryTime) ?>" min="08:00" max="18:00" step="900" required>
+            <div class="form-text" id="deliveryTimeHelp">Available (08:00 AM – 06:00 PM)</div>
+          </div>
+
+          <hr>
+
+          <div class="d-flex justify-content-between">
+            <span>Subtotal</span>
+            <span id="subtotalValue">₱<?= number_format($subtotal, 2) ?></span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span>Shipping</span>
+            <span id="shippingValue">₱<?= number_format(!empty($cart) ? $shipping : 0, 2) ?></span>
+          </div>
+
+          <hr>
+
+          <div class="d-flex justify-content-between fw-bold" style="font-size: 1.25rem;">
+            <span>Total</span>
+            <span id="summaryTotalValue">₱<?= number_format($total, 2) ?></span>
+          </div>
+
+          <form id="checkoutCartForm" action="smsbooking.php" method="post" class="mt-3">
+            <button type="submit" class="btn btn-dark w-100" id="checkoutBtn" <?= empty($cart) ? 'disabled' : '' ?>>Proceed to Checkout</button>
+          </form>
+        </div>
       </div>
-
-      <hr>
-
-      <div class="d-flex justify-content-between fw-bold">
-        <span>TOTAL</span>
-        <span id="totalValue">₱<?= number_format($total, 2) ?></span>
-      </div>
-    </div>
-
-    <div class="card p-3 mt-3 shadow-sm" style="max-width: 350px; margin-left: auto;">
-      <div class="mb-2">
-        <label class="form-label">Delivery Method</label>
-        <select class="form-select">
-          <option>Delivery</option>
-          <option>Pickup</option>
-        </select>
-      </div>
-
-      <div class="mb-2">
-        <label class="form-label">Select Date & Time</label>
-        <input type="datetime-local" class="form-control">
-      </div>
-
-      <div class="d-flex justify-content-between mt-3" style="font-size: 2rem; font-weight: bold;">
-        <span>Total:</span>
-        <span id="summaryTotalValue">₱<?= number_format($total, 2) ?></span>
-      </div>
-
-      <p class="text-muted small mb-2">Taxes and shipping calculated at checkout</p>
-      <form id="checkoutCartForm" action="smsbooking.php" method="post">
-        <button type="submit" class="btn btn-dark w-100" id="checkoutBtn" <?= empty($cart) ? 'disabled' : '' ?>>Check Out</button>
-      </form>
     </div>
   </div>
 
@@ -154,9 +174,21 @@ $total = !empty($cart) ? ($subtotal + $shipping) : 0;
       const items = Array.from(document.querySelectorAll('.cart-item'));
       const subtotalEl = document.getElementById('subtotalValue');
       const shippingEl = document.getElementById('shippingValue');
-      const totalEl = document.getElementById('totalValue');
       const summaryTotalEl = document.getElementById('summaryTotalValue');
       const checkoutBtn = document.getElementById('checkoutBtn');
+      const deliveryTimeInput = document.getElementById('deliveryTime');
+      const deliveryTimeHelp = document.getElementById('deliveryTimeHelp');
+
+      function normalizeTimeValue(v) {
+        const s = String(v || '').trim();
+        if (!/^\d{2}:\d{2}$/.test(s)) return '';
+        return s;
+      }
+
+      function isTimeInWindow(t, start, end) {
+        // HH:MM string compare works for 00-23 range
+        return t >= start && t <= end;
+      }
 
       function clampQty(val, maxVal) {
         const n = parseInt(val, 10);
@@ -200,10 +232,28 @@ $total = !empty($cart) ? ($subtotal + $shipping) : 0;
 
         if (subtotalEl) subtotalEl.textContent = '₱' + subtotal.toFixed(2);
         if (shippingEl) shippingEl.textContent = '₱' + shipping.toFixed(2);
-        if (totalEl) totalEl.textContent = '₱' + total.toFixed(2);
         if (summaryTotalEl) summaryTotalEl.textContent = '₱' + total.toFixed(2);
 
         if (checkoutBtn) checkoutBtn.disabled = !anyChecked;
+
+        if (deliveryTimeInput && deliveryTimeHelp) {
+          const t = normalizeTimeValue(deliveryTimeInput.value);
+          if (!t) {
+            deliveryTimeHelp.textContent = 'Please select a delivery time.';
+            deliveryTimeHelp.classList.remove('text-success');
+            deliveryTimeHelp.classList.add('text-danger');
+            checkoutBtn && (checkoutBtn.disabled = true);
+          } else if (!isTimeInWindow(t, '08:00', '18:00')) {
+            deliveryTimeHelp.textContent = 'Not available. Choose 08:00 AM – 06:00 PM.';
+            deliveryTimeHelp.classList.remove('text-success');
+            deliveryTimeHelp.classList.add('text-danger');
+            checkoutBtn && (checkoutBtn.disabled = true);
+          } else {
+            deliveryTimeHelp.textContent = 'Available (08:00 AM – 06:00 PM)';
+            deliveryTimeHelp.classList.remove('text-danger');
+            deliveryTimeHelp.classList.add('text-success');
+          }
+        }
       }
 
       document.addEventListener('click', (e) => {
@@ -232,6 +282,12 @@ $total = !empty($cart) ? ($subtotal + $shipping) : 0;
 
       document.addEventListener('change', (e) => {
         if (e.target && e.target.classList.contains('cart-select')) {
+          recalc();
+        }
+      });
+
+      document.addEventListener('input', (e) => {
+        if (e.target && e.target.id === 'deliveryTime') {
           recalc();
         }
       });

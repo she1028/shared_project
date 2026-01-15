@@ -1,8 +1,10 @@
 <?php
 header("Content-Type: application/json");
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-file_put_contents("debug_raw.txt", file_get_contents("php://input"));
+// Avoid emitting PHP warnings/notices into JSON responses
+ini_set('display_errors', 0);
+
+$raw = file_get_contents("php://input");
+file_put_contents("debug_raw.txt", $raw);
 
 require_once "connect.php"; 
 
@@ -55,8 +57,8 @@ function normalizePhone($num) {
     return '+' . $num;
 }
 
-// Read JSON input
-$data = json_decode(file_get_contents("php://input"), true);
+// Read JSON input (php://input should be read once)
+$data = json_decode($raw ?: '', true);
 if (!$data || empty($data['phone'])) {
     echo json_encode(["success" => false, "message" => "Invalid request"]);
     exit;

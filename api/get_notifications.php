@@ -19,14 +19,31 @@ $email = trim($_SESSION['email'] ?? '');
 if ($email === '') {
     $userId = $_SESSION['userID'] ?? ($_SESSION['userId'] ?? ($_SESSION['user_id'] ?? null));
     if ($userId) {
-        $stmtEmail = $conn->prepare('SELECT email FROM users WHERE userID = ? LIMIT 1');
-        $stmtEmail->bind_param('i', $userId);
-        $stmtEmail->execute();
-        $resEmail = $stmtEmail->get_result();
-        $rowEmail = $resEmail ? $resEmail->fetch_assoc() : null;
-        $stmtEmail->close();
-        if ($rowEmail && !empty($rowEmail['email'])) {
-            $email = trim($rowEmail['email']);
+        $uid = (int)$userId;
+        try {
+            $stmtEmail = $conn->prepare('SELECT email FROM users WHERE userId = ? LIMIT 1');
+            $stmtEmail->bind_param('i', $uid);
+            $stmtEmail->execute();
+            $resEmail = $stmtEmail->get_result();
+            $rowEmail = $resEmail ? $resEmail->fetch_assoc() : null;
+            $stmtEmail->close();
+            if ($rowEmail && !empty($rowEmail['email'])) {
+                $email = trim($rowEmail['email']);
+            }
+        } catch (mysqli_sql_exception $e) {
+            try {
+                $stmtEmail = $conn->prepare('SELECT email FROM users WHERE userID = ? LIMIT 1');
+                $stmtEmail->bind_param('i', $uid);
+                $stmtEmail->execute();
+                $resEmail = $stmtEmail->get_result();
+                $rowEmail = $resEmail ? $resEmail->fetch_assoc() : null;
+                $stmtEmail->close();
+                if ($rowEmail && !empty($rowEmail['email'])) {
+                    $email = trim($rowEmail['email']);
+                }
+            } catch (mysqli_sql_exception $e2) {
+                // ignore
+            }
         }
     }
 }
