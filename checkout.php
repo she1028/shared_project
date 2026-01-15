@@ -106,11 +106,11 @@
                 <body>
                     <!-- HERO / LOGO (simple layout like earlier) -->
                     <section class="hero-section">
-                        <div class="mx-4">
-                            <a class="d-inline-flex align-items-center back-action g-2" href="cart.php">
+                        <div class="m-2">
+                            <span class="d-inline-flex align-items-center back-action g-2" data-bs-dismiss="modal">
                                 <i class="material-icons">&#xe5c4;</i>
                                 <span>back</span>
-                            </a>
+                            </span>
                         </div>
                         <div class="text-center">
                             <img src="images/YMZM-logo.png" class="logo mb-2">
@@ -126,44 +126,43 @@
                                 <form id="checkoutForm" class="checkout-box w-100 h-100">
 
                                     <h6 class="fw-bold mb-3">CONTACT INFORMATION</h6>
-                                        <div class="row g-2">
-                                            <div class="col-md-4">
-                                                <label class="form-label">First Name <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="firstName" placeholder="First Name" autocomplete="given-name" required>
-                                                <small class="small-msg"></small>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="form-label">Middle Initial <span class="text-muted small">(optional)</span></label>
-                                                <input type="text" class="form-control" id="middleInitial" placeholder="M" maxlength="1" autocomplete="additional-name">
-                                                <small class="small-msg"></small>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="form-label">Last Name <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="lastName" placeholder="Last Name" autocomplete="family-name" required>
-                                                <small class="small-msg"></small>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label">Contact No.</label>
-                                                <input type="text" class="form-control" id="contactNumber" placeholder="09XXXXXXXXX" value="09" inputmode="numeric">
-                                                <small class="small-msg"></small>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label">Email</label>
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control" id="emailLocal" placeholder="Email" autocomplete="username" inputmode="email">
-                                                    <span class="input-group-text">@gmail.com</span>
-                                                </div>
-                                                <small class="small-msg"></small>
-                                            </div>
+                                    <div class="row g-2">
+                                        <div class="col-md-4">
+                                            <label class="form-label">First Name <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="firstName" placeholder="First Name" autocomplete="given-name" required>
+                                            <small class="small-msg"></small>
                                         </div>
-                                        <div class="mb-2">
-                                            <label class="form-label">Payment Method</label>
-                                            <select class="form-select" id="paymentMethod" required>
-                                                <option value="" selected disabled>Payment Method</option>
-                                                <option value="cash">Cash</option>
-                                                <option value="paypal">PayPal</option>
-                                            </select>
+                                        <div class="col-md-4">
+                                            <label class="form-label">Middle Initial <span class="text-muted small">(optional)</span></label>
+                                            <input type="text" class="form-control" id="middleInitial" placeholder="M" maxlength="1" autocomplete="additional-name">
+                                            <small class="small-msg"></small>
                                         </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">Last Name <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="lastName" placeholder="Last Name" autocomplete="family-name" required>
+                                            <small class="small-msg"></small>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Contact No.</label>
+                                            <input type="text" class="form-control" id="contactNumber" placeholder="09XXXXXXXXX" value="09" inputmode="numeric">
+                                            <small class="small-msg"></small>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Email</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="emailLocal" placeholder="Email" autocomplete="username" inputmode="email">
+                                                <span class="input-group-text">@gmail.com</span>
+                                            </div>
+                                            <small class="small-msg"></small>
+                                        </div>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label">Payment Method</label>
+                                        <select class="form-select" id="paymentMethod" required>
+                                            <option value="" selected disabled>Payment Method</option>
+                                            <option value="paypal">PayPal</option>
+                                        </select>
+                                    </div>
                                     <div class="mb-2">
                                         <select class="form-select" id="deliveryMethod" required>
                                             <option value="" selected disabled>Delivery Method</option>
@@ -262,18 +261,18 @@
                                         $subtotal += $lineTotal;
                                         $img = $item['image'] ?? '';
                                     ?>
-                                            <div class="summary-item d-flex mb-3 align-items-center">
-                                                <?php if (!empty($img)): ?>
-                                                    <img src="<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars((string)$item['name']) ?>" class="summary-thumb me-3">
-                                                <?php else: ?>
-                                                    <div class="summary-thumb me-3" style="background:#f1f1f1;"></div>
-                                                <?php endif; ?>
-                                                <div class="flex-grow-1">
-                                                    <div class="fw-semibold"><?= $item['name'] ?></div>
-                                                    <small class="text-muted">Qty: <?= $qty ?></small>
-                                                </div>
-                                                <div class="summary-price">₱<?= number_format($lineTotal, 2) ?></div>
+                                        <div class="summary-item d-flex mb-3 align-items-center">
+                                            <?php if (!empty($img)): ?>
+                                                <img src="<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars((string)$item['name']) ?>" class="summary-thumb me-3">
+                                            <?php else: ?>
+                                                <div class="summary-thumb me-3" style="background:#f1f1f1;"></div>
+                                            <?php endif; ?>
+                                            <div class="flex-grow-1">
+                                                <div class="fw-semibold"><?= $item['name'] ?></div>
+                                                <small class="text-muted">Qty: <?= $qty ?></small>
                                             </div>
+                                            <div class="summary-price">₱<?= number_format($lineTotal, 2) ?></div>
+                                        </div>
                                     <?php endforeach; ?>
 
                                     <hr>
@@ -310,87 +309,6 @@
                                 </div>
                             </div>
 
-                        </div>
-                    </div>
-
-                    <!-- Cash Payment Modal -->
-                    <div class="modal fade" id="cashModal" tabindex="-1" aria-labelledby="cashModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered modal-sm">
-                            <div class="modal-content">
-
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="cashModalLabel">Receipt</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-
-                                <div class="modal-body">
-                                    <div class="alert alert-success d-flex align-items-center gap-2" style="font-size:13px;">
-                                        <span class="material-icons" style="font-size:18px;">check_circle</span>
-                                        <div>
-                                            <div class="fw-semibold">Thank you for ordering!</div>
-                                            <div class="text-muted">Please view the notification for complete details.</div>
-                                        </div>
-                                    </div>
-
-                                    <div class="text-center mb-3">
-                                        <div class="fw-bold">YMZM Catering</div>
-                                        <div class="text-muted" style="font-size:12px;">Order #<span id="cashOrderId"></span></div>
-                                    </div>
-
-                                    <div class="mb-2" style="font-size:14px;">
-                                        <div><strong>Name:</strong> <span id="cashName"></span></div>
-                                        <div><strong>Contact:</strong> <span id="cashContact"></span></div>
-                                        <div><strong>Email:</strong> <span id="cashEmail"></span></div>
-                                        <div><strong>Event Date:</strong> <span id="cashEventDate"></span></div>
-                                        <div><strong>Delivery Time:</strong> <span id="cashDeliveryTime"></span></div>
-                                        <div><strong>Delivery:</strong> <span id="cashDeliveryMethod"></span></div>
-                                        <div id="cashAddressRow"><strong>Address:</strong> <span id="cashAddress"></span></div>
-                                        <div><strong>Payment:</strong> Cash on Delivery</div>
-                                    </div>
-
-                                    <hr>
-
-                                    <div class="table-responsive">
-                                        <table class="table table-sm align-middle mb-2">
-                                            <thead>
-                                                <tr>
-                                                    <th>Item</th>
-                                                    <th class="text-end">Qty</th>
-                                                    <th class="text-end">Total</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="cashItems"></tbody>
-                                        </table>
-                                    </div>
-
-                                    <div class="d-flex justify-content-between" style="font-size:14px;">
-                                        <span>Subtotal</span>
-                                        <span>₱<span id="cashSubtotal"></span></span>
-                                    </div>
-                                    <div class="d-flex justify-content-between" style="font-size:14px;">
-                                        <span>Shipping</span>
-                                        <span>₱<span id="cashShipping"></span></span>
-                                    </div>
-                                    <div class="d-flex justify-content-between fw-bold" style="font-size:16px;">
-                                        <span>Total</span>
-                                        <span>₱<span id="cashTotal"></span></span>
-                                    </div>
-
-                                    <div class="alert alert-info mt-3 mb-0" style="font-size:13px;">
-                                        Total Amount: ₱<span id="cashThanksTotal"></span><br>
-                                        View your notifications for the complete receipt and updates.
-                                    </div>
-                                    <div class="alert alert-info mt-3 mb-0" style="font-size:13px;">
-                                        Please prepare the exact amount for delivery.
-                                    </div>
-                                </div>
-
-                                <div class="modal-footer flex-column gap-2">
-                                    <button type="button" class="btn btn-primary w-100" id="cashViewNotif">View Notifications</button>
-                                    <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Close</button>
-                                </div>
-
-                            </div>
                         </div>
                     </div>
 
@@ -432,22 +350,6 @@
                                     input.parentNode.appendChild(msg);
                                 }
                                 return msg;
-                            }
-
-                            // --- CASH MODAL REDIRECT ---
-                            const cashModalCloseBtn = document.querySelector("#cashModal .btn-close");
-                            if (cashModalCloseBtn) {
-                                cashModalCloseBtn.addEventListener("click", () => {
-                                    try { sessionStorage.setItem('openNotifications', '1'); } catch (err) {}
-                                    window.location.href = "index.php?show=notifications";
-                                });
-                            }
-                            const cashModalFooterBtn = document.querySelector("#cashModal .modal-footer button");
-                            if (cashModalFooterBtn) {
-                                cashModalFooterBtn.addEventListener("click", () => {
-                                    try { sessionStorage.setItem('openNotifications', '1'); } catch (err) {}
-                                    window.location.href = "index.php?show=notifications";
-                                });
                             }
 
                             // --- NAME VALIDATION ---
@@ -544,7 +446,9 @@
                                 if (emailLocalInput.value !== normalized) {
                                     const pos = emailLocalInput.selectionStart || normalized.length;
                                     emailLocalInput.value = normalized;
-                                    try { emailLocalInput.setSelectionRange(pos, pos); } catch (e) {}
+                                    try {
+                                        emailLocalInput.setSelectionRange(pos, pos);
+                                    } catch (e) {}
                                 }
 
                                 if (!normalized) {
@@ -618,8 +522,8 @@
 
                             [streetInput, postalInput, notesInput].forEach(input => {
                                 input.addEventListener("input", validateShipFields);
-                            });
-                            ;[barangayInput, cityInput].forEach(input => {
+                            });;
+                            [barangayInput, cityInput].forEach(input => {
                                 input.addEventListener('change', validateShipFields);
                             });
 
@@ -686,60 +590,6 @@
                         const deliverySelectForm = document.getElementById("deliveryMethod");
                         const checkoutError = document.getElementById("checkoutError");
                         const paymentSelect = document.getElementById("paymentMethod");
-                        const cashTotalSpan = document.getElementById("cashTotal");
-                            const cashViewNotifBtn = document.getElementById('cashViewNotif');
-
-                        // Receipt elements
-                        const cashOrderIdEl = document.getElementById('cashOrderId');
-                        const cashNameEl = document.getElementById('cashName');
-                        const cashContactEl = document.getElementById('cashContact');
-                        const cashEmailEl = document.getElementById('cashEmail');
-                        const cashEventDateEl = document.getElementById('cashEventDate');
-                        const cashDeliveryTimeEl = document.getElementById('cashDeliveryTime');
-                        const cashDeliveryMethodEl = document.getElementById('cashDeliveryMethod');
-                        const cashAddressRowEl = document.getElementById('cashAddressRow');
-                        const cashAddressEl = document.getElementById('cashAddress');
-                        const cashItemsTbody = document.getElementById('cashItems');
-                        const cashSubtotalEl = document.getElementById('cashSubtotal');
-                        const cashShippingEl = document.getElementById('cashShipping');
-                        const cashThanksTotalEl = document.getElementById('cashThanksTotal');
-
-                        const receiptItems = <?= json_encode(array_map(function ($it) {
-                            $name = (string)($it['name'] ?? ($it['product_name'] ?? ''));
-                            $qty = isset($it['qty']) ? (int)$it['qty'] : 1;
-                            $price = isset($it['price']) ? (float)$it['price'] : 0.0;
-                            return [
-                                'name' => $name,
-                                'qty' => $qty,
-                                'line_total' => $price * $qty,
-                            ];
-                        }, $cart), JSON_UNESCAPED_UNICODE) ?>;
-
-                        function formatMoney(n) {
-                            const num = Number(n || 0);
-                            return num.toFixed(2);
-                        }
-
-                        function renderReceiptItems() {
-                            if (!cashItemsTbody) return;
-                            cashItemsTbody.innerHTML = '';
-                            (receiptItems || []).forEach((it) => {
-                                const tr = document.createElement('tr');
-                                const tdName = document.createElement('td');
-                                tdName.textContent = String(it.name || '');
-                                const tdQty = document.createElement('td');
-                                tdQty.className = 'text-end';
-                                tdQty.textContent = String(it.qty || 0);
-                                const tdTotal = document.createElement('td');
-                                tdTotal.className = 'text-end';
-                                tdTotal.textContent = '₱' + formatMoney(it.line_total);
-                                tr.appendChild(tdName);
-                                tr.appendChild(tdQty);
-                                tr.appendChild(tdTotal);
-                                cashItemsTbody.appendChild(tr);
-                            });
-                        }
-
                         checkoutForm.addEventListener("submit", function(e) {
                             e.preventDefault();
 
@@ -821,99 +671,55 @@
 
                             // Persist order to backend
                             fetch("admin/processcheckout.php", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/x-www-form-urlencoded"
-                                },
-                                body: new URLSearchParams({
-                                    name,
-                                    contact,
-                                    email,
-                                    payment,
-                                    delivery,
-                                    event_date: eventDate,
-                                    delivery_time: deliveryTime,
-                                    street: document.querySelector('input[placeholder="Street Number / #"]').value,
-                                    barangay: document.getElementById('barangaySelect').value,
-                                    city: document.getElementById('municipalitySelect').value,
-                                    province: "Batangas",
-                                    postal: document.querySelector('input[placeholder="Postal Code"]').value,
-                                    notes: document.querySelector('textarea').value,
-                                    shipping: shipping,
-                                    total: totalAmount
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/x-www-form-urlencoded"
+                                    },
+                                    body: new URLSearchParams({
+                                        name,
+                                        contact,
+                                        email,
+                                        payment,
+                                        delivery,
+                                        event_date: eventDate,
+                                        delivery_time: deliveryTime,
+                                        street: document.querySelector('input[placeholder="Street Number / #"]').value,
+                                        barangay: document.getElementById('barangaySelect').value,
+                                        city: document.getElementById('municipalitySelect').value,
+                                        province: "Batangas",
+                                        postal: document.querySelector('input[placeholder="Postal Code"]').value,
+                                        notes: document.querySelector('textarea').value,
+                                        shipping: shipping,
+                                        total: totalAmount
+                                    })
                                 })
-                            })
-                            .then(async (res) => {
-                                const text = await res.text();
-                                let data;
-                                try {
-                                    data = JSON.parse(text);
-                                } catch (err) {
-                                    // API sometimes returns plain text like "error:..."; surface it to the user.
-                                    throw new Error(text || 'Unexpected response');
-                                }
-                                return data;
-                            })
-                            .then(data => {
+                                .then(async (res) => {
+                                    const text = await res.text();
+                                    let data;
+                                    try {
+                                        data = JSON.parse(text);
+                                    } catch (err) {
+                                        // API sometimes returns plain text like "error:..."; surface it to the user.
+                                        throw new Error(text || 'Unexpected response');
+                                    }
+                                    return data;
+                                })
+                                .then(data => {
 
-                                if (data.status === "success") {
-
-                                    const orderId = data.order_id;
-                                    const totalAmount = data.total;
-
-                                    if (payment === "cash") {
-                                        if (cashOrderIdEl) cashOrderIdEl.textContent = String(orderId);
-                                        if (cashNameEl) cashNameEl.textContent = name;
-                                        if (cashContactEl) cashContactEl.textContent = contact;
-                                        if (cashEmailEl) cashEmailEl.textContent = email;
-                                        if (cashEventDateEl) cashEventDateEl.textContent = eventDate || '-';
-                                        if (cashDeliveryTimeEl) cashDeliveryTimeEl.textContent = deliveryTime || '-';
-                                        if (cashDeliveryMethodEl) cashDeliveryMethodEl.textContent = delivery;
-
-                                        if (cashAddressRowEl && cashAddressEl) {
-                                            if (delivery === 'ship') {
-                                                const streetVal = document.querySelector('input[placeholder="Street Number / #"]').value.trim();
-                                                const brgyVal = document.getElementById('barangaySelect').value;
-                                                const cityVal = document.getElementById('municipalitySelect').value;
-                                                const postalVal = document.querySelector('input[placeholder="Postal Code"]').value.trim();
-                                                cashAddressEl.textContent = `${streetVal}, ${brgyVal}, ${cityVal}, Batangas ${postalVal}`;
-                                                cashAddressRowEl.style.display = '';
-                                            } else {
-                                                cashAddressEl.textContent = '';
-                                                cashAddressRowEl.style.display = 'none';
-                                            }
-                                        }
-
-                                        renderReceiptItems();
-
-                                        if (cashSubtotalEl) cashSubtotalEl.textContent = formatMoney(<?= (float)$subtotal ?>);
-                                        if (cashShippingEl) cashShippingEl.textContent = formatMoney(shipping);
-                                        if (cashTotalSpan) cashTotalSpan.textContent = formatMoney(totalAmount);
-                                        if (cashThanksTotalEl) cashThanksTotalEl.textContent = formatMoney(totalAmount);
-                                        try { sessionStorage.setItem('openNotifications', '1'); } catch (err) {}
-                                        const cashModal = new bootstrap.Modal(document.getElementById('cashModal'));
-                                        cashModal.show();
-                                            if (cashViewNotifBtn) {
-                                                cashViewNotifBtn.onclick = () => {
-                                                    try { sessionStorage.setItem('openNotifications', '1'); } catch (err) {}
-                                                    window.location.href = 'index.php?show=notifications';
-                                                };
-                                            }
-                                    } else if (payment === "paypal") {
+                                    if (data.status === "success") {
+                                        const orderId = data.order_id;
                                         sessionStorage.setItem("order_id", orderId);
                                         window.location.href = `payment.php?order_id=${encodeURIComponent(orderId)}`;
+                                    } else {
+                                        checkoutError.textContent = data.message || "Checkout failed. Please try again.";
+                                        checkoutError.style.display = "block";
                                     }
-
-                                } else {
-                                    checkoutError.textContent = data.message || "Checkout failed. Please try again.";
+                                })
+                                .catch((err) => {
+                                    const msg = (err && err.message) ? err.message : "Network error. Please try again.";
+                                    checkoutError.textContent = msg;
                                     checkoutError.style.display = "block";
-                                }
-                            })
-                            .catch((err) => {
-                                const msg = (err && err.message) ? err.message : "Network error. Please try again.";
-                                checkoutError.textContent = msg;
-                                checkoutError.style.display = "block";
-                            });
+                                });
 
                         });
                     </script>

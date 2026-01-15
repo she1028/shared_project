@@ -6,18 +6,50 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+require_once __DIR__ . '/connect.php';
+
+$getUserId = function () {
+    return $_SESSION['userID'] ?? $_SESSION['userId'] ?? $_SESSION['user_id'] ?? null;
+};
+
+$ensureCartTable = function () use ($conn) {
+    static $ready = false;
+    if ($ready) return;
+    $sql = "CREATE TABLE IF NOT EXISTS user_carts (
+        user_id INT NOT NULL PRIMARY KEY,
+        cart_json LONGTEXT NOT NULL,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+    $conn->query($sql);
+    $ready = true;
+};
+
+$loadCartFromDb = function ($userId) use ($conn, $ensureCartTable) {
+    $ensureCartTable();
+    $stmt = $conn->prepare('SELECT cart_json FROM user_carts WHERE user_id = ? LIMIT 1');
+    $stmt->bind_param('i', $userId);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    $row = $res ? $res->fetch_assoc() : null;
+    $stmt->close();
+    if (!$row) return [];
+    $decoded = json_decode($row['cart_json'], true);
+    return is_array($decoded) ? $decoded : [];
+};
+
 // Reliable logged-in detection: accept several session key names
 $isLoggedIn = !empty($_SESSION['userID']) || !empty($_SESSION['userId']) || !empty($_SESSION['user_id']);
 $userName = $_SESSION['name'] ?? ($_SESSION['username'] ?? '');
 $userEmail = $_SESSION['email'] ?? '';
 
-$cartCount = 0;
-$cart = $_SESSION['cart'] ?? [];
-if (is_array($cart)) {
-    foreach ($cart as $it) {
-        $cartCount += (int)($it['qty'] ?? 1);
-    }
+$userId = $getUserId();
+if ($userId) {
+    $_SESSION['cart'] = $loadCartFromDb((int)$userId);
 }
+
+$cartLimit = 99;
+$cart = $_SESSION['cart'] ?? [];
+$cartCount = is_array($cart) ? min($cartLimit, count($cart)) : 0;
 
 $currentUri = htmlspecialchars($_SERVER['REQUEST_URI'] ?? 'index.php', ENT_QUOTES, 'UTF-8');
 $authUrl = 'auth.php?next=' . urlencode($currentUri);

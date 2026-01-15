@@ -531,6 +531,9 @@ if (session_status() === PHP_SESSION_NONE) {
                             ${updatedStr ? `<div class="notif-meta">Updated: ${escapeHtml(updatedStr)}</div>` : ''}
                             <div class="notif-meta">Tap again to close</div>
                         </div>
+                        <div class="mt-2 d-flex">
+                            <button type="button" class="btn btn-sm btn-outline-primary view-order-btn" data-order-id="${escapeHtml(String(n.order_id ?? ''))}">View message</button>
+                        </div>
                     `;
 
                     wrap.addEventListener('click', async () => {
@@ -555,6 +558,17 @@ if (session_status() === PHP_SESSION_NONE) {
                             `;
                         }
                     });
+
+                    const viewBtn = wrap.querySelector('.view-order-btn');
+                    if (viewBtn) {
+                        viewBtn.addEventListener('click', (ev) => {
+                            ev.stopPropagation();
+                            const oid = viewBtn.getAttribute('data-order-id');
+                            if (oid) {
+                                window.location.href = `order_details.php?order_id=${encodeURIComponent(oid)}`;
+                            }
+                        });
+                    }
 
                     notifList.appendChild(wrap);
                 });

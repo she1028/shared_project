@@ -167,6 +167,12 @@ $paypalTotal = number_format($total, 2, '.', '');
         // Internal order + DB-validated total (do not change client-side)
         const internalOrderId = <?= (int)$orderId ?>;
         const totalAmount = '<?= $paypalTotal ?>';
+        const insufficientHtml = `
+            <div class="alert alert-danger text-center">
+                <h4>Your balance is not enough</h4>
+                <p>Please top up your PayPal balance or use another funding source.</p>
+            </div>
+        `;
         const goToNotifications = () => {
             try {
                 sessionStorage.setItem('openNotifications', '1');
@@ -182,6 +188,18 @@ $paypalTotal = number_format($total, 2, '.', '');
         });
         if (stayHereBtn) stayHereBtn.addEventListener('click', () => {
             /* just dismiss */ });
+
+        const showModalMessage = (html, isSuccess = false) => {
+            const modalBody = document.getElementById('paypalModalBody');
+            if (modalBody) {
+                modalBody.innerHTML = html;
+            }
+            if (viewNotifBtn) {
+                viewNotifBtn.disabled = !isSuccess;
+            }
+            const paypalModal = new bootstrap.Modal(document.getElementById('paypalModal'));
+            paypalModal.show();
+        };
 
         // Render PayPal button
         <?php if ($paypalError === '' && strtolower($status) !== 'paid'): ?>
@@ -278,18 +296,23 @@ $paypalTotal = number_format($total, 2, '.', '');
 
                             })
                             .catch(err => {
-                                const modalBody = document.getElementById('paypalModalBody');
-                                modalBody.innerHTML = `
+                                showModalMessage(`
                     <div class="alert alert-danger text-center">
                         <h4>Network or server error!</h4>
                         <p>${err && err.message ? err.message : 'Unable to process your payment details. Please try again.'}</p>
                     </div>
-                `;
-                                const paypalModal = new bootstrap.Modal(document.getElementById('paypalModal'));
-                                paypalModal.show();
+                `);
                             });
 
+                    }).catch(function(err) {
+                        // PayPal capture failed (e.g., insufficient funds). Show balance warning.
+                        showModalMessage(insufficientHtml);
                     });
+                },
+
+                // Generic PayPal JS errors (e.g., funding source declined)
+                onError: function(err) {
+                    showModalMessage(insufficientHtml);
                 }
 
             }).render('#paypal-button-container');

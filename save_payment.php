@@ -247,6 +247,10 @@ $conn->query("CREATE TABLE IF NOT EXISTS payments (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
 // Optional columns (keeps compatibility with existing table)
+// Some older installs may not have order_id yet; add it if missing to avoid insert errors.
+if (!$tableHasColumn($conn, 'payments', 'order_id')) {
+    try { $conn->query("ALTER TABLE payments ADD COLUMN order_id VARCHAR(120) NULL"); } catch (mysqli_sql_exception $e) {}
+}
 try { $conn->query("ALTER TABLE payments ADD COLUMN IF NOT EXISTS internal_order_id INT NULL"); } catch (mysqli_sql_exception $e) {}
 try { $conn->query("ALTER TABLE payments ADD COLUMN IF NOT EXISTS paypal_order_id VARCHAR(120) NULL"); } catch (mysqli_sql_exception $e) {}
 try { $conn->query("ALTER TABLE payments ADD COLUMN IF NOT EXISTS currency VARCHAR(10) NOT NULL DEFAULT 'PHP'"); } catch (mysqli_sql_exception $e) {}

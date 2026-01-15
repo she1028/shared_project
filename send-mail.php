@@ -5,6 +5,8 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
+require_once __DIR__ . '/connect.php';
+
 // PHPMailer is vendored in this repo; load it from whichever layout exists.
 $phpMailerCandidates = [
   __DIR__ . '/PHPMailer/src',
@@ -35,6 +37,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['send'])) {
   exit;
 }
 
+if (session_status() === PHP_SESSION_NONE) {
+  session_name('client_session');
+  session_start();
+}
+
 $name = trim($_POST['name'] ?? '');
 $email = trim($_POST['email'] ?? '');
 $subject = trim($_POST['subject'] ?? '');
@@ -62,6 +69,56 @@ if ($note === '' || strlen($note) < 10 || strlen($note) > 500) {
 
 // Prevent header injection / CRLF in subject.
 $subject = preg_replace("/\r|\n/", ' ', $subject);
+
+// Resolve user id (needed for FK). Try session first, then email lookup.
+$userId = null;
+if (!empty($_SESSION['userID'])) {
+  $userId = (int)$_SESSION['userID'];
+} elseif (!empty($_SESSION['userId'])) {
+  $userId = (int)$_SESSION['userId'];
+} elseif (!empty($_SESSION['user_id'])) {
+  $userId = (int)$_SESSION['user_id'];
+}
+
+if ($userId === null) {
+  try {
+    $stmtLookup = $conn->prepare('SELECT userId FROM users WHERE email = ? LIMIT 1');
+    if ($stmtLookup) {
+      $stmtLookup->bind_param('s', $email);
+      $stmtLookup->execute();
+      $resLookup = $stmtLookup->get_result();
+      $rowLookup = $resLookup ? $resLookup->fetch_assoc() : null;
+      if ($rowLookup && isset($rowLookup['userId'])) {
+        $userId = (int)$rowLookup['userId'];
+      }
+      $stmtLookup->close();
+    }
+  } catch (mysqli_sql_exception $e) {
+    // ignore lookup failures
+  }
+}
+
+// Require a valid user_id to satisfy your FK (contact_messages.user_id NOT NULL + FK to users.userId)
+if ($userId === null) {
+  header('Location: index.php?contact=nouser');
+  exit;
+}
+
+try {
+  $stmt = $conn->prepare("INSERT INTO contact_messages (user_id, name, email, subject, message) VALUES (?, ?, ?, ?, ?)");
+  if ($stmt) {
+    $stmt->bind_param('issss', $userId, $name, $email, $subject, $note);
+    $stmt->execute();
+    $stmt->close();
+  } else {
+    header('Location: index.php?contact=dberror');
+    exit;
+  }
+} catch (mysqli_sql_exception $e) {
+  error_log('Contact message DB insert failed: ' . $e->getMessage());
+  header('Location: index.php?contact=dberror');
+  exit;
+}
 
 $mail = new PHPMailer(true);
 

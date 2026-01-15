@@ -3,16 +3,76 @@ if (session_status() === PHP_SESSION_NONE) {
   session_name('client_session');
   session_start();
 }
+require_once __DIR__ . '/connect.php';
+
+$getUserId = function () {
+  return $_SESSION['userID'] ?? $_SESSION['userId'] ?? $_SESSION['user_id'] ?? null;
+};
+
+$ensureCartTable = function () use ($conn) {
+  static $ready = false;
+  if ($ready) return;
+  $sql = "CREATE TABLE IF NOT EXISTS user_carts (
+    user_id INT NOT NULL PRIMARY KEY,
+    cart_json LONGTEXT NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+  $conn->query($sql);
+  $ready = true;
+};
+
+$loadCartFromDb = function ($userId) use ($conn, $ensureCartTable) {
+  $ensureCartTable();
+  $stmt = $conn->prepare('SELECT cart_json FROM user_carts WHERE user_id = ? LIMIT 1');
+  $stmt->bind_param('i', $userId);
+  $stmt->execute();
+  $res = $stmt->get_result();
+  $row = $res ? $res->fetch_assoc() : null;
+  $stmt->close();
+  if (!$row) return [];
+  $decoded = json_decode($row['cart_json'], true);
+  return is_array($decoded) ? $decoded : [];
+};
 $checkoutError = $_GET['error'] ?? '';
 // Avoid using stale selection if user returns to cart
 unset($_SESSION['checkout_cart']);
 
+$userId = $getUserId();
+if ($userId) {
+  // Refresh session cart from DB for this user to keep carts user-scoped
+  $_SESSION['cart'] = $loadCartFromDb((int)$userId);
+}
+
+$cartLimit = 99;
 $cart = $_SESSION['cart'] ?? [];
+$cartEntryCount = is_array($cart) ? min($cartLimit, count($cart)) : 0;
 $shipping = 120;
 $subtotal = 0;
 $totalItemCount = 0;
 $minEventDate = date('Y-m-d', strtotime('+3 days'));
 $savedDeliveryTime = (string)($_SESSION['checkout_delivery_time'] ?? '');
+
+// Persist a single clean back target across cart interactions to avoid multi-click history hops.
+$host = $_SERVER['HTTP_HOST'] ?? '';
+$storedBack = $_SESSION['cart_return_url'] ?? '';
+$backTarget = '';
+
+// Prefer previously stored target unless a new valid referrer arrives from another page (not cart).
+$referrer = $_SERVER['HTTP_REFERER'] ?? '';
+if (!empty($referrer) && stripos($referrer, 'cart.php') === false) {
+  $parsed = parse_url($referrer);
+  if ($parsed && !empty($parsed['scheme']) && !empty($parsed['host']) && (empty($host) || strcasecmp($parsed['host'], $host) === 0)) {
+    $path = $parsed['path'] ?? '';
+    $query = isset($parsed['query']) ? ('?' . $parsed['query']) : '';
+    $backTarget = $parsed['scheme'] . '://' . $parsed['host'] . (isset($parsed['port']) ? (':' . $parsed['port']) : '') . $path . $query;
+    $_SESSION['cart_return_url'] = $backTarget;
+  }
+}
+
+// Use stored target if no fresh referrer was accepted
+if (!$backTarget && !empty($storedBack)) {
+  $backTarget = $storedBack;
+}
 
 // Calculate subtotal (default: all items selected)
 foreach ($cart as $item) {
@@ -40,7 +100,7 @@ $total = !empty($cart) ? ($subtotal + $shipping) : 0;
 <body class="bg-light">
   <div class="container py-4">
     <div class="m-2">
-      <a class="d-inline-flex align-items-center back-action g-2" href="index.php">
+      <a id="cartBackBtn" class="d-inline-flex align-items-center back-action g-2" href="javascript:void(0)">
         <i class="material-icons">&#xe5c4;</i>
         <span>back</span>
       </a>
@@ -68,7 +128,7 @@ $total = !empty($cart) ? ($subtotal + $shipping) : 0;
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h6 class="fw-bold m-0 d-flex align-items-center gap-2">
               Cart
-              <span class="cart-items-count badge bg-light text-muted fw-normal border">Items: <?= (int)$totalItemCount ?></span>
+              <span class="cart-items-count badge bg-light text-muted fw-normal border">Items: <?= (int)$cartEntryCount ?></span>
             </h6>
           </div>
 
@@ -304,6 +364,25 @@ $total = !empty($cart) ? ($subtotal + $shipping) : 0;
 
       // Initialize
       recalc();
+    })();
+
+    (function () {
+      const btn = document.getElementById('cartBackBtn');
+      if (!btn) return;
+
+      const backTarget = "<?= htmlspecialchars($backTarget, ENT_QUOTES) ?>";
+
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        if (backTarget) {
+          window.location.replace(backTarget);
+          return;
+        }
+
+        // Fallback: go home if we somehow lack a stored target
+        window.location.replace('index.php');
+      });
     })();
   </script>
 

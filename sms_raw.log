@@ -586,3 +586,150 @@
   "receivedStamp":1768493759181,
   "sim":"sim1"
 }
+2026-01-15 17:59:53 {
+  "from":"123456789",
+  "text":"test message",
+  "sentStamp":1768496413933,
+  "receivedStamp":1768496413933,
+  "sim":"sim1"
+}
+2026-01-15 18:00:05 {
+  "from":"+639928941069",
+  "text":"Yes 139344",
+  "sentStamp":1768496172000,
+  "receivedStamp":1768496173114,
+  "sim":"sim1"
+}
+2026-01-15 18:01:12 {
+  "from":"123456789",
+  "text":"test message",
+  "sentStamp":1768496470305,
+  "receivedStamp":1768496470306,
+  "sim":"sim1"
+}
+2026-01-15 18:02:00 {
+  "from":"+639495733542",
+  "text":"Yes 291016",
+  "sentStamp":1768496517000,
+  "receivedStamp":1768496540432,
+  "sim":"sim1"
+}
+2026-01-15 18:14:59 {
+  "from":"+639495733542",
+  "text":"Yes 759126",
+  "sentStamp":1768497297000,
+  "receivedStamp":1768497319949,
+  "sim":"sim1"
+}
+2026-01-15 18:16:51 {
+  "from":"+639267084699",
+  "text":"Booking Ref: BOOK-4AA358\nReply YES 291016 to confirm.",
+  "sentStamp":1768496503000,
+  "receivedStamp":1768496503530,
+  "sim":"sim1"
+}
+2026-01-15 18:21:21 {
+  "from":"+639267084699",
+  "text":"Booking Ref: BOOK-BE0B1F\nReply YES 759126 to confirm.",
+  "sentStamp":1768497285000,
+  "receivedStamp":1768497286111,
+  "sim":"sim1"
+}
+2026-01-15 18:27:37 {
+  "from":"+639495733542",
+  "text":"Yes 333359",
+  "sentStamp":1768498055000,
+  "receivedStamp":1768498078051,
+  "sim":"sim1"
+}
+2026-01-15 18:28:07 {
+  "from":"+639267084699",
+  "text":"Booking Ref: BOOK-5A4B03\nReply YES 333359 to confirm.",
+  "sentStamp":1768498045000,
+  "receivedStamp":1768498045858,
+  "sim":"sim1"
+}
+2026-01-15 18:35:03 {
+  "from":"+639495733542",
+  "text":"Yes 812057",
+  "sentStamp":1768498499000,
+  "receivedStamp":1768498523333,
+  "sim":"sim1"
+}
+2026-01-15 18:37:08 {
+  "from":"+639267084699",
+  "text":"Booking Ref: BOOK-255693\nReply YES 812057 to confirm.",
+  "sentStamp":1768498488000,
+  "receivedStamp":1768498488653,
+  "sim":"sim1"
+}
+2026-01-15 18:41:00 {
+  "from":"+639495733542",
+  "text":"Yes 647449",
+  "sentStamp":1768498858000,
+  "receivedStamp":1768498880348,
+  "sim":"sim1"
+}
+2026-01-15 18:44:58 {
+  "from":"+639267084699",
+  "text":"Booking Ref: BOOK-A4BE68\nReply YES 647449 to confirm.",
+  "sentStamp":1768498831000,
+  "receivedStamp":1768498831223,
+  "sim":"sim1"
+}
+2026-01-15 18:51:44 {
+  "from":"+639267084699",
+  "text":"Booking Ref: BOOK-3A0149\nReply YES 310523 to confirm.",
+  "sentStamp":1768499500000,
+  "receivedStamp":1768499501912,
+  "sim":"sim1"
+}
+2026-01-15 18:51:55 {
+  "from":"+639495733542",
+  "text":"Yes 310523",
+  "sentStamp":1768499513000,
+  "receivedStamp":1768499535695,
+  "sim":"sim1"
+}
+2026-01-15 19:00:24 {
+  "from":"+639495733542",
+  "text":"Yes 494385",
+  "sentStamp":1768500022000,
+  "receivedStamp":1768500044766,
+  "sim":"sim1"
+}
+2026-01-15 19:01:42 {
+  "from":"+639267084699",
+  "text":"Booking Ref: BOOK-55D1D7\nReply YES 494385 to confirm.",
+  "sentStamp":1768500008000,
+  "receivedStamp":1768500008673,
+  "sim":"sim1"
+}
+2026-01-15 19:53:43 {
+  "from":"+639495733542",
+  "text":"Yes 269932",
+  "sentStamp":1768503222000,
+  "receivedStamp":1768503244049,
+  "sim":"sim1"
+}
+2026-01-15 19:53:48 {
+  "from":"+639267084699",
+  "text":"Booking Ref: BOOK-2E577B\nReply YES 269932 to confirm.",
+  "sentStamp":1768503206000,
+  "receivedStamp":1768503207490,
+  "sim":"sim1"
+}
+2026-01-15 21:22:30 {
+  "from":"+639495733542",
+  "text":"Yes 185946",
+  "sentStamp":1768508547000,
+  "receivedStamp":1768508570460,
+  "sim":"sim1"
+}
+2026-01-15 21:23:52 {
+  "from":"+639267084699",
+  "text":"Booking Ref: BOOK-8932D3\nReply YES 185946 to confirm.",
+  "sentStamp":1768508530000,
+  "receivedStamp":1768508531662,
+  "sim":"sim1"
+}

@@ -119,9 +119,9 @@ if (!$stmt->execute()) {
 }
 
 // SMS Gateway Settings
-$gateway_url = "http://192.168.1.7:8080";
+$gateway_url = "http://192.168.1.14:8080";
 $username = "sms";
-$password = "esTLpEP4";
+$password = "_1u9epAr";
 
 $message = "Booking Ref: $booking_ref\nReply YES $otp to confirm.";
 
