@@ -1,8 +1,10 @@
 <?php
 header("Content-Type: application/json");
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-file_put_contents("debug_raw.txt", file_get_contents("php://input"));
+// Avoid emitting PHP warnings/notices into JSON responses
+ini_set('display_errors', 0);
+
+$raw = file_get_contents("php://input");
+file_put_contents("debug_raw.txt", $raw);
 
 require_once "connect.php"; 
 
@@ -55,8 +57,8 @@ function normalizePhone($num) {
     return '+' . $num;
 }
 
-// Read JSON input
-$data = json_decode(file_get_contents("php://input"), true);
+// Read JSON input (php://input should be read once)
+$data = json_decode($raw ?: '', true);
 if (!$data || empty($data['phone'])) {
     echo json_encode(["success" => false, "message" => "Invalid request"]);
     exit;
@@ -64,23 +66,39 @@ if (!$data || empty($data['phone'])) {
 
 $phone = normalizePhone($data['phone']);
 
-// Booking reference
-if (!isset($data['booking_ref']) || empty($data['booking_ref'])) {
-    // Generate a unique booking reference
-    $booking_ref = 'BOOK-' . strtoupper(bin2hex(random_bytes(3))); // e.g., BOOK-1A2B3C
+$forceNewBooking = !empty($data['force_new_booking']);
 
-    // Insert new booking into bookings table
-    $stmt_booking = $conn->prepare("
-        INSERT INTO bookings (booking_ref, phone, booking_status)
-        VALUES (?, ?, 'PENDING')
-    ");
-    $stmt_booking->bind_param("ss", $booking_ref, $phone);
-    if (!$stmt_booking->execute()) {
+// Booking reference
+// Default behavior: create a new booking per OTP request.
+// If caller passes booking_ref and does not request a new booking, reuse it.
+if (!$forceNewBooking && isset($data['booking_ref']) && !empty($data['booking_ref'])) {
+    $booking_ref = (string)$data['booking_ref'];
+} else {
+    // Generate & insert a unique booking reference (retry on collision)
+    $booking_ref = '';
+    $created = false;
+    for ($attempt = 0; $attempt < 5; $attempt++) {
+        $candidate = 'BOOK-' . strtoupper(bin2hex(random_bytes(3))); // e.g., BOOK-1A2B3C
+        $stmt_booking = $conn->prepare("
+            INSERT INTO bookings (booking_ref, phone, booking_status)
+            VALUES (?, ?, 'PENDING')
+        ");
+        if (!$stmt_booking) {
+            echo json_encode(["success" => false, "message" => "Failed to create booking"]);
+            exit;
+        }
+        $stmt_booking->bind_param("ss", $candidate, $phone);
+        if (@$stmt_booking->execute()) {
+            $booking_ref = $candidate;
+            $created = true;
+            break;
+        }
+    }
+
+    if (!$created) {
         echo json_encode(["success" => false, "message" => "Failed to create booking"]);
         exit;
     }
-} else {
-    $booking_ref = $data['booking_ref'];
 }
 
 // Generate OTP

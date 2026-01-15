@@ -54,10 +54,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $_SESSION['cart'] = $cartAll;
     $_SESSION['checkout_cart'] = $checkoutCart;
+
+    // Persist selected event date (date-only)
+    $eventDate = trim((string)($_POST['event_date'] ?? ''));
+    if ($eventDate !== '' && preg_match('/^\d{4}-\d{2}-\d{2}$/', $eventDate)) {
+        $minDate = date('Y-m-d', strtotime('+3 days'));
+        if ($eventDate < $minDate) {
+            unset($_SESSION['checkout_event_date']);
+            $_SESSION['cart'] = $cartAll;
+            header('Location: cart.php?error=date');
+            exit;
+        }
+        $_SESSION['checkout_event_date'] = $eventDate;
+    } else {
+        unset($_SESSION['checkout_event_date']);
+        $_SESSION['cart'] = $cartAll;
+        header('Location: cart.php?error=date');
+        exit;
+    }
+
+    // Persist delivery time (time-only)
+    $deliveryTime = trim((string)($_POST['delivery_time'] ?? ''));
+    if ($deliveryTime !== '' && preg_match('/^\d{2}:\d{2}$/', $deliveryTime)) {
+        // Basic availability window (08:00–18:00)
+        if ($deliveryTime < '08:00' || $deliveryTime > '18:00') {
+            unset($_SESSION['checkout_delivery_time']);
+            $_SESSION['cart'] = $cartAll;
+            header('Location: cart.php?error=time');
+            exit;
+        }
+        $_SESSION['checkout_delivery_time'] = $deliveryTime;
+    } else {
+        unset($_SESSION['checkout_delivery_time']);
+        $_SESSION['cart'] = $cartAll;
+        header('Location: cart.php?error=time');
+        exit;
+    }
+    
+    // Clear old SMS booking session to ensure each checkout gets a fresh booking reference
+    unset($_SESSION['sms_booking_ref'], $_SESSION['sms_phone'], $_SESSION['sms_confirmed'], $_SESSION['sms_confirmed_at']);
 }
 
-// Reuse a booking ref within the same session to avoid creating multiple bookings
-$existingBookingRef = $_SESSION['sms_booking_ref'] ?? '';
+// Each checkout attempt should get its own booking ref (don't reuse from previous checkout)
+$existingBookingRef = '';
 
 ?><!DOCTYPE html>
 <html lang="en">
@@ -164,6 +203,31 @@ $existingBookingRef = $_SESSION['sms_booking_ref'] ?? '';
     let pollTimer = null;
     let currentBookingRef = existingBookingRef || '';
     let currentPhone = '';
+    let cooldownTimer = null;
+    let cooldownRemaining = 0;
+
+    function setButtonCooldown(seconds) {
+        if (cooldownTimer) {
+            clearInterval(cooldownTimer);
+            cooldownTimer = null;
+        }
+        cooldownRemaining = Math.max(0, seconds | 0);
+        sendBtn.disabled = true;
+        const baseLabel = currentBookingRef ? 'Resend OTP' : 'Click to Send OTP';
+        sendBtn.textContent = `${baseLabel} (${cooldownRemaining}s)`;
+        cooldownTimer = setInterval(() => {
+            cooldownRemaining -= 1;
+            if (cooldownRemaining <= 0) {
+                clearInterval(cooldownTimer);
+                cooldownTimer = null;
+                sendBtn.disabled = false;
+                sendBtn.textContent = currentBookingRef ? 'Resend OTP' : 'Click to Send OTP';
+                return;
+            }
+            const label = currentBookingRef ? 'Resend OTP' : 'Click to Send OTP';
+            sendBtn.textContent = `${label} (${cooldownRemaining}s)`;
+        }, 1000);
+    }
 
     function showToast(message, ok = true) {
         toastEl.classList.remove('text-bg-success', 'text-bg-danger');
@@ -226,6 +290,11 @@ $existingBookingRef = $_SESSION['sms_booking_ref'] ?? '';
         }
     }
 
+    // If we already have a booking ref, treat next send as a resend
+    if (currentBookingRef) {
+        sendBtn.textContent = 'Resend OTP';
+    }
+
     sendBtn.addEventListener("click", async function () {
         const phone = phoneInput.value.trim();
         const btn = this;
@@ -241,12 +310,15 @@ $existingBookingRef = $_SESSION['sms_booking_ref'] ?? '';
         currentPhone = phone;
 
         try {
+            // Each (re)send should generate a new booking reference
+            currentBookingRef = '';
+
             const res = await fetch("send_sms.php", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     phone: phone,
-                    booking_ref: currentBookingRef || undefined
+                    force_new_booking: true
                 })
             });
 
@@ -256,6 +328,10 @@ $existingBookingRef = $_SESSION['sms_booking_ref'] ?? '';
                     currentBookingRef = data.booking_ref;
                 }
                 statusEl.innerText = "✅ SMS sent. Reply YES <OTP> to confirm your order.";
+
+                // UI: allow resend after a short cooldown
+                btn.textContent = 'Resend OTP';
+                setButtonCooldown(12);
 
                 stopPolling();
                 pollTimer = setInterval(pollStatus, 2500);

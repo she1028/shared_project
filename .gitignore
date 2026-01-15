@@ -1,0 +1,7 @@
+# Local secrets
+paypal_config.php
+
+# Logs
+*.log
+sms_raw.log
+debug.log

@@ -20,6 +20,8 @@ $conn->query("CREATE TABLE IF NOT EXISTS orders (
     payment_method VARCHAR(30) NOT NULL,
     delivery_method VARCHAR(30) NOT NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'pending',
+    event_date DATE NULL,
+    delivery_time TIME NULL,
     street VARCHAR(255) NULL,
     barangay VARCHAR(120) NULL,
     city VARCHAR(120) NULL,
@@ -32,6 +34,8 @@ $conn->query("CREATE TABLE IF NOT EXISTS orders (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 $conn->query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS status VARCHAR(20) NOT NULL DEFAULT 'pending'");
+$conn->query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS event_date DATE NULL");
+$conn->query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS delivery_time TIME NULL");
 $conn->query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS subtotal DECIMAL(12,2) NOT NULL DEFAULT 0.00");
 $conn->query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS shipping DECIMAL(12,2) NOT NULL DEFAULT 0.00");
 $conn->query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS total DECIMAL(12,2) NOT NULL DEFAULT 0.00");
@@ -228,6 +232,8 @@ SELECT
     o.payment_method,
     o.delivery_method,
     o.status,
+    o.event_date,
+    o.delivery_time,
     o.street,
     o.barangay,
     o.city,
@@ -288,6 +294,7 @@ if ($itemRows) {
                         <th>Customer</th>
                         <th>Payment</th>
                         <th>Delivery</th>
+                        <th>Delivery Schedule</th>
                         <th>Status</th>
                         <th>Subtotal</th>
                         <th>Shipping</th>
@@ -310,6 +317,18 @@ if ($itemRows) {
                                 </td>
                                 <td><?php echo htmlspecialchars(ucfirst($o['payment_method'])); ?></td>
                                 <td><?php echo htmlspecialchars(ucfirst($o['delivery_method'])); ?></td>
+                                <td>
+                                    <?php
+                                    $scheduleParts = [];
+                                    if (!empty($o['event_date'])) {
+                                        $scheduleParts[] = date('M d, Y', strtotime($o['event_date']));
+                                    }
+                                    if (!empty($o['delivery_time'])) {
+                                        $scheduleParts[] = date('h:i A', strtotime($o['delivery_time']));
+                                    }
+                                    echo !empty($scheduleParts) ? htmlspecialchars(implode(' • ', $scheduleParts)) : '<span class="text-muted">—</span>';
+                                    ?>
+                                </td>
                                 <td>
                                     <?php
                                     $badge = 'secondary';
@@ -337,6 +356,8 @@ if ($itemRows) {
                                             data-email="<?php echo htmlspecialchars($o['email'], ENT_QUOTES); ?>"
                                             data-payment_method="<?php echo htmlspecialchars($o['payment_method'], ENT_QUOTES); ?>"
                                             data-delivery_method="<?php echo htmlspecialchars($o['delivery_method'], ENT_QUOTES); ?>"
+                                            data-event_date="<?php echo htmlspecialchars((string)($o['event_date'] ?? ''), ENT_QUOTES); ?>"
+                                            data-delivery_time="<?php echo htmlspecialchars((string)($o['delivery_time'] ?? ''), ENT_QUOTES); ?>"
                                             data-status="<?php echo htmlspecialchars($o['status'], ENT_QUOTES); ?>"
                                             data-street="<?php echo htmlspecialchars($o['street'], ENT_QUOTES); ?>"
                                             data-barangay="<?php echo htmlspecialchars($o['barangay'], ENT_QUOTES); ?>"
@@ -370,7 +391,7 @@ if ($itemRows) {
                                 </td>
                             </tr>
                             <tr class="collapse" id="items-<?php echo $oid; ?>">
-                                <td colspan="12" class="text-start">
+                                <td colspan="13" class="text-start">
                                     <div class="fw-semibold mb-2">Items</div>
                                     <?php if (!empty($orderItems[$oid])): ?>
                                         <div class="table-responsive">
@@ -403,7 +424,7 @@ if ($itemRows) {
                             </tr>
                         <?php endwhile; ?>
                     <?php else: ?>
-                        <tr><td colspan="12" class="text-muted">No orders yet.</td></tr>
+                        <tr><td colspan="13" class="text-muted">No orders yet.</td></tr>
                     <?php endif; ?>
                 </tbody>
             </table>
@@ -542,6 +563,14 @@ if ($itemRows) {
                         <input type="text" class="form-control" name="delivery_method" id="edit-delivery" readonly>
                     </div>
                     <div class="col-md-3">
+                        <label class="form-label">Event Date</label>
+                        <input type="text" class="form-control" id="edit-event-date" readonly>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Delivery Time</label>
+                        <input type="text" class="form-control" id="edit-delivery-time" readonly>
+                    </div>
+                    <div class="col-md-3">
                         <label class="form-label">Status</label>
                         <select class="form-select" name="status" id="edit-status" required>
                             <?php foreach ($statusOptions as $opt): ?>
@@ -612,6 +641,8 @@ document.addEventListener('DOMContentLoaded', () => {
             mapValue(document.getElementById('edit-email'), btn.dataset.email);
             mapValue(document.getElementById('edit-payment'), btn.dataset.payment_method);
             mapValue(document.getElementById('edit-delivery'), btn.dataset.delivery_method);
+            mapValue(document.getElementById('edit-event-date'), btn.dataset.event_date);
+            mapValue(document.getElementById('edit-delivery-time'), btn.dataset.delivery_time);
             mapValue(document.getElementById('edit-status'), btn.dataset.status);
             mapValue(document.getElementById('edit-street'), btn.dataset.street);
             mapValue(document.getElementById('edit-barangay'), btn.dataset.barangay);

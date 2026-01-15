@@ -1,0 +1,6 @@
+<?php
+// Copy this file to paypal_config.php (do NOT commit paypal_config.php) and fill in your sandbox credentials.
+// Alternatively set environment variables: PAYPAL_CLIENT_ID and PAYPAL_CLIENT_SECRET
+
+define('PAYPAL_CLIENT_ID', 'YOUR_PAYPAL_CLIENT_ID');
+define('PAYPAL_CLIENT_SECRET', 'YOUR_PAYPAL_CLIENT_SECRET');

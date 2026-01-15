@@ -39,9 +39,14 @@ if (basename($_SERVER['SCRIPT_NAME'] ?? '') === 'cardmodal.php') {
         cursor: pointer;
     }
 
-    .qty-box span {
-        padding: 0 12px;
+    .qty-box input {
+        width: 64px;
+        border: none;
+        text-align: center;
         font-size: 14px;
+        outline: none;
+        background: transparent;
+        padding: 0;
     }
 
     .color-dot {
@@ -118,7 +123,7 @@ if (basename($_SERVER['SCRIPT_NAME'] ?? '') === 'cardmodal.php') {
                             <!-- quantity  -->
                             <div class="qty-box">
                                 <button type="button" id="qty-minus">−</button>
-                                <span>1</span>
+                                <input type="number" id="qty-input" value="1" min="1" step="1" inputmode="numeric">
                                 <button type="button" id="qty-plus">+</button>
                             </div>
                             <!-- add to cart -->
@@ -133,34 +138,15 @@ if (basename($_SERVER['SCRIPT_NAME'] ?? '') === 'cardmodal.php') {
     </div>
 </div>
 
-<!-- Toast container (match rentals) -->
-<div id="cartToastContainer">
-    <div id="cartToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="d-flex">
-            <div class="toast-body" id="cartToastMessage">
-                Item added to cart!
-            </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-    </div>
-</div>
-
 <script>
     (() => {
         let currentFood = null;
         let currentQty = 1;
-        const qtyDisplay = document.querySelector('#foodModal .qty-box span');
+        const qtyInput = document.getElementById('qty-input');
 
         function showToast(message, success = true) {
-            const toastEl = document.getElementById('cartToast');
-            const toastMessage = document.getElementById('cartToastMessage');
-            toastMessage.textContent = message;
-
-            toastEl.classList.toggle('text-bg-success', success);
-            toastEl.classList.toggle('text-bg-danger', !success);
-
-            const toast = new bootstrap.Toast(toastEl, { delay: 2000 });
-            toast.show();
+            // Intentionally silent (no toast box)
+            return;
         }
 
         window.openFoodModal = function (item) {
@@ -174,7 +160,7 @@ if (basename($_SERVER['SCRIPT_NAME'] ?? '') === 'cardmodal.php') {
             document.getElementById('modalFoodServing').innerText = item.serving || '';
             document.getElementById('modalFoodCategory').innerText = item.category || '';
 
-            if (qtyDisplay) qtyDisplay.innerText = currentQty;
+            if (qtyInput) qtyInput.value = String(currentQty);
 
             const modal = new bootstrap.Modal(document.getElementById('foodModal'));
             modal.show();
@@ -182,13 +168,22 @@ if (basename($_SERVER['SCRIPT_NAME'] ?? '') === 'cardmodal.php') {
 
         document.getElementById('qty-minus').addEventListener('click', () => {
             if (currentQty > 1) currentQty--;
-            if (qtyDisplay) qtyDisplay.innerText = currentQty;
+            if (qtyInput) qtyInput.value = String(currentQty);
         });
 
         document.getElementById('qty-plus').addEventListener('click', () => {
             currentQty++;
-            if (qtyDisplay) qtyDisplay.innerText = currentQty;
+            if (qtyInput) qtyInput.value = String(currentQty);
         });
+
+        if (qtyInput) {
+            qtyInput.addEventListener('input', () => {
+                const raw = parseInt(qtyInput.value || '1', 10);
+                const next = Number.isFinite(raw) ? raw : 1;
+                currentQty = Math.max(1, next);
+                qtyInput.value = String(currentQty);
+            });
+        }
 
         document.getElementById('addToCartBtn').addEventListener('click', () => {
             if (!currentFood) return;
@@ -214,7 +209,9 @@ if (basename($_SERVER['SCRIPT_NAME'] ?? '') === 'cardmodal.php') {
                 .then(data => {
                     if (data.success) {
                         showToast(data.message, true);
-                        if (typeof updateCartCount === 'function') {
+                        if (typeof window.setCartCount === 'function' && data.cart_count !== undefined) {
+                            window.setCartCount(data.cart_count);
+                        } else if (typeof updateCartCount === 'function') {
                             updateCartCount();
                         }
                         const modalEl = document.getElementById('foodModal');

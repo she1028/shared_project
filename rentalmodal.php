@@ -28,9 +28,14 @@
         cursor: pointer;
     }
 
-    .qty-box span {
-        padding: 0 12px;
+    .qty-box input {
+        width: 64px;
+        border: none;
+        text-align: center;
         font-size: 14px;
+        outline: none;
+        background: transparent;
+        padding: 0;
     }
 
     .color-chip {
@@ -47,13 +52,7 @@
         box-shadow: 0 0 0 2px #c5b69a60;
     }
 
-    /* Toast styling */
-    #cartToastContainer {
-        position: fixed;
-        bottom: 1rem;
-        right: 1rem;
-        z-index: 1080;
-    }
+    /* Toast UI removed */
 </style>
 
 <!-- Rental detail modal -->
@@ -109,7 +108,7 @@
                             <!-- quantity  -->
                             <div class="qty-box">
                                 <button type="button" id="qty-minus">−</button>
-                                <span>1</span>
+                                <input type="number" id="qty-input" value="1" min="1" step="1" inputmode="numeric">
                                 <button type="button" id="qty-plus">+</button>
                             </div>
                             <!-- add to cart -->
@@ -124,18 +123,6 @@
     </div>
 </div>
 
-<!-- Toast container -->
-<div id="cartToastContainer">
-    <div id="cartToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="d-flex">
-            <div class="toast-body" id="cartToastMessage">
-                Item added to cart!
-            </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-    </div>
-</div>
-
 <script>
 (() => {
     let currentItem = null;
@@ -143,7 +130,7 @@
     let selectedColor = null;
     let currentColors = [];
 
-    const qtyDisplay = document.querySelector('#rentalModal .qty-box span');
+    const qtyInput = document.getElementById('qty-input');
     const colorsContainer = document.getElementById('modalRentalColors');
 
     const qtyMinusBtn = document.getElementById('qty-minus');
@@ -170,7 +157,14 @@
         if (typeof max === 'number') {
             if (currentQty > max) currentQty = Math.max(1, max);
         }
-        if (qtyDisplay) qtyDisplay.innerText = String(currentQty);
+        if (qtyInput) {
+            qtyInput.value = String(currentQty);
+            if (typeof max === 'number' && max > 0) {
+                qtyInput.max = String(max);
+            } else {
+                qtyInput.removeAttribute('max');
+            }
+        }
 
         const isOutOfStock = (typeof max === 'number' && max <= 0);
         if (qtyPlusBtn) qtyPlusBtn.disabled = (typeof max === 'number' && currentQty >= max);
@@ -183,15 +177,8 @@
     }
 
     function showToast(message, success = true) {
-        const toastEl = document.getElementById('cartToast');
-        const toastMessage = document.getElementById('cartToastMessage');
-        toastMessage.textContent = message;
-
-        toastEl.classList.toggle('text-bg-success', success);
-        toastEl.classList.toggle('text-bg-danger', !success);
-
-        const toast = new bootstrap.Toast(toastEl, { delay: 2000 });
-        toast.show();
+        // Intentionally silent (no toast box)
+        return;
     }
 
     window.openRentalModal = function (item) {
@@ -205,7 +192,7 @@
         document.getElementById('modalRentalServing').innerText = item.serving || '';
         document.getElementById('modalRentalCategory').innerText = item.category || '';
 
-        if (qtyDisplay) qtyDisplay.innerText = currentQty;
+        if (qtyInput) qtyInput.value = String(currentQty);
 
         // Render colors as clickable chips
         colorsContainer.innerHTML = '';
@@ -241,6 +228,23 @@
         const modal = new bootstrap.Modal(document.getElementById('rentalModal'));
         modal.show();
     };
+
+    if (qtyInput) {
+        qtyInput.addEventListener('input', () => {
+            const raw = parseInt(qtyInput.value || '1', 10);
+            const next = Number.isFinite(raw) ? raw : 1;
+
+            const max = getMaxQty();
+            if (typeof max === 'number' && max > 0 && next > max) {
+                const cn = selectedColor ? (selectedColor.color_name || selectedColor.name || '') : '';
+                showToast(`Only ${max} available${cn ? ' in ' + cn : ''}.`, false);
+                currentQty = max;
+            } else {
+                currentQty = Math.max(1, next);
+            }
+            updateQtyUi();
+        });
+    }
 
     if (qtyMinusBtn) {
         qtyMinusBtn.addEventListener('click', () => {
@@ -309,7 +313,11 @@
         .then(data => {
             if (data.success) {
                 showToast(data.message, true); // replaced alert
-                if (typeof updateCartCount === 'function') updateCartCount();
+                if (typeof window.setCartCount === 'function' && data.cart_count !== undefined) {
+                    window.setCartCount(data.cart_count);
+                } else if (typeof updateCartCount === 'function') {
+                    updateCartCount();
+                }
                 const modalEl = document.getElementById('rentalModal');
                 const instance = bootstrap.Modal.getInstance(modalEl);
                 if (instance) instance.hide();

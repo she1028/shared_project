@@ -155,7 +155,13 @@ if (!$found) {
 
 $_SESSION['cart'] = $cart;
 
+$cartCount = 0;
+foreach ($cart as $it) {
+    $cartCount += (int)($it['qty'] ?? 1);
+}
+
 echo json_encode([
     'success' => true,
-    'message' => "{$payload['qty']} x {$payload['name']} added to cart"
+    'message' => "{$payload['qty']} x {$payload['name']} added to cart",
+    'cart_count' => $cartCount
 ]);

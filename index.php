@@ -413,6 +413,7 @@ if (session_status() === PHP_SESSION_NONE) {
             // no-op
         } else {
             let notificationsCache = [];
+            const orderDetailsCache = {};
 
         const statusClass = (s) => {
             if (s === 'paid') return 'paid';
@@ -463,6 +464,53 @@ if (session_status() === PHP_SESSION_NONE) {
                 }
                 notificationsCache = list;
 
+                const fetchOrderDetails = async (orderId) => {
+                    const key = String(orderId || '');
+                    if (!key) return null;
+                    if (orderDetailsCache[key]) return orderDetailsCache[key];
+                    try {
+                        const res = await fetch(`api/get_order_details.php?order_id=${encodeURIComponent(key)}`);
+                        const data = await res.json();
+                        if (data && data.success) {
+                            orderDetailsCache[key] = data;
+                            return data;
+                        }
+                    } catch (e) {
+                        // ignore
+                    }
+                    return null;
+                };
+
+                const renderOrderDetailsHtml = (data) => {
+                    if (!data || !data.order) return '<div class="notif-meta">Unable to load order details.</div>';
+                    const o = data.order;
+                    const items = Array.isArray(data.items) ? data.items : [];
+                    const money = (n) => {
+                        const num = Number(n || 0);
+                        return num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    };
+                    const itemsText = items.length
+                        ? items.map(it => `• ${escapeHtml(it.product_name)} x${escapeHtml(it.quantity)}`).join('<br>')
+                        : '(No items)';
+
+                    const addressBits = [o.street, o.barangay, o.city, o.province, o.postal_code]
+                        .map(v => (v || '').trim())
+                        .filter(Boolean);
+
+                    return `
+                        <div class="notif-meta"><strong>Name:</strong> ${escapeHtml(o.full_name || '')}</div>
+                        <div class="notif-meta"><strong>Contact:</strong> ${escapeHtml(o.contact || '')}</div>
+                        <div class="notif-meta"><strong>Email:</strong> ${escapeHtml(o.email || '')}</div>
+                        <div class="notif-meta"><strong>Payment:</strong> ${escapeHtml(String(o.payment_method || '').toUpperCase())}</div>
+                        <div class="notif-meta"><strong>Delivery:</strong> ${escapeHtml(String(o.delivery_method || '').toUpperCase())}</div>
+                        ${addressBits.length ? `<div class="notif-meta"><strong>Address:</strong> ${escapeHtml(addressBits.join(', '))}</div>` : ''}
+                        <div class="notif-meta"><strong>Items:</strong><br>${itemsText}</div>
+                        <div class="notif-meta"><strong>Subtotal:</strong> PHP ${escapeHtml(money(o.subtotal))}</div>
+                        <div class="notif-meta"><strong>Shipping:</strong> PHP ${escapeHtml(money(o.shipping))}</div>
+                        <div class="notif-meta"><strong>Total:</strong> PHP ${escapeHtml(money(o.total))}</div>
+                    `;
+                };
+
                 list.forEach(n => {
                     const wrap = document.createElement('div');
                     wrap.className = 'notif-item';
@@ -495,6 +543,16 @@ if (session_status() === PHP_SESSION_NONE) {
                             wrap.style.opacity = '0.75';
                             updateBadge();
                             await markNotificationsRead([n.id]);
+                        }
+
+                        if (isOpening && detail) {
+                            detail.innerHTML = `<div class="notif-meta">Loading order details…</div>`;
+                            const data = await fetchOrderDetails(n.order_id);
+                            detail.innerHTML = `
+                                ${updatedStr ? `<div class="notif-meta">Updated: ${escapeHtml(updatedStr)}</div>` : ''}
+                                ${renderOrderDetailsHtml(data)}
+                                <div class="notif-meta mt-2">Tap again to close</div>
+                            `;
                         }
                     });
 
