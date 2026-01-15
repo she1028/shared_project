@@ -14,8 +14,21 @@ if (basename($_SERVER['SCRIPT_NAME'] ?? '') === 'cardmodal.php') {
         width: fit-content;
 
     } */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
     .custom-modal .modal-content {
         height: auto;
+    }
+
+    .pic {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+        justify-content: center;
     }
 
     .back-action {
@@ -63,6 +76,34 @@ if (basename($_SERVER['SCRIPT_NAME'] ?? '') === 'cardmodal.php') {
         right: 1rem;
         z-index: 1080;
     }
+
+    @media(max-width: 768px) {
+        .pic {
+            width: 100%;
+            height: 100%;
+            max-height: 250px;
+            max-width: 250px;
+            object-fit: cover;
+            display: flex;
+            justify-content: center;
+            margin: auto;
+        }
+
+
+    }
+
+    @media(max-width: 980px) {
+        .pic {
+            width: 100%;
+            height: 100%;
+            max-height: 250px;
+            max-width: 250px;
+            object-fit: cover;
+            display: flex;
+            justify-content: center;
+            margin: auto;
+        }
+    }
 </style>
 
 <!-- Food detail modal -->
@@ -71,22 +112,22 @@ if (basename($_SERVER['SCRIPT_NAME'] ?? '') === 'cardmodal.php') {
         <div class="modal-content p-3" style="background-color: #ede3d4;">
             <div class="modal-body">
                 <div class="row align-items-center justify-content-center">
-                    <div class="col-lg-5 col-12 align-items-center">
-                        <img id="modalFoodImage" class="img-fluid">
-                    </div>
                     <!-- Back button -->
+                    <div class="my-2">
+                        <span class="d-inline-flex align-items-center border bg-light rounded-5 px-2 py-1 btn-outline-darkg-2 back-action g-2" data-bs-dismiss="modal">
+                            <i class="material-icons">&#xe5c4;</i>
+                            <span>back</span>
+                        </span>
+                    </div>
+                    <div class="col-lg-5 col-12 align-items-center">
+                        <img id="modalFoodImage" class="img-fluid pic">
+                    </div>
                     <div class="col-lg-7 col-12 p-2 mt-2">
-                        <div class="m-2">
-                            <span class="d-inline-flex align-items-center back-action g-2" data-bs-dismiss="modal">
-                                <i class="material-icons">&#xe5c4;</i>
-                                <span>back</span>
-                            </span>
-                        </div>
                         <!-- Category -->
                         <div class="d-flex align-items-center justify-content-center m-2">
                             <span id="modalFoodCategory"
                                 class="rounded-5 text-center py-1 px-3"
-                                style="background-color: #c6c6c6cc; font-size: 13px;">
+                                style="background-color: #ffffffcc; font-size: 13px;">
                             </span>
                         </div>
                         <div class="row mt-2">
@@ -128,7 +169,7 @@ if (basename($_SERVER['SCRIPT_NAME'] ?? '') === 'cardmodal.php') {
                             </div>
                             <!-- add to cart -->
                             <div class="d-flex align-items-center">
-                                <span id="addToCartBtn" class="btn rounded-2 text-center py-1 px-2 ms-5" style="background-color: #c6c6c6cc; justify-content: center;">add to cart</span>
+                                <span id="addToCartBtn" class="btn rounded-3 text-center py-1 px-2 ms-5" style="background-color: #f8c25f; justify-content: center;">add to cart</span>
                             </div>
                         </div>
                     </div>
@@ -149,7 +190,7 @@ if (basename($_SERVER['SCRIPT_NAME'] ?? '') === 'cardmodal.php') {
             return;
         }
 
-        window.openFoodModal = function (item) {
+        window.openFoodModal = function(item) {
             currentFood = item || null;
             currentQty = 1;
 
@@ -201,10 +242,12 @@ if (basename($_SERVER['SCRIPT_NAME'] ?? '') === 'cardmodal.php') {
             };
 
             fetch('add_to_cart.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(postData)
-            })
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(postData)
+                })
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
@@ -372,7 +415,7 @@ if (basename($_SERVER['SCRIPT_NAME'] ?? '') === 'cardmodal.php') {
                         $qty = isset($item['qty']) ? (int)$item['qty'] : 1;
                         $lineTotal = ((float)$item['price']) * $qty;
                         $subtotal += $lineTotal;
-                        ?>
+                    ?>
                         <div class="d-flex mb-3 align-items-center">
                             <div class="item-number"><?= $index + 1 ?></div>
                             <div class="flex-grow-1 ms-2">
@@ -644,7 +687,7 @@ if (basename($_SERVER['SCRIPT_NAME'] ?? '') === 'cardmodal.php') {
         const paymentSelect = document.getElementById("paymentMethod");
         const cashTotalSpan = document.getElementById("cashTotal");
 
-        checkoutForm.addEventListener("submit", function (e) {
+        checkoutForm.addEventListener("submit", function(e) {
             e.preventDefault();
 
             checkoutError.style.display = "none";
@@ -690,57 +733,58 @@ if (basename($_SERVER['SCRIPT_NAME'] ?? '') === 'cardmodal.php') {
 
             // Persist order to backend
             fetch("admin/processcheckout.php", {
-                method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: new URLSearchParams({
-                    name,
-                    contact,
-                    email,
-                    payment,
-                    delivery,
-                    street: document.querySelector('input[placeholder="Street Number / #"]').value,
-                    barangay: document.querySelector('input[placeholder="Barangay"]').value,
-                    city: document.querySelector('input[placeholder="City"]').value,
-                    province: "Batangas",
-                    postal: document.querySelector('input[placeholder="Postal Code"]').value,
-                    notes: document.querySelector('textarea').value,
-                    shipping: shipping,
-                    total: totalAmount
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    body: new URLSearchParams({
+                        name,
+                        contact,
+                        email,
+                        payment,
+                        delivery,
+                        street: document.querySelector('input[placeholder="Street Number / #"]').value,
+                        barangay: document.querySelector('input[placeholder="Barangay"]').value,
+                        city: document.querySelector('input[placeholder="City"]').value,
+                        province: "Batangas",
+                        postal: document.querySelector('input[placeholder="Postal Code"]').value,
+                        notes: document.querySelector('textarea').value,
+                        shipping: shipping,
+                        total: totalAmount
+                    })
                 })
-            })
-            .then(res => res.text())
-            .then(data => {
-                const trimmed = (data || "").trim();
-                if (trimmed === "success") {
-                    if (payment === "cash") {
-                        cashTotalSpan.textContent = totalAmount.toFixed(2);
-                        const cashModal = new bootstrap.Modal(document.getElementById('cashModal'));
-                        cashModal.show();
-                    } else if (payment === "full") {
-                        const confirmPay = confirm("Are you sure you want to pay?");
-                        if (confirmPay) {
-                            window.location.href = "payment.php";
+                .then(res => res.text())
+                .then(data => {
+                    const trimmed = (data || "").trim();
+                    if (trimmed === "success") {
+                        if (payment === "cash") {
+                            cashTotalSpan.textContent = totalAmount.toFixed(2);
+                            const cashModal = new bootstrap.Modal(document.getElementById('cashModal'));
+                            cashModal.show();
+                        } else if (payment === "full") {
+                            const confirmPay = confirm("Are you sure you want to pay?");
+                            if (confirmPay) {
+                                window.location.href = "payment.php";
+                            }
+                        } else if (payment === "paypal") {
+                            alert("PayPal checkout coming soon. Order saved as pending.");
                         }
-                    } else if (payment === "paypal") {
-                        alert("PayPal checkout coming soon. Order saved as pending.");
+                    } else {
+                        const friendly = trimmed === "error:empty_cart" ?
+                            "Your cart is empty. Please add items before checking out." :
+                            trimmed === "error:not_logged_in" ?
+                            "Please sign in to checkout." :
+                            trimmed;
+
+                        checkoutError.textContent = friendly || "There was a problem processing your order. Please try again.";
+                        checkoutError.style.display = "block";
                     }
-                } else {
-                    const friendly = trimmed === "error:empty_cart"
-                        ? "Your cart is empty. Please add items before checking out."
-                        : trimmed === "error:not_logged_in"
-                            ? "Please sign in to checkout."
-                        : trimmed;
-
-                    checkoutError.textContent = friendly || "There was a problem processing your order. Please try again.";
+                })
+                .catch(() => {
+                    checkoutError.textContent = "Unable to submit order. Please check your connection.";
                     checkoutError.style.display = "block";
-                }
-            })
-            .catch(() => {
-                checkoutError.textContent = "Unable to submit order. Please check your connection.";
-                checkoutError.style.display = "block";
-            });
+                });
         });
-
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>

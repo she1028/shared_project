@@ -69,11 +69,13 @@
 #chat p.user {
     background: #d4efff;
     align-self: flex-end;
+    width: fit-content;
 }
 
 #chat p.bot {
     background: #f1f1f1;
     align-self: flex-start;
+    width: fit-content;
 }
 
 /* Input container */
@@ -149,12 +151,16 @@ function send_to_chat() {
     if (!text) return;
 
     // Add user message to chat
-    chat.innerHTML += "<p class='user'><b>You:</b> " + text + "</p>";
+    chat.innerHTML += `
+    <div class = "d-flex justify-content-end mb-2">
+        <p class='user rounded-5'><b>You:</b> ` + text + `</p>
+    </div>`;
+    
     input.value = "";  // Clear the input field
     chat.scrollTop = chat.scrollHeight;
 
     const reply_id = "reply_" + Date.now();
-    chat.innerHTML += "<p id='" + reply_id + "' class='bot'><b>YMZM:</b> ...</p>";
+    chat.innerHTML += "<p id='" + reply_id + "' class='bot justify-content-start mb-2 rounded-5' style='word-wrap:break-all;'><b>YMZM:</b> ...</p>";
     chat.scrollTop = chat.scrollHeight;
 
     // Send user input to chat.php using AJAX (fetch API)

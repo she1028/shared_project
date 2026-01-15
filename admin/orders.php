@@ -269,14 +269,19 @@ if ($itemRows) {
     <meta charset="UTF-8">
     <title>Orders</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="admin.css">
 </head>
 <body>
 <div class="bg-blur"></div>
+<div class="container mt-5">
+    <a href="dashboard.php" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Back
+    </a>
+</div>
 <div class="container mt-4">
-    <a href="dashboard.php" class="btn btn-secondary mb-3">Back</a>
     <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-        <h2 class="m-0">Orders</h2>
+        <h2 class="m-0 text-light">Orders</h2>
         <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addOrderModal">Add Order</button>
     </div>
     <?php if ($alert): ?>
@@ -351,23 +356,7 @@ if ($itemRows) {
                                         <button
                                             class="btn btn-sm btn-outline-secondary edit-order"
                                             data-id="<?php echo $oid; ?>"
-                                            data-full_name="<?php echo htmlspecialchars($o['full_name'], ENT_QUOTES); ?>"
-                                            data-contact="<?php echo htmlspecialchars($o['contact'], ENT_QUOTES); ?>"
-                                            data-email="<?php echo htmlspecialchars($o['email'], ENT_QUOTES); ?>"
-                                            data-payment_method="<?php echo htmlspecialchars($o['payment_method'], ENT_QUOTES); ?>"
-                                            data-delivery_method="<?php echo htmlspecialchars($o['delivery_method'], ENT_QUOTES); ?>"
-                                            data-event_date="<?php echo htmlspecialchars((string)($o['event_date'] ?? ''), ENT_QUOTES); ?>"
-                                            data-delivery_time="<?php echo htmlspecialchars((string)($o['delivery_time'] ?? ''), ENT_QUOTES); ?>"
                                             data-status="<?php echo htmlspecialchars($o['status'], ENT_QUOTES); ?>"
-                                            data-street="<?php echo htmlspecialchars($o['street'], ENT_QUOTES); ?>"
-                                            data-barangay="<?php echo htmlspecialchars($o['barangay'], ENT_QUOTES); ?>"
-                                            data-city="<?php echo htmlspecialchars($o['city'], ENT_QUOTES); ?>"
-                                            data-province="<?php echo htmlspecialchars($o['province'], ENT_QUOTES); ?>"
-                                            data-postal_code="<?php echo htmlspecialchars($o['postal_code'], ENT_QUOTES); ?>"
-                                            data-notes="<?php echo htmlspecialchars($o['notes'], ENT_QUOTES); ?>"
-                                            data-subtotal="<?php echo (float)$o['subtotal']; ?>"
-                                            data-shipping="<?php echo (float)$o['shipping']; ?>"
-                                            data-total="<?php echo (float)$o['total']; ?>"
                                             data-bs-toggle="modal"
                                             data-bs-target="#editOrderModal"
                                         >Edit</button>
@@ -375,17 +364,6 @@ if ($itemRows) {
                                             <input type="hidden" name="action" value="delete_order">
                                             <input type="hidden" name="order_id" value="<?php echo $oid; ?>">
                                             <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
-                                        </form>
-                                        <form method="post" class="d-flex gap-1 align-items-center flex-wrap">
-                                            <input type="hidden" name="action" value="update_status">
-                                            <input type="hidden" name="order_id" value="<?php echo $oid; ?>">
-                                            <select name="status" class="form-select form-select-sm">
-                                                <?php foreach ($statusOptions as $opt): ?>
-                                                    <option value="<?php echo $opt; ?>" <?php echo $o['status'] === $opt ? 'selected' : ''; ?>><?php echo ucfirst($opt); ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                            <input type="text" name="notify_message" class="form-control form-control-sm" placeholder="Message (optional)">
-                                            <button type="submit" class="btn btn-sm btn-outline-primary">Update</button>
                                         </form>
                                     </div>
                                 </td>
@@ -535,42 +513,14 @@ if ($itemRows) {
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editOrderLabel">Edit Order</h5>
+                <h5 class="modal-title" id="editOrderLabel">Update Status</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form method="post" class="modal-body" id="editOrderForm">
-                <input type="hidden" name="action" value="edit_order">
+                <input type="hidden" name="action" value="update_status">
                 <input type="hidden" name="order_id" id="edit-order-id">
                 <div class="row g-2">
-                    <div class="col-md-6">
-                        <label class="form-label">Full Name</label>
-                        <input type="text" class="form-control" name="full_name" id="edit-full-name" required readonly>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Contact</label>
-                        <input type="text" class="form-control" name="contact" id="edit-contact" required readonly>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-control" name="email" id="edit-email" required readonly>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Payment</label>
-                        <input type="text" class="form-control" name="payment_method" id="edit-payment" readonly>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Delivery</label>
-                        <input type="text" class="form-control" name="delivery_method" id="edit-delivery" readonly>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Event Date</label>
-                        <input type="text" class="form-control" id="edit-event-date" readonly>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Delivery Time</label>
-                        <input type="text" class="form-control" id="edit-delivery-time" readonly>
-                    </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label class="form-label">Status</label>
                         <select class="form-select" name="status" id="edit-status" required>
                             <?php foreach ($statusOptions as $opt): ?>
@@ -578,50 +528,14 @@ if ($itemRows) {
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    <div class="col-md-9">
-                        <label class="form-label">Street</label>
-                        <input type="text" class="form-control" name="street" id="edit-street" readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Barangay</label>
-                        <input type="text" class="form-control" name="barangay" id="edit-barangay" readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">City</label>
-                        <input type="text" class="form-control" name="city" id="edit-city" readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Province</label>
-                        <input type="text" class="form-control" name="province" id="edit-province" readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Postal Code</label>
-                        <input type="text" class="form-control" name="postal_code" id="edit-postal" readonly>
-                    </div>
                     <div class="col-md-8">
-                        <label class="form-label">Notes</label>
-                        <input type="text" class="form-control" name="notes" id="edit-notes" readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Subtotal</label>
-                        <input type="number" step="0.01" min="0" class="form-control" name="subtotal" id="edit-subtotal" required readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Shipping</label>
-                        <input type="number" step="0.01" min="0" class="form-control" name="shipping" id="edit-shipping" required readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Total</label>
-                        <input type="number" step="0.01" min="0" class="form-control" name="total" id="edit-total" required readonly>
-                    </div>
-                    <div class="col-md-12">
-                        <label class="form-label">Notify Message (optional)</label>
-                        <input type="text" class="form-control" name="notify_message" placeholder="Message to send with status">
+                        <label class="form-label">Admin Message (optional)</label>
+                        <input type="text" class="form-control" name="notify_message" id="edit-notify" placeholder="Message to send with status">
                     </div>
                 </div>
                 <div class="text-end mt-3">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Status</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
                 </div>
             </form>
         </div>
@@ -632,27 +546,15 @@ if ($itemRows) {
 document.addEventListener('DOMContentLoaded', () => {
     const editButtons = document.querySelectorAll('.edit-order');
     const mapValue = (el, val) => { if (el) el.value = val ?? ''; };
+    const orderIdField = document.getElementById('edit-order-id');
+    const statusField = document.getElementById('edit-status');
+    const notifyField = document.getElementById('edit-notify');
 
     editButtons.forEach(btn => {
         btn.addEventListener('click', () => {
-            mapValue(document.getElementById('edit-order-id'), btn.dataset.id);
-            mapValue(document.getElementById('edit-full-name'), btn.dataset.full_name);
-            mapValue(document.getElementById('edit-contact'), btn.dataset.contact);
-            mapValue(document.getElementById('edit-email'), btn.dataset.email);
-            mapValue(document.getElementById('edit-payment'), btn.dataset.payment_method);
-            mapValue(document.getElementById('edit-delivery'), btn.dataset.delivery_method);
-            mapValue(document.getElementById('edit-event-date'), btn.dataset.event_date);
-            mapValue(document.getElementById('edit-delivery-time'), btn.dataset.delivery_time);
-            mapValue(document.getElementById('edit-status'), btn.dataset.status);
-            mapValue(document.getElementById('edit-street'), btn.dataset.street);
-            mapValue(document.getElementById('edit-barangay'), btn.dataset.barangay);
-            mapValue(document.getElementById('edit-city'), btn.dataset.city);
-            mapValue(document.getElementById('edit-province'), btn.dataset.province);
-            mapValue(document.getElementById('edit-postal'), btn.dataset.postal_code);
-            mapValue(document.getElementById('edit-notes'), btn.dataset.notes);
-            mapValue(document.getElementById('edit-subtotal'), parseFloat(btn.dataset.subtotal || 0).toFixed(2));
-            mapValue(document.getElementById('edit-shipping'), parseFloat(btn.dataset.shipping || 0).toFixed(2));
-            mapValue(document.getElementById('edit-total'), parseFloat(btn.dataset.total || 0).toFixed(2));
+            mapValue(orderIdField, btn.dataset.id);
+            mapValue(statusField, btn.dataset.status);
+            mapValue(notifyField, '');
         });
     });
 });

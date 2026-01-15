@@ -158,6 +158,61 @@ try {
                 </div>
             </div>
 
+            <!-- Recent Orders -->
+            <div class="col-12 d-flex justify-content-center">
+                <div class="card card-admin shadow w-100 m-3" style="max-width: 1000px;">
+                    <div class="p-3">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                            <h5 class="m-0">Recent Orders</h5>
+                            <a href="orders.php" class="btn btn-outline-primary btn-sm">View All</a>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Customer</th>
+                                    <th>Schedule</th>
+                                    <th>Status</th>
+                                    <th class="text-end">Total</th>
+                                    <th>Created</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if (!empty($recentOrders)): ?>
+                                    <?php foreach ($recentOrders as $o): ?>
+                                        <tr>
+                                            <td><?php echo (int)$o['id']; ?></td>
+                                            <td><?php echo htmlspecialchars((string)$o['full_name']); ?></td>
+                                            <td>
+                                                <?php
+                                                $scheduleParts = [];
+                                                if (!empty($o['event_date'])) {
+                                                    $scheduleParts[] = date('M d, Y', strtotime($o['event_date']));
+                                                }
+                                                if (!empty($o['delivery_time'])) {
+                                                    $scheduleParts[] = date('h:i A', strtotime($o['delivery_time']));
+                                                }
+                                                echo !empty($scheduleParts) ? htmlspecialchars(implode(' • ', $scheduleParts)) : '<span class="text-muted">—</span>';
+                                                ?>
+                                            </td>
+                                            <td><?php echo htmlspecialchars((string)$o['status']); ?></td>
+                                            <td class="text-end">₱<?php echo number_format((float)$o['total'], 2); ?></td>
+                                            <td><?php echo !empty($o['created_at']) ? date('M d, Y h:i A', strtotime($o['created_at'])) : '—'; ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted">No orders yet.</td>
+                                    </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
             <div class="row">
                 <!-- Total Users Card -->
                 <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
@@ -259,59 +314,6 @@ try {
                     </div>
                 </div>
 
-            </div>
-
-            <!-- Recent Orders -->
-            <div class="col-12 d-flex justify-content-center">
-                <div class="card card-admin shadow w-100 m-3" style="max-width: 1000px;">
-                    <div class="p-3">
-                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                            <h5 class="m-0">Recent Orders</h5>
-                            <a href="orders.php" class="btn btn-outline-primary btn-sm">View All</a>
-                        </div>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Customer</th>
-                                    <th>Schedule</th>
-                                    <th>Status</th>
-                                    <th class="text-end">Total</th>
-                                    <th>Created</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if (!empty($recentOrders)): ?>
-                                    <?php foreach ($recentOrders as $o): ?>
-                                        <tr>
-                                            <td><?php echo (int)$o['id']; ?></td>
-                                            <td><?php echo htmlspecialchars((string)$o['full_name']); ?></td>
-                                            <td>
-                                                <?php
-                                                $scheduleParts = [];
-                                                if (!empty($o['event_date'])) {
-                                                    $scheduleParts[] = date('M d, Y', strtotime($o['event_date']));
-                                                }
-                                                if (!empty($o['delivery_time'])) {
-                                                    $scheduleParts[] = date('h:i A', strtotime($o['delivery_time']));
-                                                }
-                                                echo !empty($scheduleParts) ? htmlspecialchars(implode(' • ', $scheduleParts)) : '<span class="text-muted">—</span>';
-                                                ?>
-                                            </td>
-                                            <td><?php echo htmlspecialchars((string)$o['status']); ?></td>
-                                            <td class="text-end">₱<?php echo number_format((float)$o['total'], 2); ?></td>
-                                            <td><?php echo !empty($o['created_at']) ? date('M d, Y h:i A', strtotime($o['created_at'])) : '—'; ?></td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <tr><td colspan="6" class="text-center text-muted">No orders yet.</td></tr>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
             </div>
         </div>
 
