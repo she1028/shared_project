@@ -69,12 +69,15 @@ $categories = $conn->query("SELECT * FROM food_categories ORDER BY food_category
     <meta charset="UTF-8">
     <title>Food Categories</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="admin.css">
 </head>
 <body>
 <div class="bg-blur"></div>
-<div class="container mt-4">
-    <a href="dashboard.php" class="btn btn-secondary">Back</a>
+<div class="container mt-5">
+    <a href="dashboard.php" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Back
+    </a>
 </div>
 <div class="container py-4">
     <div class="row justify-content-center">

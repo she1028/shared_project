@@ -43,13 +43,13 @@ if (isset($_POST['update_ref'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Bookings</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="admin.css">
 </head>
 
 <body>
     <div class="bg-blur"></div>
 
-    <div class="container admin-wrapper my-4">
+    <div class="container admin-wrapper my-4 align-items-center">
         <div class="row">
             <div class="col-12">
                 <div class="card-admin">

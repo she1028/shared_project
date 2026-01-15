@@ -100,7 +100,11 @@ $total = !empty($cart) ? ($subtotal + $shipping) : 0;
 <body class="bg-light">
   <div class="container py-4">
     <div class="m-2">
+<<<<<<< HEAD
       <a id="cartBackBtn" class="d-inline-flex align-items-center back-action g-2" href="javascript:void(0)">
+=======
+      <a class="d-inline-flex align-items-center border bg-light rounded-5 px-3 py-2 btn-outline-darkg-2 back-action g-2" href="index.php">
+>>>>>>> origin/main
         <i class="material-icons">&#xe5c4;</i>
         <span>back</span>
       </a>

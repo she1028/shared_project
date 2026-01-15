@@ -87,3 +87,6 @@ $footerFacebook = $footer['facebook_url'] ?? 'https://facebook.com';
     </div>
 </footer>
 
+<?php include_once(__DIR__ . '/includes/chatbot.php'); ?>
+<?php include_once(__DIR__ . '/includes/notifications-widget.php'); ?>
+

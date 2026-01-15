@@ -212,11 +212,6 @@ if (isset($_POST['email'], $_POST['password']) && !isset($_POST['name'])) {
                     <span class="ms-2">Authenticating with Bake & Take...</span>
                 </div>
                 
-                <div class="d-flex align-items-center my-3">
-                    <hr class="flex-grow-1"> <span class="mx-2">Visit us on</span>
-                    <hr class="flex-grow-1">
-                </div>
-                <div class="text-center"> <i class="bi bi-google fs-4 mx-3"></i> <i class="bi bi-facebook fs-4 mx-3"></i> <i class="bi bi-apple fs-4 mx-3"></i> </div>
             </form>
 
             <!-- sign up -->

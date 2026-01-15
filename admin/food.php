@@ -175,6 +175,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete') {
     <meta charset="UTF-8">
     <title>Food Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="admin.css">
     <style>
         /* Keep wide tables inside the card and allow horizontal scrolling */
@@ -198,8 +199,10 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete') {
 
 <body>
     <div class="bg-blur"></div>
-    <div class="container mt-4">
-        <a href="dashboard.php" class="btn btn-secondary">Back</a>
+    <div class="container mt-5">
+        <a href="dashboard.php" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Back
+        </a>
     </div>
     <div class="container-fluid py-4">
         <div class="row justify-content-center">

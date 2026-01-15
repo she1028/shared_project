@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Oranienbaum' rel='stylesheet'>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
@@ -95,7 +96,7 @@
                 : '<span class="text-muted small">No colors available</span>';
 
             card.innerHTML = `
-                <img src="${item.image}" class="card-img-top" style="height:200px; width:100%; object-fit: cover; object-position:center; background-color: #f8f9fa;">
+                <img src="${item.image}" class="card-img-top" style="height:200px; width:100%; object-fit: cover; object-position:center; background-color: #f8f9fa; filter: none !important;">
                 <div class="card-body text-start">
                     <h5 class="card-title">${item.name}</h5>
                     <p class="card-text mb-2">₱ ${Number(item.price).toFixed(2)}</p>
