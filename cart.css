@@ -49,6 +49,11 @@
   text-align: center;
   padding-left: 0;
   padding-right: 0;
+  appearance: textfield;
+  -webkit-appearance: textfield;
+  -moz-appearance: textfield;
+  height: 30px;
+  line-height: 30px;
 }
 
 /* Keep qty editor perfectly centered */
@@ -58,31 +63,88 @@
   justify-content: space-between;
 }
 
-.cart-item .input-group.input-group-sm > .btn,
-.cart-item .input-group.input-group-sm > .form-control {
-  height: 32px;
-}
-
-.cart-item .qty-minus,
-.cart-item .qty-plus {
-  width: 32px;
-  padding: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .cart-item .cart-qty {
   padding-top: 0;
   padding-bottom: 0;
+  width: 44px;
+  min-width: 44px;
+  max-width: 44px;
+  flex: 0 0 44px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.cart-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  min-width: 160px;
+}
+
+.cart-qty-wrap {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 6px;
+  overflow: hidden;
+  width: 111px;
+  min-width: 111px;
+  flex: 0 0 39px;
+}
+
+.cart-qty-wrap .btn {
+  width: 32px;
+  min-width: 32px;
+  border: none;
+  border-radius: 0;
+}
+
+.cart-qty-wrap .cart-qty {
+  border: none;
+}
+
+.cart-price {
+  font-weight: 600;
+  min-width: 80px;
+}
+
+.cart-remove-left {
+  margin-top: 6px;
+}
+
+.cart-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cart-meta-title {
+  font-size: 0.98rem;
+}
+
+.cart-meta-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cart-meta-line {
+  font-size: 0.82rem;
+  color: #555;
+}
+
+.cart-meta-label {
+  color: #333;
+  font-weight: 600;
+  margin-right: 4px;
+}
+
+.cart-meta-value {
+  color: #555;
 }
 
 /* Keep right-side controls centered even if description wraps */
-.cart-actions {
-  align-self: flex-start;
-  margin-top: 11px; /* (thumb 54px - control 32px) / 2 */
-}
-
 .cart-actions .btn-outline-secondary {
   border-color: rgba(0,0,0,0.15);
 }
@@ -93,6 +155,28 @@
 
 .cart-actions .btn-outline-danger:hover {
   border-color: rgba(220,53,69,0.8);
+}
+
+/* Slightly shift the items count badge left */
+.cart-items-count {
+  margin-right: -4px;
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 8px;
+  font-size: 0.78rem;
+  border-radius: 999px;
+}
+
+/* Hide native number spinners so only + / - controls are used */
+.cart-qty::-webkit-outer-spin-button,
+.cart-qty::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.cart-qty {
+  -moz-appearance: textfield;
 }
 
 @media (max-width: 576px) {

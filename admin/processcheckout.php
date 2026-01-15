@@ -253,7 +253,7 @@
         $status = 'pending';
 
         if (empty($cart)) {
-            echo "error:empty_cart";
+            echo "error: empty_cart";
             exit;
         }
 
@@ -339,7 +339,7 @@
         $stmt = $conn->prepare("
             INSERT INTO orders 
             (full_name, contact, email, payment_method, delivery_method, status, event_date, delivery_time, street, barangay, city, province, postal_code, notes, subtotal, shipping, total)
-            VALUES (?,?,?,?,?,?,NULLIF(?,''),NULLIF(?,''),?,?,?,?,?,?,?,?,?,?)
+            VALUES (?,?,?,?,?,?,NULLIF(?,''),NULLIF(?,''),?,?,?,?,?,?,?,?,?)
         ");
 
         $stmt->bind_param(

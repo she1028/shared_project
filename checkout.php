@@ -119,25 +119,35 @@
                     </section>
 
                     <div class="container my-5">
-                        <div class="row g-3 justify-content-center">
+                        <div class="row g-3 justify-content-center align-items-stretch">
 
                             <!-- LEFT: Checkout Form -->
-                            <div class="col-lg-6 col-md-7">
-                                <form id="checkoutForm" class="checkout-box">
+                            <div class="col-lg-6 col-md-7 d-flex">
+                                <form id="checkoutForm" class="checkout-box w-100 h-100">
 
                                     <h6 class="fw-bold mb-3">CONTACT INFORMATION</h6>
                                         <div class="row g-2">
-                                            <div class="col-md-6">
-                                                <label class="form-label">Full Name</label>
-                                                <input type="text" class="form-control" placeholder="Full Name">
+                                            <div class="col-md-4">
+                                                <label class="form-label">First Name <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="firstName" placeholder="First Name" autocomplete="given-name" required>
+                                                <small class="small-msg"></small>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label">Middle Initial <span class="text-muted small">(optional)</span></label>
+                                                <input type="text" class="form-control" id="middleInitial" placeholder="M" maxlength="1" autocomplete="additional-name">
+                                                <small class="small-msg"></small>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label">Last Name <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="lastName" placeholder="Last Name" autocomplete="family-name" required>
                                                 <small class="small-msg"></small>
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label">Contact No.</label>
-                                                <input type="text" class="form-control" placeholder="Contact No." value="+63">
+                                                <input type="text" class="form-control" id="contactNumber" placeholder="09XXXXXXXXX" value="09" inputmode="numeric">
                                                 <small class="small-msg"></small>
                                             </div>
-                                            <div class="col-12">
+                                            <div class="col-md-6">
                                                 <label class="form-label">Email</label>
                                                 <div class="input-group">
                                                     <input type="text" class="form-control" id="emailLocal" placeholder="Email" autocomplete="username" inputmode="email">
@@ -146,10 +156,18 @@
                                                 <small class="small-msg"></small>
                                             </div>
                                         </div>
+                                        <div class="mb-2">
+                                            <label class="form-label">Payment Method</label>
+                                            <select class="form-select" id="paymentMethod" required>
+                                                <option value="" selected disabled>Payment Method</option>
+                                                <option value="cash">Cash</option>
+                                                <option value="paypal">PayPal</option>
+                                            </select>
+                                        </div>
                                     <div class="mb-2">
-                                        <select class="form-select" id="deliveryMethod">
-                                            <option value="" disabled>Delivery Method</option>
-                                            <option value="ship" selected>Ship</option>
+                                        <select class="form-select" id="deliveryMethod" required>
+                                            <option value="" selected disabled>Delivery Method</option>
+                                            <option value="ship">Ship</option>
                                         </select>
                                     </div>
 
@@ -226,14 +244,6 @@
                                         <input type="text" class="form-control" value="067 Bawi Padre Garcia Batangas" readonly>
                                     </div>
 
-                                    <div class="mb-2">
-                                        <select class="form-select" id="paymentMethod">
-                                            <option value="" disabled>Payment Method</option>
-                                            <option value="cash" selected>Cash</option>
-                                            <option value="paypal">PayPal</option>
-                                        </select>
-                                    </div>
-
                                     <div id="checkoutError" class="checkout-error" style="display:none;"></div>
 
                                     <button type="submit" class="btn btn-secondary w-100 mt-3">Complete Order</button>
@@ -241,8 +251,8 @@
                             </div>
 
                             <!-- RIGHT: Order Summary -->
-                            <div class="col-lg-4 col-md-5">
-                                <div class="order-summary">
+                            <div class="col-lg-4 col-md-5 d-flex">
+                                <div class="order-summary w-100 h-50">
                                     <h6 class="fw-bold mb-3">ORDER SUMMARY</h6>
                                     <?php
                                     $subtotal = 0;
@@ -305,7 +315,7 @@
 
                     <!-- Cash Payment Modal -->
                     <div class="modal fade" id="cashModal" tabindex="-1" aria-labelledby="cashModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-dialog modal-dialog-centered modal-sm">
                             <div class="modal-content">
 
                                 <div class="modal-header">
@@ -314,6 +324,14 @@
                                 </div>
 
                                 <div class="modal-body">
+                                    <div class="alert alert-success d-flex align-items-center gap-2" style="font-size:13px;">
+                                        <span class="material-icons" style="font-size:18px;">check_circle</span>
+                                        <div>
+                                            <div class="fw-semibold">Thank you for ordering!</div>
+                                            <div class="text-muted">Please view the notification for complete details.</div>
+                                        </div>
+                                    </div>
+
                                     <div class="text-center mb-3">
                                         <div class="fw-bold">YMZM Catering</div>
                                         <div class="text-muted" style="font-size:12px;">Order #<span id="cashOrderId"></span></div>
@@ -359,11 +377,16 @@
                                     </div>
 
                                     <div class="alert alert-info mt-3 mb-0" style="font-size:13px;">
+                                        Total Amount: ₱<span id="cashThanksTotal"></span><br>
+                                        View your notifications for the complete receipt and updates.
+                                    </div>
+                                    <div class="alert alert-info mt-3 mb-0" style="font-size:13px;">
                                         Please prepare the exact amount for delivery.
                                     </div>
                                 </div>
 
-                                <div class="modal-footer">
+                                <div class="modal-footer flex-column gap-2">
+                                    <button type="button" class="btn btn-primary w-100" id="cashViewNotif">View Notifications</button>
                                     <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Close</button>
                                 </div>
 
@@ -415,84 +438,91 @@
                             const cashModalCloseBtn = document.querySelector("#cashModal .btn-close");
                             if (cashModalCloseBtn) {
                                 cashModalCloseBtn.addEventListener("click", () => {
-                                    window.location.href = "index.php";
+                                    try { sessionStorage.setItem('openNotifications', '1'); } catch (err) {}
+                                    window.location.href = "index.php?show=notifications";
                                 });
                             }
                             const cashModalFooterBtn = document.querySelector("#cashModal .modal-footer button");
                             if (cashModalFooterBtn) {
                                 cashModalFooterBtn.addEventListener("click", () => {
-                                    window.location.href = "index.php";
+                                    try { sessionStorage.setItem('openNotifications', '1'); } catch (err) {}
+                                    window.location.href = "index.php?show=notifications";
                                 });
                             }
 
-                            // --- FULL NAME VALIDATION ---
-                            const nameInput = document.querySelector('input[placeholder="Full Name"]');
-                            const nameMsg = createMsg(nameInput);
+                            // --- NAME VALIDATION ---
+                            const firstNameInput = document.getElementById('firstName');
+                            const middleInitialInput = document.getElementById('middleInitial');
+                            const lastNameInput = document.getElementById('lastName');
+                            const nameMsg = createMsg(lastNameInput);
 
-                            nameInput.addEventListener("input", () => {
-                                const parts = nameInput.value.trim().split(/\s+/);
-                                if (parts.length < 2) {
-                                    nameMsg.textContent = "Enter at least First and Last Name";
-                                    nameMsg.style.color = "red";
-                                    nameInput.style.borderColor = "red";
-                                    return;
+                            function validateName() {
+                                const first = firstNameInput.value.trim();
+                                let mid = middleInitialInput.value.trim();
+                                const last = lastNameInput.value.trim();
+
+                                if (mid.length > 1) {
+                                    mid = mid.charAt(0);
+                                    middleInitialInput.value = mid;
                                 }
+
+                                if (!first || !last) {
+                                    nameMsg.textContent = "Enter first and last name";
+                                    nameMsg.style.color = "red";
+                                    lastNameInput.style.borderColor = "red";
+                                    firstNameInput.style.borderColor = first ? "" : "red";
+                                    return false;
+                                }
+
                                 nameMsg.textContent = "Valid name";
                                 nameMsg.style.color = "green";
-                                nameInput.style.borderColor = "green";
+                                lastNameInput.style.borderColor = "green";
+                                firstNameInput.style.borderColor = "green";
+                                return true;
+                            }
+
+                            [firstNameInput, middleInitialInput, lastNameInput].forEach(inp => {
+                                inp.addEventListener('input', validateName);
                             });
 
                             // --- CONTACT VALIDATION ---
-                            const contactInput = document.querySelector('input[placeholder="Contact No."]');
+                            const contactInput = document.getElementById('contactNumber');
                             contactInput.value = "09";
                             const contactMsg = createMsg(contactInput);
 
                             function updateContact() {
                                 let val = contactInput.value.replace(/\D/g, "");
-                                if (val.startsWith("09")) {
-                                    val = val.slice(0, 10);
-                                    contactInput.value = val;
-                                    if (val.length === 10) {
-                                        contactMsg.textContent = "Valid Contact";
-                                        contactMsg.style.color = "green";
-                                        contactInput.style.borderColor = "green";
-                                    } else {
-                                        contactMsg.textContent = "Contact must be 10 digits starting with 09";
-                                        contactMsg.style.color = "red";
-                                        contactInput.style.borderColor = "red";
-                                    }
-                                } else {
-                                    val = val.slice(0, 12);
-                                    contactInput.value = "+63" + val;
-                                    if (val.length === 12) {
-                                        contactMsg.textContent = "Valid Contact";
-                                        contactMsg.style.color = "green";
-                                        contactInput.style.borderColor = "green";
-                                    } else {
-                                        contactMsg.textContent = "Contact must be 12 digits starting with +63";
-                                        contactMsg.style.color = "red";
-                                        contactInput.style.borderColor = "red";
-                                    }
+                                if (!val.startsWith("09")) {
+                                    val = "09" + val.replace(/^0+/, "");
                                 }
+                                val = val.slice(0, 11);
+                                contactInput.value = val;
+
+                                if (val.length === 11 && val.startsWith("09")) {
+                                    contactMsg.textContent = "Valid Contact";
+                                    contactMsg.style.color = "green";
+                                    contactInput.style.borderColor = "green";
+                                    return true;
+                                }
+
+                                contactMsg.textContent = "Contact must be 11 digits starting with 09";
+                                contactMsg.style.color = "red";
+                                contactInput.style.borderColor = "red";
+                                return false;
                             }
 
                             contactInput.addEventListener("input", updateContact);
                             contactInput.addEventListener("keydown", (e) => {
-                                if ((e.key === "Backspace" || e.key === "Delete") && contactInput.selectionStart <= 2 && contactInput.value.startsWith("09")) e.preventDefault();
-                                if ((e.key === "Backspace" || e.key === "Delete") && contactInput.selectionStart <= 3 && contactInput.value.startsWith("+63")) e.preventDefault();
-                                if (contactInput.selectionStart < 2 && contactInput.value.startsWith("09") && e.key.length === 1) e.preventDefault();
-                                if (contactInput.selectionStart < 3 && contactInput.value.startsWith("+63") && e.key.length === 1) e.preventDefault();
+                                if ((e.key === "Backspace" || e.key === "Delete") && contactInput.selectionStart <= 2) e.preventDefault();
+                                if (contactInput.selectionStart < 2 && e.key.length === 1) e.preventDefault();
                             });
                             contactInput.addEventListener("paste", (e) => {
                                 e.preventDefault();
                                 let paste = e.clipboardData.getData("text").replace(/\D/g, "");
-                                if (paste.startsWith("09")) {
-                                    paste = paste.slice(0, 10);
-                                    contactInput.value = paste;
-                                } else {
-                                    paste = paste.slice(0, 10);
-                                    contactInput.value = "+63" + paste;
+                                if (!paste.startsWith("09")) {
+                                    paste = "09" + paste.replace(/^0+/, "");
                                 }
+                                contactInput.value = paste.slice(0, 11);
                                 updateContact();
                             });
 
@@ -657,6 +687,7 @@
                         const checkoutError = document.getElementById("checkoutError");
                         const paymentSelect = document.getElementById("paymentMethod");
                         const cashTotalSpan = document.getElementById("cashTotal");
+                            const cashViewNotifBtn = document.getElementById('cashViewNotif');
 
                         // Receipt elements
                         const cashOrderIdEl = document.getElementById('cashOrderId');
@@ -671,6 +702,7 @@
                         const cashItemsTbody = document.getElementById('cashItems');
                         const cashSubtotalEl = document.getElementById('cashSubtotal');
                         const cashShippingEl = document.getElementById('cashShipping');
+                        const cashThanksTotalEl = document.getElementById('cashThanksTotal');
 
                         const receiptItems = <?= json_encode(array_map(function ($it) {
                             $name = (string)($it['name'] ?? ($it['product_name'] ?? ''));
@@ -714,17 +746,49 @@
                             checkoutError.style.display = "none";
                             checkoutError.textContent = "";
 
-                            const name = document.querySelector('input[placeholder="Full Name"]').value.trim();
-                            const contact = document.querySelector('input[placeholder="Contact No."]').value.trim();
+                            const first = (document.getElementById('firstName')?.value || '').trim();
+                            const midRaw = (document.getElementById('middleInitial')?.value || '').trim();
+                            const mid = midRaw ? midRaw.charAt(0) : '';
+                            const last = (document.getElementById('lastName')?.value || '').trim();
+                            const name = `${first} ${mid ? mid + ' ' : ''}${last}`.trim();
+
+                            const contactInputEl = document.getElementById('contactNumber');
+                            const contact = (contactInputEl?.value || '').trim();
+                            const contactDigits = contact.replace(/\D/g, '');
+
                             const emailLocal = (document.getElementById('emailLocal')?.value || '').trim();
                             const email = (emailLocal.includes('@') ? emailLocal.split('@')[0] : emailLocal).replace(/\s+/g, '') + '@gmail.com';
                             const delivery = deliverySelectForm.value;
                             const payment = paymentSelect.value;
                             const deliveryTime = <?= json_encode((string)$checkoutDeliveryTime) ?>;
 
-                            if (!name || !contact || !email || !delivery || !payment || !deliveryTime) {
-                                checkoutError.textContent = "Please complete all required details";
+                            const showError = (msg) => {
+                                checkoutError.textContent = msg;
                                 checkoutError.style.display = "block";
+                            };
+
+                            if (!first || !last) {
+                                showError("First and last name are required");
+                                return;
+                            }
+
+                            if (!contactDigits.startsWith('09') || contactDigits.length !== 11) {
+                                showError("Valid contact number is required (11 digits starting with 09)");
+                                return;
+                            }
+
+                            if (!emailLocal) {
+                                showError("Email is required");
+                                return;
+                            }
+
+                            if (!delivery || !payment) {
+                                showError("Please select delivery and payment method");
+                                return;
+                            }
+
+                            if (!deliveryTime) {
+                                showError("Delivery time is required. Please set it in cart before checkout.");
                                 return;
                             }
 
@@ -757,76 +821,99 @@
 
                             // Persist order to backend
                             fetch("admin/processcheckout.php", {
-                                    method: "POST",
-                                    headers: {
-                                        "Content-Type": "application/x-www-form-urlencoded"
-                                    },
-                                    body: new URLSearchParams({
-                                        name,
-                                        contact,
-                                        email,
-                                        payment,
-                                        delivery,
-                                        event_date: eventDate,
-                                        delivery_time: deliveryTime,
-                                        street: document.querySelector('input[placeholder="Street Number / #"]').value,
-                                        barangay: document.getElementById('barangaySelect').value,
-                                        city: document.getElementById('municipalitySelect').value,
-                                        province: "Batangas",
-                                        postal: document.querySelector('input[placeholder="Postal Code"]').value,
-                                        notes: document.querySelector('textarea').value,
-                                        shipping: shipping,
-                                        total: totalAmount
-                                    })
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/x-www-form-urlencoded"
+                                },
+                                body: new URLSearchParams({
+                                    name,
+                                    contact,
+                                    email,
+                                    payment,
+                                    delivery,
+                                    event_date: eventDate,
+                                    delivery_time: deliveryTime,
+                                    street: document.querySelector('input[placeholder="Street Number / #"]').value,
+                                    barangay: document.getElementById('barangaySelect').value,
+                                    city: document.getElementById('municipalitySelect').value,
+                                    province: "Batangas",
+                                    postal: document.querySelector('input[placeholder="Postal Code"]').value,
+                                    notes: document.querySelector('textarea').value,
+                                    shipping: shipping,
+                                    total: totalAmount
                                 })
-                                .then(res => res.json())
-                                .then(data => {
+                            })
+                            .then(async (res) => {
+                                const text = await res.text();
+                                let data;
+                                try {
+                                    data = JSON.parse(text);
+                                } catch (err) {
+                                    // API sometimes returns plain text like "error:..."; surface it to the user.
+                                    throw new Error(text || 'Unexpected response');
+                                }
+                                return data;
+                            })
+                            .then(data => {
 
-                                    if (data.status === "success") {
+                                if (data.status === "success") {
 
-                                        const orderId = data.order_id;
-                                        const totalAmount = data.total;
+                                    const orderId = data.order_id;
+                                    const totalAmount = data.total;
 
-                                        if (payment === "cash") {
-                                            if (cashOrderIdEl) cashOrderIdEl.textContent = String(orderId);
-                                            if (cashNameEl) cashNameEl.textContent = name;
-                                            if (cashContactEl) cashContactEl.textContent = contact;
-                                            if (cashEmailEl) cashEmailEl.textContent = email;
-                                            if (cashEventDateEl) cashEventDateEl.textContent = eventDate || '-';
-                                            if (cashDeliveryTimeEl) cashDeliveryTimeEl.textContent = deliveryTime || '-';
-                                            if (cashDeliveryMethodEl) cashDeliveryMethodEl.textContent = delivery;
+                                    if (payment === "cash") {
+                                        if (cashOrderIdEl) cashOrderIdEl.textContent = String(orderId);
+                                        if (cashNameEl) cashNameEl.textContent = name;
+                                        if (cashContactEl) cashContactEl.textContent = contact;
+                                        if (cashEmailEl) cashEmailEl.textContent = email;
+                                        if (cashEventDateEl) cashEventDateEl.textContent = eventDate || '-';
+                                        if (cashDeliveryTimeEl) cashDeliveryTimeEl.textContent = deliveryTime || '-';
+                                        if (cashDeliveryMethodEl) cashDeliveryMethodEl.textContent = delivery;
 
-                                            if (cashAddressRowEl && cashAddressEl) {
-                                                if (delivery === 'ship') {
-                                                    const streetVal = document.querySelector('input[placeholder="Street Number / #"]').value.trim();
-                                                    const brgyVal = document.getElementById('barangaySelect').value;
-                                                    const cityVal = document.getElementById('municipalitySelect').value;
-                                                    const postalVal = document.querySelector('input[placeholder="Postal Code"]').value.trim();
-                                                    cashAddressEl.textContent = `${streetVal}, ${brgyVal}, ${cityVal}, Batangas ${postalVal}`;
-                                                    cashAddressRowEl.style.display = '';
-                                                } else {
-                                                    cashAddressEl.textContent = '';
-                                                    cashAddressRowEl.style.display = 'none';
-                                                }
+                                        if (cashAddressRowEl && cashAddressEl) {
+                                            if (delivery === 'ship') {
+                                                const streetVal = document.querySelector('input[placeholder="Street Number / #"]').value.trim();
+                                                const brgyVal = document.getElementById('barangaySelect').value;
+                                                const cityVal = document.getElementById('municipalitySelect').value;
+                                                const postalVal = document.querySelector('input[placeholder="Postal Code"]').value.trim();
+                                                cashAddressEl.textContent = `${streetVal}, ${brgyVal}, ${cityVal}, Batangas ${postalVal}`;
+                                                cashAddressRowEl.style.display = '';
+                                            } else {
+                                                cashAddressEl.textContent = '';
+                                                cashAddressRowEl.style.display = 'none';
                                             }
-
-                                            renderReceiptItems();
-
-                                            if (cashSubtotalEl) cashSubtotalEl.textContent = formatMoney(<?= (float)$subtotal ?>);
-                                            if (cashShippingEl) cashShippingEl.textContent = formatMoney(shipping);
-                                            if (cashTotalSpan) cashTotalSpan.textContent = formatMoney(totalAmount);
-                                            const cashModal = new bootstrap.Modal(document.getElementById('cashModal'));
-                                            cashModal.show();
-                                        } else if (payment === "paypal") {
-                                            sessionStorage.setItem("order_id", orderId);
-                                            window.location.href = `payment.php?order_id=${encodeURIComponent(orderId)}`;
                                         }
 
-                                    } else {
-                                        checkoutError.textContent = "Checkout failed. Please try again.";
-                                        checkoutError.style.display = "block";
+                                        renderReceiptItems();
+
+                                        if (cashSubtotalEl) cashSubtotalEl.textContent = formatMoney(<?= (float)$subtotal ?>);
+                                        if (cashShippingEl) cashShippingEl.textContent = formatMoney(shipping);
+                                        if (cashTotalSpan) cashTotalSpan.textContent = formatMoney(totalAmount);
+                                        if (cashThanksTotalEl) cashThanksTotalEl.textContent = formatMoney(totalAmount);
+                                        try { sessionStorage.setItem('openNotifications', '1'); } catch (err) {}
+                                        const cashModal = new bootstrap.Modal(document.getElementById('cashModal'));
+                                        cashModal.show();
+                                            if (cashViewNotifBtn) {
+                                                cashViewNotifBtn.onclick = () => {
+                                                    try { sessionStorage.setItem('openNotifications', '1'); } catch (err) {}
+                                                    window.location.href = 'index.php?show=notifications';
+                                                };
+                                            }
+                                    } else if (payment === "paypal") {
+                                        sessionStorage.setItem("order_id", orderId);
+                                        window.location.href = `payment.php?order_id=${encodeURIComponent(orderId)}`;
                                     }
-                                })
+
+                                } else {
+                                    checkoutError.textContent = data.message || "Checkout failed. Please try again.";
+                                    checkoutError.style.display = "block";
+                                }
+                            })
+                            .catch((err) => {
+                                const msg = (err && err.message) ? err.message : "Network error. Please try again.";
+                                checkoutError.textContent = msg;
+                                checkoutError.style.display = "block";
+                            });
 
                         });
                     </script>

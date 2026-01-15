@@ -5,6 +5,26 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 require 'connect.php';
 
+// Load PayPal credentials from environment or optional config file
+$paypalClientId = getenv('PAYPAL_CLIENT_ID') ?: getenv('PAYPAL_CLIENT_ID_SANDBOX') ?: '';
+$paypalSecret = getenv('PAYPAL_SECRET') ?: getenv('PAYPAL_CLIENT_SECRET') ?: getenv('PAYPAL_CLIENT_SECRET_SANDBOX') ?: '';
+
+$configPath = __DIR__ . '/paypal_config.php';
+if (is_readable($configPath)) {
+    require_once $configPath;
+    if ($paypalClientId === '' && defined('PAYPAL_CLIENT_ID')) {
+        $paypalClientId = PAYPAL_CLIENT_ID;
+    }
+    if ($paypalSecret === '' && defined('PAYPAL_CLIENT_SECRET')) {
+        $paypalSecret = PAYPAL_CLIENT_SECRET;
+    }
+}
+
+$paypalError = '';
+if ($paypalClientId === '') {
+    $paypalError = 'PayPal client ID is not configured. Set PAYPAL_CLIENT_ID/PAYPAL_CLIENT_SECRET in your environment or fill paypal_config.php.';
+}
+
 // Guests should not access payment page
 $isLoggedIn = !empty($_SESSION['userID']) || !empty($_SESSION['userId']) || !empty($_SESSION['user_id']);
 if (!$isLoggedIn) {
@@ -80,147 +100,203 @@ $paypalTotal = number_format($total, 2, '.', '');
 ?>
 <!doctype html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Payment</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Payment</title>
 
-<!-- Bootstrap -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<!-- PayPal SDK -->
-<script src="https://www.sandbox.paypal.com/sdk/js?client-id=ARGgYhbICaBZMOHsjf7zYbR422f-nsDmfJjIMcf_Y8Pm2hrqR9dNelZ-TxjTwK9zD7FOuJcvQ2br1pzx&currency=PHP&enable-funding=card&intent=capture"></script>
+        <!-- PayPal SDK -->
+        <?php if ($paypalError === ''): ?>
+            <script src="https://www.sandbox.paypal.com/sdk/js?client-id=<?= urlencode($paypalClientId) ?>&currency=PHP&enable-funding=card&intent=capture"></script>
+        <?php endif; ?>
 </head>
+
 <body class="bg-light">
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow">
-                <div class="card-body text-center">
-                    <h3 class="mb-3">Complete Your Payment</h3>
-                    <p class="text-muted mb-1">Order #<?= (int)$orderId ?></p>
-                    <p class="mb-3"><strong>Total:</strong> PHP <?= htmlspecialchars($paypalTotal) ?></p>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-body text-center">
+                        <h3 class="mb-3">Complete Your Payment</h3>
+                        <p class="text-muted mb-1">Order #<?= (int)$orderId ?></p>
+                        <p class="mb-3"><strong>Total:</strong> PHP <?= htmlspecialchars($paypalTotal) ?></p>
 
-                    <?php if (strtolower($status) === 'paid'): ?>
-                        <div class="alert alert-success">This order is already marked as paid.</div>
-                    <?php else: ?>
-                        <!-- PayPal Button -->
-                        <div id="paypal-button-container"></div>
-                    <?php endif; ?>
+                        <?php if ($paypalError !== ''): ?>
+                            <div class="alert alert-danger">PayPal is not configured. <?= htmlspecialchars($paypalError) ?></div>
+                        <?php elseif (strtolower($status) === 'paid'): ?>
+                            <div class="alert alert-success">This order is already marked as paid.</div>
+                        <?php else: ?>
+                            <!-- PayPal Button -->
+                            <div id="paypal-button-container"></div>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Payment Confirmation Modal -->
-<div class="modal fade" id="paypalModal" tabindex="-1" aria-labelledby="paypalModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
+    <!-- Payment Confirmation Modal -->
+    <div class="modal fade" id="paypalModal" tabindex="-1" aria-labelledby="paypalModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
 
-      <div class="modal-header">
-        <h5 class="modal-title" id="paypalModalLabel">Payment Confirmation</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="paypalModalLabel">Payment Confirmation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="paypalModalClose"></button>
+                </div>
 
-      <div class="modal-body" id="paypalModalBody">
-        <!-- Payment info will appear here dynamically -->
-      </div>
+                <div class="modal-body" id="paypalModalBody">
+                    <!-- Payment info will appear here dynamically -->
+                </div>
 
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal" onclick="window.location.href='index.php'">Close</button>
-      </div>
+                <div class="modal-footer flex-column gap-2">
+                    <button type="button" class="btn btn-primary w-100" id="paypalViewNotif">View Notifications</button>
+                    <button type="button" class="btn btn-secondary w-100" id="paypalStayHere" data-bs-dismiss="modal">Stay on this page</button>
+                </div>
 
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
-<script>
-// Internal order + DB-validated total (do not change client-side)
-const internalOrderId = <?= (int)$orderId ?>;
-const totalAmount = '<?= $paypalTotal ?>';
-
-// Render PayPal button
-<?php if (strtolower($status) !== 'paid'): ?>
-paypal.Buttons({
-    style: {
-        shape: 'rect',
-        color: 'blue',
-        layout: 'vertical',
-        label: 'paypal'
-    },
-
-    // Create the order
-    createOrder: function(data, actions) {
-        return actions.order.create({
-            purchase_units: [{
-                reference_id: String(internalOrderId),
-                amount: { currency_code: 'PHP', value: totalAmount }
-            }]
+    <script>
+        // Internal order + DB-validated total (do not change client-side)
+        const internalOrderId = <?= (int)$orderId ?>;
+        const totalAmount = '<?= $paypalTotal ?>';
+        const goToNotifications = () => {
+            try {
+                sessionStorage.setItem('openNotifications', '1');
+            } catch (err) {}
+            window.location.href = 'index.php?show=notifications';
+        };
+        const viewNotifBtn = document.getElementById('paypalViewNotif');
+        const stayHereBtn = document.getElementById('paypalStayHere');
+        const modalCloseBtn = document.getElementById('paypalModalClose');
+        if (viewNotifBtn) viewNotifBtn.addEventListener('click', goToNotifications);
+        if (modalCloseBtn) modalCloseBtn.addEventListener('click', () => {
+            window.location.href = 'index.php';
         });
-    },
+        if (stayHereBtn) stayHereBtn.addEventListener('click', () => {
+            /* just dismiss */ });
 
-    // On approval
-    onApprove: function (data, actions) {
-        return actions.order.capture().then(function (details) {
+        // Render PayPal button
+        <?php if ($paypalError === '' && strtolower($status) !== 'paid'): ?>
+            paypal.Buttons({
+                style: {
+                    shape: 'rect',
+                    color: 'blue',
+                    layout: 'vertical',
+                    label: 'paypal'
+                },
 
-            // Send data to PHP
-            fetch("save_payment.php", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    order_id: internalOrderId,
-                    paypal_order_id: details.id
-                })
-            })
-            .then(res => res.json())
-            .then(res => {
-                const modalBody = document.getElementById('paypalModalBody');
+                // Create the order
+                createOrder: function(data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{
+                            reference_id: String(internalOrderId),
+                            amount: {
+                                currency_code: 'PHP',
+                                value: totalAmount
+                            }
+                        }]
+                    });
+                },
 
-                if (res.status === "success") {
-                    modalBody.innerHTML = `
-                        <div class="alert alert-success text-center">
-                            <h4 class="mb-2">Successfully Paid</h4>
-                            <p class="mb-1"><strong>Order:</strong> #${res.order_id}</p>
-                            <p class="mb-1"><strong>Paid Amount:</strong> PHP ${res.amount}</p>
-                            <p class="mb-1"><strong>Status:</strong> ${res.payment_status}</p>
-                            <p class="mb-0 text-muted" style="font-size:12px;">PayPal Ref: ${res.paypal_order_id}</p>
+                // On approval
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(details) {
+
+                        // Send data to PHP
+                        fetch("save_payment.php", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({
+                                    order_id: internalOrderId,
+                                    paypal_order_id: details.id
+                                })
+                            })
+                            .then(async res => {
+                                let text = '';
+                                let payload = null;
+                                try {
+                                    text = await res.text();
+                                } catch (e) {
+                                    // ignore
+                                }
+                                try {
+                                    if (text) payload = JSON.parse(text);
+                                } catch (e) {
+                                    // non-JSON response
+                                }
+                                if (!res.ok) {
+                                    const message = (payload && payload.message) ? payload.message : (text || 'Unable to process your payment details. Please try again.');
+                                    throw new Error(message);
+                                }
+                                if (!payload) {
+                                    const message = text || 'Unexpected empty response from server.';
+                                    throw new Error(message);
+                                }
+                                return payload;
+                            })
+                            .then(res => {
+                                const modalBody = document.getElementById('paypalModalBody');
+                                if (viewNotifBtn) viewNotifBtn.disabled = res.status !== "success";
+
+                                if (res.status === "success") {
+                                    try {
+                                        sessionStorage.setItem('openNotifications', '1');
+                                    } catch (err) {}
+                                    modalBody.innerHTML = `
+                        <div class="alert alert-success">
+                            <div class="fw-semibold">Thank you for your support!</div>
+                            <div class="small text-muted mb-2">Your payment was successful. Notifications now include your receipt.</div>
+                            <div class="d-flex justify-content-between"><span>Order #</span><strong>${res.order_id}</strong></div>
+                            <div class="d-flex justify-content-between"><span>Paid Amount</span><strong>PHP ${res.amount}</strong></div>
+                            <div class="d-flex justify-content-between"><span>Status</span><strong>${res.payment_status}</strong></div>
+                            <div class="small text-muted mt-2">PayPal Ref: ${res.paypal_order_id}</div>
+                            <div class="small text-muted">Processed via PayPal Sandbox.</div>
                         </div>
                     `;
-                } else {
-                    modalBody.innerHTML = `
+                                } else {
+                                    modalBody.innerHTML = `
                         <div class="alert alert-danger text-center">
                             <h4>Oops! Something went wrong.</h4>
                             <p>${res.message || 'We could not validate/save your payment. Please try again.'}</p>
                         </div>
                     `;
-                }
+                                }
 
-                // Show modal
-                const paypalModal = new bootstrap.Modal(document.getElementById('paypalModal'));
-                paypalModal.show();
+                                // Show modal
+                                const paypalModal = new bootstrap.Modal(document.getElementById('paypalModal'));
+                                paypalModal.show();
 
-            })
-            .catch(err => {
-                const modalBody = document.getElementById('paypalModalBody');
-                modalBody.innerHTML = `
+                            })
+                            .catch(err => {
+                                const modalBody = document.getElementById('paypalModalBody');
+                                modalBody.innerHTML = `
                     <div class="alert alert-danger text-center">
                         <h4>Network or server error!</h4>
-                        <p>Unable to process your payment details. Please try again later.</p>
+                        <p>${err && err.message ? err.message : 'Unable to process your payment details. Please try again.'}</p>
                     </div>
                 `;
-                const paypalModal = new bootstrap.Modal(document.getElementById('paypalModal'));
-                paypalModal.show();
-            });
+                                const paypalModal = new bootstrap.Modal(document.getElementById('paypalModal'));
+                                paypalModal.show();
+                            });
 
-        });
-    }
+                    });
+                }
 
-}).render('#paypal-button-container');
-<?php endif; ?>
-</script>
+            }).render('#paypal-button-container');
+        <?php endif; ?>
+    </script>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

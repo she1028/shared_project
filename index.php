@@ -585,6 +585,25 @@ if (session_status() === PHP_SESSION_NONE) {
                 }
             };
 
+            const openPanelIfRequested = () => {
+                const params = new URLSearchParams(window.location.search);
+                const shouldOpen = params.get('show') === 'notifications' || (sessionStorage.getItem('openNotifications') === '1');
+                if (!shouldOpen) return;
+
+                if (!notifPanel.classList.contains('open')) {
+                    togglePanel();
+                } else {
+                    fetchNotifications();
+                }
+
+                try { sessionStorage.removeItem('openNotifications'); } catch (err) {}
+                if (params.get('show') === 'notifications') {
+                    params.delete('show');
+                    const next = window.location.pathname + (params.toString() ? ('?' + params.toString()) : '') + window.location.hash;
+                    window.history.replaceState({}, document.title, next);
+                }
+            };
+
             notifFab.addEventListener('click', togglePanel);
             notifClose.addEventListener('click', togglePanel);
             notifRefresh.addEventListener('click', () => {
@@ -593,6 +612,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
             // Initial badge load (without forcing the panel open)
             fetchNotifications();
+            openPanelIfRequested();
         }
     </script>
 

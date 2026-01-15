@@ -5,6 +5,25 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 require 'connect.php';
 
+// Helper to load PayPal credentials from environment or optional paypal_config.php
+function loadPayPalCredentials(): array {
+    $clientId = getenv('PAYPAL_CLIENT_ID') ?: getenv('PAYPAL_CLIENT_ID_SANDBOX') ?: '';
+    $clientSecret = getenv('PAYPAL_SECRET') ?: getenv('PAYPAL_CLIENT_SECRET') ?: getenv('PAYPAL_CLIENT_SECRET_SANDBOX') ?: '';
+
+    $configPath = __DIR__ . '/paypal_config.php';
+    if (is_readable($configPath)) {
+        require_once $configPath;
+        if ($clientId === '' && defined('PAYPAL_CLIENT_ID')) {
+            $clientId = PAYPAL_CLIENT_ID;
+        }
+        if ($clientSecret === '' && defined('PAYPAL_CLIENT_SECRET')) {
+            $clientSecret = PAYPAL_CLIENT_SECRET;
+        }
+    }
+
+    return [$clientId, $clientSecret];
+}
+
 header('Content-Type: application/json; charset=utf-8');
 
 $data = json_decode(file_get_contents('php://input'), true);
@@ -114,13 +133,12 @@ $tableHasColumn = function (mysqli $conn, string $table, string $column): bool {
     }
 };
 
-// PayPal credentials: use env vars to avoid hardcoding secrets
-$clientId = getenv('PAYPAL_CLIENT_ID') ?: '';
-$clientSecret = getenv('PAYPAL_SECRET') ?: '';
+// PayPal credentials: load from env or paypal_config.php
+[$clientId, $clientSecret] = loadPayPalCredentials();
 if ($clientId === '' || $clientSecret === '') {
     echo json_encode([
         'status' => 'error',
-        'message' => 'PayPal server credentials are not set. Set PAYPAL_CLIENT_ID and PAYPAL_SECRET in your environment.'
+        'message' => 'PayPal server credentials are not set. Provide PAYPAL_CLIENT_ID/PAYPAL_CLIENT_SECRET env vars or fill paypal_config.php.'
     ]);
     exit;
 }

@@ -355,3 +355,234 @@
   "receivedStamp":1768425900749,
   "sim":"sim1"
 }
+2026-01-15 13:07:58 {
+  "from":"123456789",
+  "text":"test message",
+  "sentStamp":1768478876646,
+  "receivedStamp":1768478876646,
+  "sim":"sim1"
+}
+2026-01-15 13:08:00 {
+  "from":"123456789",
+  "text":"test message",
+  "sentStamp":1768478878493,
+  "receivedStamp":1768478878493,
+  "sim":"sim1"
+}
+2026-01-15 13:45:03 {
+  "from":"123456789",
+  "text":"test message",
+  "sentStamp":1768481101913,
+  "receivedStamp":1768481101913,
+  "sim":"sim1"
+}
+2026-01-15 13:53:23 {
+  "from":"+639928941069",
+  "text":"Yes 224287",
+  "sentStamp":1768481601000,
+  "receivedStamp":1768481602135,
+  "sim":"sim1"
+}
+2026-01-15 14:06:29 {
+  "from":"+639928941069",
+  "text":"Yes 704485",
+  "sentStamp":1768482387000,
+  "receivedStamp":1768482387604,
+  "sim":"sim1"
+}
+2026-01-15 14:18:48 {
+  "from":"+639928941069",
+  "text":"Yes 796044",
+  "sentStamp":1768483126000,
+  "receivedStamp":1768483126335,
+  "sim":"sim1"
+}
+2026-01-15 14:19:43 {
+  "from":"+639928941069",
+  "text":"Yes 602982",
+  "sentStamp":1768483148000,
+  "receivedStamp":1768483148513,
+  "sim":"sim1"
+}
+2026-01-15 14:23:55 {
+  "from":"+639928941069",
+  "text":"Yes 101989",
+  "sentStamp":1768483434000,
+  "receivedStamp":1768483433961,
+  "sim":"sim1"
+}
+2026-01-15 15:04:08 {
+  "from":"+639928941069",
+  "text":"Yes 366811",
+  "sentStamp":1768485845000,
+  "receivedStamp":1768485846330,
+  "sim":"sim1"
+}
+2026-01-15 15:18:49 {
+  "from":"+639928941069",
+  "text":"Yes 734558",
+  "sentStamp":1768486727000,
+  "receivedStamp":1768486727659,
+  "sim":"sim1"
+}
+2026-01-15 15:30:08 {
+  "from":"+639928941069",
+  "text":"Yes 402313",
+  "sentStamp":1768487397000,
+  "receivedStamp":1768487397719,
+  "sim":"sim1"
+}
+2026-01-15 15:30:08 {
+  "from":"+639928941069",
+  "text":"Yes 765563",
+  "sentStamp":1768487338000,
+  "receivedStamp":1768487338808,
+  "sim":"sim1"
+}
+2026-01-15 15:32:11 {
+  "from":"+639928941069",
+  "text":"Yes 402313",
+  "sentStamp":1768487527000,
+  "receivedStamp":1768487529702,
+  "sim":"sim1"
+}
+2026-01-15 15:46:12 {
+  "from":"+639928941069",
+  "text":"Yes 243535",
+  "sentStamp":1768488369000,
+  "receivedStamp":1768488370440,
+  "sim":"sim1"
+}
+2026-01-15 16:03:58 {
+  "from":"+639928941069",
+  "text":"Yes 110616",
+  "sentStamp":1768489436000,
+  "receivedStamp":1768489437215,
+  "sim":"sim1"
+}
+2026-01-15 16:04:48 {
+  "from":"SMART",
+  "text":"Your Allnet Texts will expire in 60 minutes.                                                                                                                   ",
+  "sentStamp":1768489486000,
+  "receivedStamp":1768489486717,
+  "sim":"sim1"
+}
+2026-01-15 16:05:26 {
+  "from":"SMART",
+  "text":" Always stay connected. Check out the Smart App for Promo Load, Rewards, latest offers and MORE!",
+  "sentStamp":1768489486000,
+  "receivedStamp":1768489487967,
+  "sim":"sim1"
+}
+2026-01-15 16:26:18 {
+  "from":"+639928941069",
+  "text":"Yes 243371",
+  "sentStamp":1768490776000,
+  "receivedStamp":1768490776982,
+  "sim":"sim1"
+}
+2026-01-15 16:32:42 {
+  "from":"+639928941069",
+  "text":"Yes 289396",
+  "sentStamp":1768491098000,
+  "receivedStamp":1768491103460,
+  "sim":"sim1"
+}
+2026-01-15 16:39:38 {
+  "from":"+639928941069",
+  "text":"Yes 244207",
+  "sentStamp":1768491194000,
+  "receivedStamp":1768491194689,
+  "sim":"sim1"
+}
+2026-01-15 16:41:53 {
+  "from":"+639928941069",
+  "text":"Yes 244207",
+  "sentStamp":1768491194000,
+  "receivedStamp":1768491194689,
+  "sim":"sim1"
+}
+2026-01-15 16:44:08 {
+  "from":"+639928941069",
+  "text":"Yes 244207",
+  "sentStamp":1768491194000,
+  "receivedStamp":1768491194689,
+  "sim":"sim1"
+}
+2026-01-15 16:50:54 {
+  "from":"+639928941069",
+  "text":"Yes 727199",
+  "sentStamp":1768492188000,
+  "receivedStamp":1768492189361,
+  "sim":"sim1"
+}
+2026-01-15 17:02:57 {
+  "from":"123456789",
+  "text":"test message",
+  "sentStamp":1768492975759,
+  "receivedStamp":1768492975760,
+  "sim":"sim1"
+}
+2026-01-15 17:06:09 {
+  "from":"SMART",
+  "text":" Need load urgently? Borrow up to 1GB with LOAN-A-LOAD. Dial *5623# to get started!",
+  "sentStamp":1768493166000,
+  "receivedStamp":1768493167774,
+  "sim":"sim1"
+}
+2026-01-15 17:06:09 {
+  "from":"SMART",
+  "text":"Your Allnet Texts for today has expired.                                                                                                                       ",
+  "sentStamp":1768493166000,
+  "receivedStamp":1768493167948,
+  "sim":"sim1"
+}
+2026-01-15 17:07:52 {
+  "from":"SMART",
+  "text":"16Jan12:07 AM\nRegular Load: P0.50 Exp: 06Jan2027 05:34PM\nMagic Data (No Expiry) MB: 1395.14\nMins Mobile (No Expiry): 54",
+  "sentStamp":1768493271000,
+  "receivedStamp":1768493270916,
+  "sim":"sim1"
+}
+2026-01-15 17:09:57 {
+  "from":"SMART",
+  "text":"16Jan12:09 AM\nRegular Load: P0.50 Exp: 06Jan2027 05:34PM\nMagic Data (No Expiry) MB: 1395.14\nMins Mobile (No Expiry): 54",
+  "sentStamp":1768493381000,
+  "receivedStamp":1768493380886,
+  "sim":"sim1"
+}
+2026-01-15 17:16:43 {
+  "from":"SMART",
+  "text":"16Jan 00:13: Allnet 30 loaded to 639495733542 from XXXXXXXX7428. Ref:EVDAG3AB2D25. Use Smart App for the best promos & deals! smrt.ph\/SmartApp",
+  "sentStamp":1768493629000,
+  "receivedStamp":1768493629816,
+  "sim":"sim1"
+}
+2026-01-15 17:16:51 {
+  "from":"123456789",
+  "text":"test message",
+  "sentStamp":1768493809242,
+  "receivedStamp":1768493809243,
+  "sim":"sim1"
+}
+2026-01-15 17:16:53 {
+  "from":"SMART",
+  "text":"Need more data? Get as much as 48 GB data FOR ALL SITES AND APPS with ALL DATA! Subscribe NOW and discover other exciting promos via Smart App & Online Store!",
+  "sentStamp":1768493629000,
+  "receivedStamp":1768493630376,
+  "sim":"sim1"
+}
+2026-01-15 17:17:32 {
+  "from":"SMART",
+  "text":"Awesome! You can now enjoy 100 MB + UNLI CALLS & TEXTS for 1 day with ALLNET 30.",
+  "sentStamp":1768493629000,
+  "receivedStamp":1768493631358,
+  "sim":"sim1"
+}
+2026-01-15 17:19:49 {
+  "from":"+639928941069",
+  "text":"Yes 776940",
+  "sentStamp":1768493759000,
+  "receivedStamp":1768493759181,
+  "sim":"sim1"
+}

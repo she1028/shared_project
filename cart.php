@@ -66,8 +66,10 @@ $total = !empty($cart) ? ($subtotal + $shipping) : 0;
       <div class="col-lg-8">
         <div id="cartList" class="cart-card shadow-sm p-3">
           <div class="d-flex justify-content-between align-items-center mb-3">
-            <h6 class="fw-bold m-0">Cart</h6>
-            <div class="text-muted small">Items: <?= (int)$totalItemCount ?></div>
+            <h6 class="fw-bold m-0 d-flex align-items-center gap-2">
+              Cart
+              <span class="cart-items-count badge bg-light text-muted fw-normal border">Items: <?= (int)$totalItemCount ?></span>
+            </h6>
           </div>
 
           <?php if (!empty($cart)): ?>
@@ -77,8 +79,12 @@ $total = !empty($cart) ? ($subtotal + $shipping) : 0;
                 $itemTotal = $price * $qty;
                 $img = $item['image'] ?? '';
                 $maxQtyAttr = '';
+                $availableStock = null;
                 if (($item['type'] ?? '') === 'rental' && isset($item['color_stock']) && $item['color_stock'] !== null && (int)$item['color_stock'] > 0) {
                   $maxQtyAttr = ' max="' . (int)$item['color_stock'] . '"';
+                  $availableStock = (int)$item['color_stock'];
+                } elseif (isset($item['stock']) && $item['stock'] !== null && (int)$item['stock'] >= 0) {
+                  $availableStock = (int)$item['stock'];
                 }
             ?>
               <div class="d-flex mb-3 align-items-center cart-item" data-index="<?= (int)$index ?>" data-price="<?= htmlspecialchars((string)$price) ?>">
@@ -87,33 +93,37 @@ $total = !empty($cart) ? ($subtotal + $shipping) : 0;
                 </div>
 
                 <?php if (!empty($img)): ?>
-                  <img src="<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($item['name']) ?>" style="width:64px; height:64px; object-fit:cover; border-radius:10px;" class="me-3">
+                  <img src="<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($item['name']) ?>" style="width:80px; height:80px; object-fit:cover; border-radius:12px;" class="me-3">
                 <?php else: ?>
-                  <div class="me-3" style="width:64px; height:64px; border-radius:10px; background:#f1f1f1;"></div>
+                  <div class="me-3" style="width:80px; height:80px; border-radius:12px; background:#f1f1f1;"></div>
                 <?php endif; ?>
 
-                <div class="flex-grow-1">
-                  <div class="fw-semibold"><?= htmlspecialchars($item['name']) ?></div>
-                  <?php if (!empty($item['color_name'])): ?>
-                    <div class="text-muted small">Color: <?= htmlspecialchars($item['color_name']) ?></div>
-                  <?php endif; ?>
-                  <div class="text-muted small">₱<?= number_format($price, 2) ?> each</div>
-                </div>
-
-                <div class="d-flex align-items-center gap-2 cart-actions">
-                  <div class="input-group input-group-sm" style="width: 124px;">
-                    <button class="btn btn-outline-secondary qty-minus" type="button">-</button>
-                    <input type="number" class="form-control text-center cart-qty" name="qty[<?= (int)$index ?>]" form="checkoutCartForm" value="<?= (int)$qty ?>" min="1" step="1"<?= $maxQtyAttr ?>>
-                    <button class="btn btn-outline-secondary qty-plus" type="button">+</button>
+                <div class="flex-grow-1 cart-meta">
+                  <div class="fw-semibold cart-meta-title"><?= htmlspecialchars($item['name']) ?></div>
+                  <div class="cart-meta-lines">
+                    <?php if (!empty($item['color_name'])): ?>
+                      <div class="cart-meta-line"><span class="cart-meta-label">Color:</span> <span class="cart-meta-value"><?= htmlspecialchars($item['color_name']) ?></span></div>
+                    <?php endif; ?>
+                    <div class="cart-meta-line"><span class="cart-meta-label">Price:</span> <span class="cart-meta-value">₱<?= number_format($price, 2) ?> each</span></div>
+                    <?php if ($availableStock !== null): ?>
+                      <div class="cart-meta-line"><span class="cart-meta-label">Available:</span> <span class="cart-meta-value"><?= (int)$availableStock ?></span></div>
+                    <?php endif; ?>
                   </div>
-                  <div class="text-nowrap">₱<span class="item-total"><?= number_format($itemTotal, 2) ?></span></div>
-
-                  <form method="post" class="ms-1" action="removefromcart.php">
+                  <form method="post" class="cart-remove-left" action="removefromcart.php">
                     <input type="hidden" name="id" value="<?= htmlspecialchars((string)($item['id'] ?? '')) ?>">
                     <input type="hidden" name="color_id" value="<?= isset($item['color_id']) ? htmlspecialchars((string)$item['color_id']) : '' ?>">
                     <input type="hidden" name="color_name" value="<?= isset($item['color_name']) ? htmlspecialchars((string)$item['color_name']) : '' ?>">
                     <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
                   </form>
+                </div>
+
+                <div class="cart-actions">
+                  <div class="cart-qty-wrap">
+                    <button class="btn btn-outline-secondary qty-minus" type="button">-</button>
+                    <input type="text" inputmode="numeric" pattern="[0-9]*" class="form-control text-center cart-qty" name="qty[<?= (int)$index ?>]" form="checkoutCartForm" value="<?= (int)$qty ?>"<?= $maxQtyAttr ?>>
+                    <button class="btn btn-outline-secondary qty-plus" type="button">+</button>
+                  </div>
+                  <div class="cart-price text-end">₱<span class="item-total"><?= number_format($itemTotal, 2) ?></span></div>
                 </div>
               </div>
             <?php endforeach; ?>
