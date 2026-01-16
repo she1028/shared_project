@@ -264,7 +264,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete') {
                                         <td class="food-desc"><?= htmlspecialchars($f['food_description']) ?></td>
 
                                         <!-- Price -->
-                                        <td>$ <?= number_format($f['food_price'], 2) ?></td>
+                                        <td>₱ <?= number_format($f['food_price'], 2) ?></td>
 
                                         <!-- Serving Size -->
                                         <td><?= htmlspecialchars($f['food_serving_size']) ?></td>

@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: cart.php?error=time');
         exit;
     }
-    
+
     // Clear old SMS booking session to ensure each checkout gets a fresh booking reference
     unset($_SESSION['sms_booking_ref'], $_SESSION['sms_phone'], $_SESSION['sms_confirmed'], $_SESSION['sms_confirmed_at']);
 }
@@ -98,7 +98,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Each checkout attempt should get its own booking ref (don't reuse from previous checkout)
 $existingBookingRef = '';
 
-?><!DOCTYPE html>
+?>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -109,9 +110,9 @@ $existingBookingRef = '';
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <style>
-
         body {
             font-family: Arial, sans-serif;
             background: #f4f6f8;
@@ -162,192 +163,231 @@ $existingBookingRef = '';
             right: 1rem;
             z-index: 1080;
         }
+
+        .back-action {
+            cursor: pointer;
+            user-select: none;
+            width: fit-content;
+            text-decoration: none;
+            color: #1f1f1f;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 999px;
+            padding: 6px 10px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+        }
+
+        .back-action:hover {
+            background: #fff;
+            border-color: rgba(0, 0, 0, 0.14);
+        }
     </style>
 </head>
 
 <body>
 
-<div class="container">
-    <div class="sms-box card-admin">
-        <div class="sms-title">SMS Booking<br>Confirmation</div>
-        <div class="sms-help">Please enter your phone number to send an OTP via SMS to confirm your order.</div>
+    <div class="container">
+        <div class="my-5 mx-4">
+            <a class="d-inline-flex align-items-center border bg-light rounded-5 px-2 py-1 back-action gap-2 text-decoration-none text-dark" href="cart.php">
+                <i class="material-icons">&#xe5c4;</i>
+                <span>back</span>
+            </a>
+        </div>
+        <div class="sms-box card-admin">
+            <div class="sms-title">SMS Booking<br>Confirmation</div>
+            <div class="sms-help">Please enter your phone number to send an OTP via SMS to confirm your order.</div>
 
-        <input type="text" id="phone" class="form-control" placeholder="09XXXXXXXXX" required>
+            <input type="text" id="phone" class="form-control" placeholder="09XXXXXXXXX" required>
 
-        <button id="sendSmsBtn" class="btn btn-success mt-2">Click to Send OTP</button>
+            <button id="sendSmsBtn" class="btn btn-success mt-2">Click to Send OTP</button>
 
-        <p id="status"></p>
-    </div>
-</div>
-
-<div class="toast-container">
-    <div id="smsToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="d-flex">
-            <div class="toast-body" id="smsToastBody">We have received your confirmation.</div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            <p id="status"></p>
         </div>
     </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="toast-container">
+        <div id="smsToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="smsToastBody">We have received your confirmation.</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
 
-<script>
-(() => {
-    const existingBookingRef = <?= json_encode((string)$existingBookingRef) ?>;
-    const phoneInput = document.getElementById("phone");
-    const sendBtn = document.getElementById("sendSmsBtn");
-    const statusEl = document.getElementById("status");
-    const toastEl = document.getElementById('smsToast');
-    const toastBody = document.getElementById('smsToastBody');
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
-    let pollTimer = null;
-    let currentBookingRef = existingBookingRef || '';
-    let currentPhone = '';
-    let cooldownTimer = null;
-    let cooldownRemaining = 0;
+    <script>
+        (() => {
+            const existingBookingRef = <?= json_encode((string)$existingBookingRef) ?>;
+            const phoneInput = document.getElementById("phone");
+            const sendBtn = document.getElementById("sendSmsBtn");
+            const statusEl = document.getElementById("status");
+            const toastEl = document.getElementById('smsToast');
+            const toastBody = document.getElementById('smsToastBody');
 
-    function setButtonCooldown(seconds) {
-        if (cooldownTimer) {
-            clearInterval(cooldownTimer);
-            cooldownTimer = null;
-        }
-        cooldownRemaining = Math.max(0, seconds | 0);
-        sendBtn.disabled = true;
-        const baseLabel = currentBookingRef ? 'Resend OTP' : 'Click to Send OTP';
-        sendBtn.textContent = `${baseLabel} (${cooldownRemaining}s)`;
-        cooldownTimer = setInterval(() => {
-            cooldownRemaining -= 1;
-            if (cooldownRemaining <= 0) {
-                clearInterval(cooldownTimer);
-                cooldownTimer = null;
-                sendBtn.disabled = false;
-                sendBtn.textContent = currentBookingRef ? 'Resend OTP' : 'Click to Send OTP';
-                return;
+            let pollTimer = null;
+            let currentBookingRef = existingBookingRef || '';
+            let currentPhone = '';
+            let cooldownTimer = null;
+            let cooldownRemaining = 0;
+
+            function setButtonCooldown(seconds) {
+                if (cooldownTimer) {
+                    clearInterval(cooldownTimer);
+                    cooldownTimer = null;
+                }
+                cooldownRemaining = Math.max(0, seconds | 0);
+                sendBtn.disabled = true;
+                const baseLabel = currentBookingRef ? 'Resend OTP' : 'Click to Send OTP';
+                sendBtn.textContent = `${baseLabel} (${cooldownRemaining}s)`;
+                cooldownTimer = setInterval(() => {
+                    cooldownRemaining -= 1;
+                    if (cooldownRemaining <= 0) {
+                        clearInterval(cooldownTimer);
+                        cooldownTimer = null;
+                        sendBtn.disabled = false;
+                        sendBtn.textContent = currentBookingRef ? 'Resend OTP' : 'Click to Send OTP';
+                        return;
+                    }
+                    const label = currentBookingRef ? 'Resend OTP' : 'Click to Send OTP';
+                    sendBtn.textContent = `${label} (${cooldownRemaining}s)`;
+                }, 1000);
             }
-            const label = currentBookingRef ? 'Resend OTP' : 'Click to Send OTP';
-            sendBtn.textContent = `${label} (${cooldownRemaining}s)`;
-        }, 1000);
-    }
 
-    function showToast(message, ok = true) {
-        toastEl.classList.remove('text-bg-success', 'text-bg-danger');
-        toastEl.classList.add(ok ? 'text-bg-success' : 'text-bg-danger');
-        toastBody.textContent = message;
-        const toast = new bootstrap.Toast(toastEl, { delay: 2500 });
-        toast.show();
-    }
-
-    function stopPolling() {
-        if (pollTimer) {
-            clearInterval(pollTimer);
-            pollTimer = null;
-        }
-    }
-
-    async function pollStatus() {
-        if (!currentBookingRef) return;
-        try {
-            const res = await fetch('check_booking_status.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ booking_ref: currentBookingRef, phone: currentPhone })
-            });
-            const data = await res.json();
-            if (!data || !data.success) return;
-
-            const status = String(data.status || '').toUpperCase();
-            if (status === 'CONFIRMED') {
-                stopPolling();
-                statusEl.innerText = "✅ Confirmation received. Redirecting you back to checkout...";
-
-                // Persist SMS-confirmed flag in the client session
-                const confirmRes = await fetch('sms_confirm_session.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ booking_ref: currentBookingRef, phone: currentPhone })
+            function showToast(message, ok = true) {
+                toastEl.classList.remove('text-bg-success', 'text-bg-danger');
+                toastEl.classList.add(ok ? 'text-bg-success' : 'text-bg-danger');
+                toastBody.textContent = message;
+                const toast = new bootstrap.Toast(toastEl, {
+                    delay: 2500
                 });
-                const confirmData = await confirmRes.json();
-                if (!confirmData || !confirmData.success) {
-                    showToast('Confirmed by SMS, but session sync failed. Please refresh.', false);
-                    sendBtn.disabled = false;
+                toast.show();
+            }
+
+            function stopPolling() {
+                if (pollTimer) {
+                    clearInterval(pollTimer);
+                    pollTimer = null;
+                }
+            }
+
+            async function pollStatus() {
+                if (!currentBookingRef) return;
+                try {
+                    const res = await fetch('check_booking_status.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            booking_ref: currentBookingRef,
+                            phone: currentPhone
+                        })
+                    });
+                    const data = await res.json();
+                    if (!data || !data.success) return;
+
+                    const status = String(data.status || '').toUpperCase();
+                    if (status === 'CONFIRMED') {
+                        stopPolling();
+                        statusEl.innerText = "✅ Confirmation received. Redirecting you back to checkout...";
+
+                        // Persist SMS-confirmed flag in the client session
+                        const confirmRes = await fetch('sms_confirm_session.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                booking_ref: currentBookingRef,
+                                phone: currentPhone
+                            })
+                        });
+                        const confirmData = await confirmRes.json();
+                        if (!confirmData || !confirmData.success) {
+                            showToast('Confirmed by SMS, but session sync failed. Please refresh.', false);
+                            sendBtn.disabled = false;
+                            return;
+                        }
+
+                        showToast('We have received your confirmation.', true);
+                        setTimeout(() => {
+                            window.location.href = 'checkout.php?sms=confirmed';
+                        }, 2500);
+                    } else if (status === 'CANCELLED') {
+                        stopPolling();
+                        statusEl.innerText = "❌ Booking cancelled via SMS. You can resend an OTP.";
+                        showToast('Booking cancelled. You can resend OTP.', false);
+                        sendBtn.disabled = false;
+                    } else {
+                        statusEl.innerText = "✅ SMS sent. Reply YES <OTP> to confirm your order.";
+                    }
+                } catch (e) {
+                    // ignore transient errors
+                }
+            }
+
+            // If we already have a booking ref, treat next send as a resend
+            if (currentBookingRef) {
+                sendBtn.textContent = 'Resend OTP';
+            }
+
+            sendBtn.addEventListener("click", async function() {
+                const phone = phoneInput.value.trim();
+                const btn = this;
+
+                if (phone === "") {
+                    statusEl.innerText = "❌ Please enter your phone number to send an OTP code via SMS.";
                     return;
                 }
 
-                showToast('We have received your confirmation.', true);
-                setTimeout(() => {
-                    window.location.href = 'checkout.php?sms=confirmed';
-                }, 2500);
-            } else if (status === 'CANCELLED') {
-                stopPolling();
-                statusEl.innerText = "❌ Booking cancelled via SMS. You can resend an OTP.";
-                showToast('Booking cancelled. You can resend OTP.', false);
-                sendBtn.disabled = false;
-            } else {
-                statusEl.innerText = "✅ SMS sent. Reply YES <OTP> to confirm your order.";
-            }
-        } catch (e) {
-            // ignore transient errors
-        }
-    }
+                btn.disabled = true;
+                statusEl.innerText = "📩 Sending SMS...";
 
-    // If we already have a booking ref, treat next send as a resend
-    if (currentBookingRef) {
-        sendBtn.textContent = 'Resend OTP';
-    }
+                currentPhone = phone;
 
-    sendBtn.addEventListener("click", async function () {
-        const phone = phoneInput.value.trim();
-        const btn = this;
+                try {
+                    // Each (re)send should generate a new booking reference
+                    currentBookingRef = '';
 
-        if (phone === "") {
-            statusEl.innerText = "❌ Please enter your phone number to send an OTP code via SMS.";
-            return;
-        }
+                    const res = await fetch("send_sms.php", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            phone: phone,
+                            force_new_booking: true
+                        })
+                    });
 
-        btn.disabled = true;
-        statusEl.innerText = "📩 Sending SMS...";
+                    const data = await res.json();
+                    if (data && data.success) {
+                        if (data.booking_ref) {
+                            currentBookingRef = data.booking_ref;
+                        }
+                        statusEl.innerText = "✅ SMS sent. Reply YES <OTP> to confirm your order.";
 
-        currentPhone = phone;
+                        // UI: allow resend after a short cooldown
+                        btn.textContent = 'Resend OTP';
+                        setButtonCooldown(12);
 
-        try {
-            // Each (re)send should generate a new booking reference
-            currentBookingRef = '';
-
-            const res = await fetch("send_sms.php", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    phone: phone,
-                    force_new_booking: true
-                })
-            });
-
-            const data = await res.json();
-            if (data && data.success) {
-                if (data.booking_ref) {
-                    currentBookingRef = data.booking_ref;
+                        stopPolling();
+                        pollTimer = setInterval(pollStatus, 2500);
+                        // Immediate first check
+                        pollStatus();
+                    } else {
+                        statusEl.innerText = "❌ " + (data && data.message ? data.message : 'Failed to send SMS');
+                        btn.disabled = false;
+                    }
+                } catch (e) {
+                    statusEl.innerText = "⚠️ Server error.";
+                    btn.disabled = false;
                 }
-                statusEl.innerText = "✅ SMS sent. Reply YES <OTP> to confirm your order.";
-
-                // UI: allow resend after a short cooldown
-                btn.textContent = 'Resend OTP';
-                setButtonCooldown(12);
-
-                stopPolling();
-                pollTimer = setInterval(pollStatus, 2500);
-                // Immediate first check
-                pollStatus();
-            } else {
-                statusEl.innerText = "❌ " + (data && data.message ? data.message : 'Failed to send SMS');
-                btn.disabled = false;
-            }
-        } catch (e) {
-            statusEl.innerText = "⚠️ Server error.";
-            btn.disabled = false;
-        }
-    });
-})();
-</script>
+            });
+        })();
+    </script>
 
 </body>
+
 </html>

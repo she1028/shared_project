@@ -59,7 +59,7 @@ $backTarget = '';
 
 // Prefer previously stored target unless a new valid referrer arrives from another page (not cart).
 $referrer = $_SERVER['HTTP_REFERER'] ?? '';
-if (!empty($referrer) && stripos($referrer, 'cart.php') === false) {
+if (!empty($referrer) && stripos($referrer, 'cart.php') === false && stripos($referrer, 'smsbooking.php') === false){
   $parsed = parse_url($referrer);
   if ($parsed && !empty($parsed['scheme']) && !empty($parsed['host']) && (empty($host) || strcasecmp($parsed['host'], $host) === 0)) {
     $path = $parsed['path'] ?? '';
@@ -72,6 +72,9 @@ if (!empty($referrer) && stripos($referrer, 'cart.php') === false) {
 // Use stored target if no fresh referrer was accepted
 if (!$backTarget && !empty($storedBack)) {
   $backTarget = $storedBack;
+  if (stripos($storedBack, 'smsbooking.php') === false) {
+    $backTarget = $storedBack;
+  }
 }
 
 // Calculate subtotal (default: all items selected)
