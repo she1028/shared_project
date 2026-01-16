@@ -106,12 +106,12 @@
                 <body>
                     <!-- HERO / LOGO (simple layout like earlier) -->
                     <section class="hero-section">
-                        <div class="m-2">
-                            <span class="d-inline-flex align-items-center back-action g-2" data-bs-dismiss="modal">
+                        <!-- <div class="my-2 mx-4">
+                            <a class="d-inline-flex align-items-center border bg-light rounded-5 px-2 py-1 back-action gap-2 text-decoration-none text-dark" href="cart.php">
                                 <i class="material-icons">&#xe5c4;</i>
                                 <span>back</span>
-                            </span>
-                        </div>
+                            </a>
+                        </div> -->
                         <div class="text-center">
                             <img src="images/YMZM-logo.png" class="logo mb-2">
                             <h5 class="fw-bold m-0">YMZM</h5>

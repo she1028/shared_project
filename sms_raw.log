@@ -733,3 +733,38 @@
   "receivedStamp":1768508531662,
   "sim":"sim1"
 }
+2026-01-15 22:25:27 {
+  "from":"+639954772540",
+  "text":"yes 356154",
+  "sentStamp":1768512325000,
+  "receivedStamp":1768512347691,
+  "sim":"sim1"
+}
+2026-01-16 02:15:00 {
+  "from":"+639267084699",
+  "text":"Booking Ref: BOOK-D67F07\nReply YES 176684 to confirm.",
+  "sentStamp":1768526099000,
+  "receivedStamp":1768526098917,
+  "sim":"sim1"
+}
+2026-01-16 02:15:16 {
+  "from":"+639495733542",
+  "text":"Yes 176684",
+  "sentStamp":1768526115000,
+  "receivedStamp":1768526137722,
+  "sim":"sim1"
+}
+2026-01-16 02:30:15 {
+  "from":"+639267084699",
+  "text":"Booking Ref: BOOK-9891D6\nReply YES 103706 to confirm.",
+  "sentStamp":1768527013000,
+  "receivedStamp":1768527014327,
+  "sim":"sim1"
+}
+2026-01-16 02:30:32 {
+  "from":"+639495733542",
+  "text":"YES 103706",
+  "sentStamp":1768527031000,
+  "receivedStamp":1768527053439,
+  "sim":"sim1"
+}

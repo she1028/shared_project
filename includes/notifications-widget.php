@@ -159,6 +159,9 @@ $isClientLoggedIn = (!empty($_SESSION['role']) && $_SESSION['role'] !== 'admin')
                         ${updatedStr ? `<div class="notif-meta">Updated: ${escapeHtml(updatedStr)}</div>` : ''}
                         <div class="notif-meta">Tap again to close</div>
                     </div>
+                    <div class="mt-2 d-flex">
+                        <button type="button" class="btn btn-sm btn-outline-primary view-receipt-btn" data-order-id="${escapeHtml(String(n.order_id ?? ''))}">View receipt</button>
+                    </div>
                 `;
 
                 wrap.addEventListener('click', async () => {
@@ -183,6 +186,17 @@ $isClientLoggedIn = (!empty($_SESSION['role']) && $_SESSION['role'] !== 'admin')
                         `;
                     }
                 });
+
+                const viewBtn = wrap.querySelector('.view-receipt-btn');
+                if (viewBtn) {
+                    viewBtn.addEventListener('click', (ev) => {
+                        ev.stopPropagation();
+                        const oid = viewBtn.getAttribute('data-order-id');
+                        if (oid) {
+                            window.location.href = `order_details.php?order_id=${encodeURIComponent(oid)}`;
+                        }
+                    });
+                }
 
                 notifList.appendChild(wrap);
             });
