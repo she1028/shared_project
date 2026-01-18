@@ -831,3 +831,108 @@
   "receivedStamp":1768531802609,
   "sim":"sim1"
 }
+2026-01-16 04:34:51 {
+  "from":"+639495733542",
+  "text":"Booking Ref: BOOK-D4CB87\nReply YES 231780 to confirm.",
+  "sentStamp":1768563289000,
+  "receivedStamp":1768534512324,
+  "sim":"sim2"
+}
+2026-01-16 04:41:05 {
+  "from":"+639954772540",
+  "text":"yes 266715",
+  "sentStamp":1768534858000,
+  "receivedStamp":1768534885863,
+  "sim":"sim1"
+}
+2026-01-16 04:42:07 {
+  "from":"+639954772540",
+  "text":"yes 516624",
+  "sentStamp":1768534920000,
+  "receivedStamp":1768534948073,
+  "sim":"sim1"
+}
+2026-01-16 06:19:12 {
+  "from":"123456789",
+  "text":"test message",
+  "sentStamp":1768540751374,
+  "receivedStamp":1768540751374,
+  "sim":"sim1"
+}
+2026-01-16 06:19:48 {
+  "from":"+639928941069",
+  "text":"Yes 298755",
+  "sentStamp":1768540787000,
+  "receivedStamp":1768540787180,
+  "sim":"sim1"
+}
+2026-01-16 06:52:23 {
+  "from":"123456789",
+  "text":"test message",
+  "sentStamp":1768542742850,
+  "receivedStamp":1768542742850,
+  "sim":"sim1"
+}
+2026-01-16 06:54:18 {
+  "from":"+639928941069",
+  "text":"Yes 804639",
+  "sentStamp":1768542857000,
+  "receivedStamp":1768542857726,
+  "sim":"sim1"
+}
+2026-01-16 07:17:18 {
+  "from":"123456789",
+  "text":"test message",
+  "sentStamp":1768544237865,
+  "receivedStamp":1768544237865,
+  "sim":"sim1"
+}
+2026-01-16 07:58:03 {
+  "from":"123456789",
+  "text":"test message",
+  "sentStamp":1768546682453,
+  "receivedStamp":1768546682454,
+  "sim":"sim1"
+}
+2026-01-16 07:58:55 {
+  "from":"+639928941069",
+  "text":"Yes486330",
+  "sentStamp":1768546729000,
+  "receivedStamp":1768546733886,
+  "sim":"sim1"
+}
+2026-01-16 07:59:24 {
+  "from":"123456789",
+  "text":"test message",
+  "sentStamp":1768546763519,
+  "receivedStamp":1768546763520,
+  "sim":"sim1"
+}
+2026-01-16 08:03:56 {
+  "from":"+639928941069",
+  "text":"Yes486330",
+  "sentStamp":1768547031000,
+  "receivedStamp":1768547034975,
+  "sim":"sim1"
+}
+2026-01-16 08:03:56 {
+  "from":"+639928941069",
+  "text":"Yes 471424",
+  "sentStamp":1768547032000,
+  "receivedStamp":1768547035639,
+  "sim":"sim1"
+}
+2026-01-16 08:03:57 {
+  "from":"+639928941069",
+  "text":"Yes 185851",
+  "sentStamp":1768547035000,
+  "receivedStamp":1768547036135,
+  "sim":"sim1"
+}
+2026-01-16 08:31:13 {
+  "from":"+639928941069",
+  "text":"Yes 499959",
+  "sentStamp":1768548671000,
+  "receivedStamp":1768548671654,
+  "sim":"sim1"
+}

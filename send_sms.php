@@ -106,7 +106,7 @@ $otp = rand(100000, 999999);
 $otp_hash = password_hash($otp, PASSWORD_DEFAULT);
 $expires_at = date("Y-m-d H:i:s", time() + 300); // 5 minutes
 
-// Save OTP in DB
+// Save OTP in DB---
 $stmt = $conn->prepare("
     INSERT INTO otp_requests (phone, booking_ref, otp_hash, expires_at)
     VALUES (?, ?, ?, ?)
@@ -119,9 +119,9 @@ if (!$stmt->execute()) {
 }
 
 // SMS Gateway Settings
-$gateway_url = "http://192.168.1.14:8080";
+$gateway_url = "http://172.20.10.5:8080";
 $username = "sms";
-$password = "_1u9epAr";
+$password = "esTLpEP4";
 
 $message = "Booking Ref: $booking_ref\nReply YES $otp to confirm.";
 
